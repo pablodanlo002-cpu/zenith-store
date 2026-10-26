@@ -1,8 +1,46 @@
 // aliexpress-service.js - Service d'intégration & automatisation AliExpress
 const axios = require('axios');
+const https = require('https');
+const dns = require('dns');
+
+// Import optionnel de l'API officielle AliExpress Dropshipper
+let DropshipperClient = null;
+try {
+    const aeSdk = require('ae_sdk');
+    DropshipperClient = aeSdk.DropshipperClient;
+} catch(e) {}
+
+// Forcer IPv4 en priorité pour éviter les blocages de routage IPv6 sur les conteneurs cloud (Render / AWS)
+if (dns.setDefaultResultOrder) {
+    try { dns.setDefaultResultOrder('ipv4first'); } catch(e) {}
+}
+
+const httpsAgent = new https.Agent({
+    keepAlive: true,
+    rejectUnauthorized: false
+});
 
 // Base de connaissances & référentiel de produits vérifiés (Garantie 100% sans échec)
 const VERIFIED_PRODUCTS = {
+    '1005012626624444': {
+        name: 'Support de Refroidissement Horizontal RGB pour PS5 Slim / Pro - Station de Charge Double Manettes & Support Casque',
+        category: 'accessoires',
+        supplierPrice: 19.90,
+        price: 39.99,
+        oldPrice: 59.99,
+        discount: 33,
+        image: 'https://ae-pic-a1.aliexpress-media.com/kf/S49832f51255948a399eb37157282cb59F.jpg',
+        images: [
+            'https://ae-pic-a1.aliexpress-media.com/kf/S49832f51255948a399eb37157282cb59F.jpg',
+            'https://ae-pic-a1.aliexpress-media.com/kf/S65ebaba8856d4bf8be9050d614e088e4J.jpg',
+            'https://ae-pic-a1.aliexpress-media.com/kf/Sf9024be1ca014ea888cdf77b5d62accad.jpg',
+            'https://ae-pic-a1.aliexpress-media.com/kf/S52eca0d7a5774d94afedd899e609343cu.jpg',
+            'https://ae-pic-a1.aliexpress-media.com/kf/S413707bb0559478a97b3757ee25e6b27z.jpg',
+            'https://ae-pic-a1.aliexpress-media.com/kf/S221bd8fd8ebe49d5b6ec1241e4733044J.jpg'
+        ],
+        brand: 'Zenith Tech',
+        tags: ['Expédition rapide', 'Compatible PS5 Slim/Pro', 'RGB']
+    },
     '1005013234055626': {
         name: 'Moniteur de Jeu Gaming LXZ 24,5" 200Hz - Écran IPS Full HD 1080p 1ms, Haut-Parleurs Intégrés, HDMI & DisplayPort, Compatible FreeSync',
         category: 'ecrans',
@@ -102,17 +140,14 @@ const VERIFIED_PRODUCTS = {
 
 class AliExpressService {
     constructor(config = {}) {
-        this.appKey = config.appKey || process.env.ALIEXPRESS_APP_KEY;
-        this.appSecret = config.appSecret || process.env.ALIEXPRESS_APP_SECRET;
-        this.accessToken = config.accessToken || process.env.ALIEXPRESS_ACCESS_TOKEN;
+        this.appKey = config.appKey || process.env.ALIEXPRESS_APP_KEY || '555908';
+        this.appSecret = config.appSecret || process.env.ALIEXPRESS_APP_SECRET || 't2NI2H3gAdWZoDyqbSZvVYE8CnNtl85g2';
+        this.accessToken = config.accessToken || process.env.ALIEXPRESS_ACCESS_TOKEN || '';
         this.apiEndpoint = 'https://api-sg.aliexpress.com/sync';
     }
 
     /**
      * Extrait l'identifiant produit depuis une URL AliExpress ou un ID brut
-     * Exemples :
-     * - https://fr.aliexpress.com/item/1005013234055626.html
-     * - 1005013234055626
      */
     extractProductId(input) {
         if (!input) return null;
@@ -133,24 +168,96 @@ class AliExpressService {
         const primaryTargetUrl = `https://fr.aliexpress.com/item/${productId}.html`;
         const verified = VERIFIED_PRODUCTS[productId];
 
+        // 1. Priorité A : Base de connaissances vérifiée (Résultat instantané garanti sans bug réseau)
+        if (verified) {
+            console.log(`[AliExpress] Produit #${productId} résolu via le référentiel vérifié`);
+            return {
+                id: `prod-ali-${productId}`,
+                name: verified.name,
+                supplierPrice: verified.supplierPrice,
+                price: verified.price,
+                oldPrice: verified.oldPrice,
+                discount: verified.discount,
+                image: verified.image,
+                images: verified.images || [verified.image],
+                category: verified.category,
+                brand: verified.brand,
+                rating: 5,
+                reviews: 58,
+                stock: true,
+                stockCount: 15,
+                url: `produit.html?id=prod-ali-${productId}`,
+                tags: verified.tags || ['Expédition rapide', 'Garantie 2 ans', 'Testé'],
+                aliexpress: {
+                    productId: productId,
+                    supplierPrice: verified.supplierPrice,
+                    url: primaryTargetUrl
+                }
+            };
+        }
+
+        // 2. Priorité B : API officielle AliExpress Dropshipper si token présent
+        if (DropshipperClient && this.accessToken) {
+            try {
+                console.log(`[AliExpress API] Appel API officielle pour produit #${productId}...`);
+                const client = new DropshipperClient({
+                    app_key: this.appKey,
+                    app_secret: this.appSecret,
+                    session: this.accessToken
+                });
+                const apiRes = await client.productDetails({
+                    product_id: productId,
+                    ship_to_country: 'FR',
+                    target_currency: 'EUR',
+                    target_language: 'FR'
+                });
+                if (apiRes.ok && apiRes.data) {
+                    const prod = apiRes.data;
+                    const apiTitle = prod.subject || prod.title;
+                    const apiImages = (prod.ae_multimedia_info_dto && prod.ae_multimedia_info_dto.image_urls) 
+                        ? prod.ae_multimedia_info_dto.image_urls.split(';') 
+                        : [];
+                    const sp = parseFloat(prod.product_min_price || prod.target_sale_price || 20);
+                    const suggestedPrice = Math.round(sp <= 10 ? sp * 2.5 : sp <= 30 ? sp * 1.9 : sp * 1.6) - 0.01;
+                    console.log(`[AliExpress API] Succès API officielle : ${apiTitle}`);
+                    return {
+                        id: `prod-ali-${productId}`,
+                        name: apiTitle,
+                        supplierPrice: sp,
+                        price: suggestedPrice,
+                        oldPrice: Math.round(suggestedPrice * 1.4) - 0.01,
+                        discount: 28,
+                        image: apiImages[0] || 'https://ae-pic-a1.aliexpress-media.com/kf/S49832f51255948a399eb37157282cb59F.jpg',
+                        images: apiImages.slice(0, 6),
+                        category: this.detectCategory(apiTitle),
+                        brand: 'Zenith Tech',
+                        rating: 5,
+                        reviews: 45,
+                        stock: true,
+                        stockCount: 15,
+                        url: `produit.html?id=prod-ali-${productId}`,
+                        tags: ['Expédition rapide', 'Garantie 2 ans', 'Officiel API'],
+                        aliexpress: {
+                            productId: productId,
+                            supplierPrice: sp,
+                            url: primaryTargetUrl
+                        }
+                    };
+                }
+            } catch(apiErr) {
+                console.warn('[AliExpress API] Échec API officielle, bascule sur le scraper:', apiErr.message);
+            }
+        }
+
+        // 3. Priorité C : Scraper multi-sources direct
         try {
-            // Requête vers le flux produit AliExpress avec en-têtes réalistes
             const browserHeaders = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
                 'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
-                'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-                'sec-ch-ua-mobile': '?0',
-                'sec-ch-ua-platform': '"Windows"',
-                'sec-fetch-dest': 'document',
-                'sec-fetch-mode': 'navigate',
-                'sec-fetch-site': 'none',
-                'sec-fetch-user': '?1',
-                'upgrade-insecure-requests': '1',
                 'Cookie': 'aep_usuc_f=site=fra&b_locale=fr_FR&c_tp=EUR&region=FR;'
             };
 
-            // Seulement les vraies URLs valides (PAS item.aliexpress.com qui est un 404 permanent)
             const targetUrls = [
                 `https://fr.aliexpress.com/item/${productId}.html`,
                 `https://www.aliexpress.com/item/${productId}.html`
@@ -161,12 +268,12 @@ class AliExpressService {
                 try {
                     const response = await axios.get(url, {
                         headers: browserHeaders,
+                        httpsAgent: httpsAgent,
                         timeout: 15000,
                         maxRedirects: 5
                     });
                     if (response.data && typeof response.data === 'string' && response.data.length > 5000) {
                         const tempHtml = response.data;
-                        // On vérifie que ce n'est PAS une page 404
                         const is404 = tempHtml.includes('<title>404') || 
                                       tempHtml.includes('404 page') || 
                                       tempHtml.includes('Page Not Found');
@@ -181,7 +288,7 @@ class AliExpressService {
                 }
             }
 
-            // 1. Extraction titre (Multi-sources prioritaires)
+            // Extraction titre (Multi-sources prioritaires)
             let title = '';
             const ogTitle = html.match(/<meta property="og:title" content="([^"]+)"/i);
             const twitterTitle = html.match(/<meta name="twitter:title" content="([^"]+)"/i);
@@ -215,18 +322,13 @@ class AliExpressService {
                                    title.toLowerCase() === 'aliexpress';
 
             if (isInvalidTitle) {
-                if (verified) {
-                    title = verified.name;
-                } else {
-                    title = `Produit Gaming Pro #${productId.slice(-6)}`;
-                }
+                title = `Produit Gaming Pro #${productId.slice(-6)}`;
             }
 
-            // 2. Extraction images (principale + galerie multi-photos)
+            // Extraction images
             let mainImage = '';
             let galleryImages = [];
 
-            // A. Recherche directe dans imagePathList JSON
             const pathListMatch = html.match(/"imagePathList"\s*:\s*(\[[^\]]+\])/);
             if (pathListMatch) {
                 try {
@@ -237,7 +339,6 @@ class AliExpressService {
                 } catch(e) {}
             }
 
-            // B. Recherche par balises og:image ou twitter:image
             const imageMatch = html.match(/<meta property="og:image" content="([^"]+)"/i) ||
                                html.match(/<meta name="twitter:image" content="([^"]+)"/i);
             if (imageMatch && imageMatch[1]) {
@@ -247,28 +348,23 @@ class AliExpressService {
                 }
             }
 
-            // C. Toutes les images CDN AliExpress trouvées dans le HTML
             const allImgs = html.match(/https:\/\/[^"'\s]+?\.(?:jpg|png|webp|jpeg)/gi) || [];
             const filtered = Array.from(new Set(allImgs.filter(u => 
                 (u.includes('aliexpress-media.com') || u.includes('alicdn.com')) &&
                 !u.includes('avatar') && !u.includes('logo') && !u.includes('feedback') && !u.includes('icon') &&
-                !u.includes('HTB18eCBQ') && // Logo 404 AliExpress à exclure formellement
+                !u.includes('HTB18eCBQ') && // Logo 404 rouge AliExpress à rejeter
                 !u.includes('404') &&
                 (u.includes('/kf/') || u.includes('/item/'))
             ))).map(u => u.replace(/_[0-9]+x[0-9]+.*\.jpg$/i, ''));
             galleryImages = Array.from(new Set([...galleryImages, ...filtered]));
 
-            // Si aucune image valide trouvée par scraping, utiliser le référentiel vérifié ou l'image de catégorie
             if (galleryImages.length > 0) {
                 mainImage = galleryImages[0];
-            } else if (verified && verified.image) {
-                mainImage = verified.image;
-                galleryImages = verified.images || [verified.image];
             } else {
                 const detectedCat = this.detectCategory(title);
                 const defaultCatImages = {
                     'ecrans': 'https://ae-pic-a1.aliexpress-media.com/kf/S8e6719d4d45f4b3fb2d71ad1dd1bd3b6r.jpg',
-                    'accessoires': 'https://ae-pic-a1.aliexpress-media.com/kf/S26c44fc58b75456cb028767272565a6av.jpg',
+                    'accessoires': 'https://ae-pic-a1.aliexpress-media.com/kf/S49832f51255948a399eb37157282cb59F.jpg',
                     'souris': 'https://ae-pic-a1.aliexpress-media.com/kf/S2857e17696cd44219ed0a1dde0b60b9cl.jpg',
                     'claviers': 'https://ae-pic-a1.aliexpress-media.com/kf/A9e8796a563c0417187e03b909809750at.jpg',
                     'casques': 'https://ae-pic-a1.aliexpress-media.com/kf/S9148d5306e004653a1523bb824f1146c9.jpg',
@@ -279,11 +375,10 @@ class AliExpressService {
                 galleryImages = [mainImage];
             }
 
-            // 3. Extraction prix fournisseur
-            let supplierPrice = verified ? verified.supplierPrice : 20.00;
+            // Extraction prix
+            let supplierPrice = 20.00;
             let priceFound = false;
 
-            // Source 1 : Paramètre pdp_npi dans l'URL originale
             const rawInput = String(productIdOrUrl);
             const pdpMatch = rawInput.match(/pdp_npi=[^&]*?(?:EUR|USD)[!%21]+([\d.]+)[!%21]+([\d.]+)/i) ||
                              decodeURIComponent(rawInput).match(/pdp_npi=[^&]*?(?:EUR|USD)!([\d.]+)!([\d.]+)/i);
@@ -295,7 +390,6 @@ class AliExpressService {
                 }
             }
 
-            // Source 2 : Balises Meta produit
             if (!priceFound && !isInvalidTitle) {
                 const metaPrice = html.match(/<meta property="product:price:amount" content="([^"]+)"/i) ||
                                   html.match(/<meta property="og:price:amount" content="([^"]+)"/i);
@@ -305,71 +399,35 @@ class AliExpressService {
                 }
             }
 
-            // Source 3 : Schema JSON-LD
-            if (!priceFound && !isInvalidTitle) {
-                const jsonLdMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i);
-                if (jsonLdMatch && jsonLdMatch[1]) {
-                    try {
-                        const parsedLd = JSON.parse(jsonLdMatch[1]);
-                        const offer = parsedLd.offers || (Array.isArray(parsedLd) ? parsedLd[0]?.offers : null);
-                        if (offer && (offer.price || offer.lowPrice)) {
-                            supplierPrice = parseFloat(offer.price || offer.lowPrice);
-                            priceFound = true;
-                        }
-                    } catch (e) {}
-                }
+            let suggestedSellingPrice;
+            if (supplierPrice <= 10) {
+                suggestedSellingPrice = Math.max(supplierPrice * 2.5, supplierPrice + 8);
+            } else if (supplierPrice <= 30) {
+                suggestedSellingPrice = supplierPrice * 1.9;
+            } else if (supplierPrice <= 80) {
+                suggestedSellingPrice = supplierPrice * 1.6;
+            } else {
+                suggestedSellingPrice = supplierPrice * 1.45;
             }
-
-            // Source 4 : Regex HTML
-            if (!priceFound && !isInvalidTitle) {
-                const priceMatch = html.match(/formattedActivityPrice":"([^"]+)"/) ||
-                                   html.match(/activityAmount":\{"value":([\d.]+)/) ||
-                                   html.match(/minAmount":\{"value":([\d.]+)/) ||
-                                   html.match(/"minPrice":"([^"]+)"/) ||
-                                   html.match(/(\d+[.,]\d{2})\s*€/);
-                if (priceMatch && priceMatch[1]) {
-                    const parsed = parseFloat(priceMatch[1].replace(',', '.'));
-                    if (parsed > 0) {
-                        supplierPrice = parsed;
-                        priceFound = true;
-                    }
-                }
-            }
-
-            // Calcul du prix de vente suggéré selon la marge
-            let suggestedSellingPrice = verified ? verified.price : null;
-            if (!suggestedSellingPrice) {
-                if (supplierPrice <= 10) {
-                    suggestedSellingPrice = Math.max(supplierPrice * 2.5, supplierPrice + 8);
-                } else if (supplierPrice <= 30) {
-                    suggestedSellingPrice = supplierPrice * 1.9;
-                } else if (supplierPrice <= 80) {
-                    suggestedSellingPrice = supplierPrice * 1.6;
-                } else {
-                    suggestedSellingPrice = supplierPrice * 1.45;
-                }
-                suggestedSellingPrice = Math.round(suggestedSellingPrice) - 0.01;
-            }
-
-            const detectedCategory = verified ? verified.category : this.detectCategory(title);
+            suggestedSellingPrice = Math.round(suggestedSellingPrice) - 0.01;
 
             return {
                 id: `prod-ali-${productId}`,
                 name: title,
                 supplierPrice: parseFloat(supplierPrice.toFixed(2)),
                 price: parseFloat(suggestedSellingPrice.toFixed(2)),
-                oldPrice: verified ? verified.oldPrice : (Math.round(suggestedSellingPrice * 1.4) - 0.01),
-                discount: verified ? verified.discount : 28,
+                oldPrice: Math.round(suggestedSellingPrice * 1.4) - 0.01,
+                discount: 28,
                 image: mainImage,
                 images: galleryImages.slice(0, 6),
-                category: detectedCategory,
-                brand: verified ? verified.brand : 'Zenith Tech',
+                category: this.detectCategory(title),
+                brand: 'Zenith Tech',
                 rating: 5,
                 reviews: Math.floor(Math.random() * 40) + 35,
                 stock: true,
                 stockCount: 15,
                 url: `produit.html?id=prod-ali-${productId}`,
-                tags: verified ? verified.tags : ['Expédition rapide', 'Garantie 2 ans', 'Testé'],
+                tags: ['Expédition rapide', 'Garantie 2 ans', 'Testé'],
                 aliexpress: {
                     productId: productId,
                     supplierPrice: parseFloat(supplierPrice.toFixed(2)),
@@ -379,42 +437,15 @@ class AliExpressService {
         } catch (error) {
             console.warn(`Extraction directe partielle pour AliExpress ID ${productId}:`, error.message);
             
-            if (verified) {
-                return {
-                    id: `prod-ali-${productId}`,
-                    name: verified.name,
-                    supplierPrice: verified.supplierPrice,
-                    price: verified.price,
-                    oldPrice: verified.oldPrice,
-                    discount: verified.discount,
-                    image: verified.image,
-                    images: verified.images || [verified.image],
-                    category: verified.category,
-                    brand: verified.brand,
-                    rating: 5,
-                    reviews: 48,
-                    stock: true,
-                    stockCount: 15,
-                    url: `produit.html?id=prod-ali-${productId}`,
-                    tags: verified.tags || ['Expédition rapide', 'Garantie 2 ans'],
-                    aliexpress: {
-                        productId: productId,
-                        supplierPrice: verified.supplierPrice,
-                        url: primaryTargetUrl
-                    }
-                };
-            }
-
-            // Mode résilient / Fallback intelligent si AliExpress bloque le bot
             return {
                 id: `prod-ali-${productId}`,
                 name: `Périphérique Gaming AliExpress (#${productId.slice(-6)})`,
-                supplierPrice: 29.90,
-                price: 59.99,
-                oldPrice: 89.99,
-                discount: 33,
-                image: 'https://ae-pic-a1.aliexpress-media.com/kf/S2857e17696cd44219ed0a1dde0b60b9cl.jpg',
-                images: ['https://ae-pic-a1.aliexpress-media.com/kf/S2857e17696cd44219ed0a1dde0b60b9cl.jpg'],
+                supplierPrice: 24.90,
+                price: 49.99,
+                oldPrice: 69.99,
+                discount: 28,
+                image: 'https://ae-pic-a1.aliexpress-media.com/kf/S49832f51255948a399eb37157282cb59F.jpg',
+                images: ['https://ae-pic-a1.aliexpress-media.com/kf/S49832f51255948a399eb37157282cb59F.jpg'],
                 category: 'accessoires',
                 brand: 'Zenith Partner',
                 rating: 5,
@@ -425,7 +456,7 @@ class AliExpressService {
                 tags: ['Expédition rapide', 'Garantie 2 ans'],
                 aliexpress: {
                     productId: productId,
-                    supplierPrice: 29.90,
+                    supplierPrice: 24.90,
                     url: primaryTargetUrl
                 }
             };
