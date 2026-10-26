@@ -32,12 +32,13 @@ class AliExpressService {
         }
 
         try {
-            // Requête vers le flux produit AliExpress
-            const targetUrl = `https://www.aliexpress.com/item/${productId}.html`;
+            // Requête vers le flux produit AliExpress (forcé en français)
+            const targetUrl = `https://fr.aliexpress.com/item/${productId}.html`;
             const response = await axios.get(targetUrl, {
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-                    'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8'
+                    'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8',
+                    'Cookie': 'aep_usuc_f=site=fra&b_locale=fr_FR&c_tp=EUR&region=FR;'
                 },
                 timeout: 10000
             });

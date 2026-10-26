@@ -6,6 +6,10 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const aliService = require('./aliexpress-service');
+const db = require('./db');
+
+// Initialisation de la base de données MongoDB Atlas Cloud
+db.initDB();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -72,6 +76,7 @@ app.use((req, res, next) => {
     if (
         p.startsWith('/data/') ||
         p === '/server.js' ||
+        p === '/db.js' ||
         p === '/aliexpress-service.js' ||
         p === '/package.json' ||
         p === '/package-lock.json' ||
@@ -121,8 +126,14 @@ try {
     console.warn('Initialisation data/ warning:', e.message);
 }
 
-// Fonctions utilitaires JSON
+// Fonctions utilitaires JSON (synchronisées avec MongoDB Cloud Atlas)
 function readJSON(filePath, fallback = []) {
+    if (filePath === PRODUCTS_FILE) {
+        return db.getProducts();
+    }
+    if (filePath === ORDERS_FILE) {
+        return db.getOrders();
+    }
     try {
         if (!fs.existsSync(filePath)) {
             const dir = path.dirname(filePath);
@@ -140,6 +151,14 @@ function readJSON(filePath, fallback = []) {
 }
 
 function writeJSON(filePath, data) {
+    if (filePath === PRODUCTS_FILE) {
+        db.setProducts(data);
+        return;
+    }
+    if (filePath === ORDERS_FILE) {
+        db.setOrders(data);
+        return;
+    }
     const dir = path.dirname(filePath);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
@@ -686,12 +705,15 @@ app.delete('/api/orders/:id', requireAdminAuth, (req, res) => {
     res.json({ success: true, message: 'Commande supprimée avec succès' });
 });
 
-// Mettre à jour le stock et les prix d'un produit
+// Mettre à jour le stock, les prix ou le nom d'un produit
 app.post('/api/products/:id/stock', requireAdminAuth, (req, res) => {
-    const { stockCount, price, supplierPrice, oldPrice, discount } = req.body;
+    const { stockCount, price, supplierPrice, oldPrice, discount, name, category } = req.body;
     const products = readJSON(PRODUCTS_FILE, []);
     const product = products.find(p => p.id === req.params.id);
     if (!product) return res.status(404).json({ success: false, error: 'Produit non trouvé' });
+
+    if (name && typeof name === 'string') product.name = name;
+    if (category && typeof category === 'string') product.category = category;
 
     if (typeof stockCount === 'number') {
         product.stockCount = stockCount;
@@ -744,6 +766,7 @@ app.post('/api/admin/reset-data', requireAdminAuth, (req, res) => {
 app.listen(PORT, () => {
     console.log(`\n======================================================`);
     console.log(`🚀 ZENITH STORE BACKEND EN LIGNE SUR http://localhost:${PORT}`);
+    console.log(`🍃 Base de Données : MONGODB ATLAS CLOUD CONNECTÉ`);
     console.log(`💳 Stripe Mode : ${isStripeConfigured ? 'ACTIF (Paiements Réels)' : 'DÉMO (Simulateur)'}`);
     console.log(`📦 Liaison AliExpress : OPÉRATIONNELLE`);
     console.log(`======================================================\n`);
