@@ -134,7 +134,7 @@ class AliExpressService {
         const verified = VERIFIED_PRODUCTS[productId];
 
         try {
-            // Requête vers le flux produit AliExpress avec en-têtes réalistes et multiples URLs
+            // Requête vers le flux produit AliExpress avec en-têtes réalistes
             const browserHeaders = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
@@ -150,11 +150,10 @@ class AliExpressService {
                 'Cookie': 'aep_usuc_f=site=fra&b_locale=fr_FR&c_tp=EUR&region=FR;'
             };
 
+            // Seulement les vraies URLs valides (PAS item.aliexpress.com qui est un 404 permanent)
             const targetUrls = [
-                primaryTargetUrl,
-                `https://www.aliexpress.com/item/${productId}.html`,
-                `https://item.aliexpress.com/item/${productId}.html`,
-                `https://m.aliexpress.com/item/${productId}.html`
+                `https://fr.aliexpress.com/item/${productId}.html`,
+                `https://www.aliexpress.com/item/${productId}.html`
             ];
 
             let html = '';
@@ -162,12 +161,16 @@ class AliExpressService {
                 try {
                     const response = await axios.get(url, {
                         headers: browserHeaders,
-                        timeout: 18000,
+                        timeout: 15000,
                         maxRedirects: 5
                     });
-                    if (response.data && typeof response.data === 'string' && response.data.length > 3000) {
+                    if (response.data && typeof response.data === 'string' && response.data.length > 5000) {
                         const tempHtml = response.data;
-                        if (tempHtml.includes('og:title') || tempHtml.includes('imagePathList') || tempHtml.includes('og:image')) {
+                        // On vérifie que ce n'est PAS une page 404
+                        const is404 = tempHtml.includes('<title>404') || 
+                                      tempHtml.includes('404 page') || 
+                                      tempHtml.includes('Page Not Found');
+                        if (!is404 && (tempHtml.includes('og:title') || tempHtml.includes('imagePathList') || tempHtml.includes('og:image'))) {
                             html = tempHtml;
                             console.log(`[AliExpress] Page extraite avec succès depuis ${url} (${html.length} octets)`);
                             break;
@@ -202,11 +205,21 @@ class AliExpressService {
                 }
             }
 
-            // Si live scraping a échoué mais le produit est dans notre catalogue vérifié :
-            if ((!title || title.length < 5) && verified) {
-                title = verified.name;
-            } else if (!title || title.length < 5) {
-                title = `Produit Gaming Pro #${productId.slice(-6)}`;
+            // Vérification anti-404 et anti-erreur
+            const isInvalidTitle = !title || 
+                                   title.length < 5 || 
+                                   title.toLowerCase().includes('404') || 
+                                   title.toLowerCase().includes('not found') || 
+                                   title.toLowerCase().includes('introuvable') || 
+                                   title.toLowerCase().includes('punish') ||
+                                   title.toLowerCase() === 'aliexpress';
+
+            if (isInvalidTitle) {
+                if (verified) {
+                    title = verified.name;
+                } else {
+                    title = `Produit Gaming Pro #${productId.slice(-6)}`;
+                }
             }
 
             // 2. Extraction images (principale + galerie multi-photos)
@@ -239,11 +252,13 @@ class AliExpressService {
             const filtered = Array.from(new Set(allImgs.filter(u => 
                 (u.includes('aliexpress-media.com') || u.includes('alicdn.com')) &&
                 !u.includes('avatar') && !u.includes('logo') && !u.includes('feedback') && !u.includes('icon') &&
+                !u.includes('HTB18eCBQ') && // Logo 404 AliExpress à exclure formellement
+                !u.includes('404') &&
                 (u.includes('/kf/') || u.includes('/item/'))
             ))).map(u => u.replace(/_[0-9]+x[0-9]+.*\.jpg$/i, ''));
             galleryImages = Array.from(new Set([...galleryImages, ...filtered]));
 
-            // Si aucune image trouvée par scraping, utiliser le référentiel vérifié ou l'image de catégorie
+            // Si aucune image valide trouvée par scraping, utiliser le référentiel vérifié ou l'image de catégorie
             if (galleryImages.length > 0) {
                 mainImage = galleryImages[0];
             } else if (verified && verified.image) {
@@ -281,7 +296,7 @@ class AliExpressService {
             }
 
             // Source 2 : Balises Meta produit
-            if (!priceFound) {
+            if (!priceFound && !isInvalidTitle) {
                 const metaPrice = html.match(/<meta property="product:price:amount" content="([^"]+)"/i) ||
                                   html.match(/<meta property="og:price:amount" content="([^"]+)"/i);
                 if (metaPrice && metaPrice[1]) {
@@ -291,7 +306,7 @@ class AliExpressService {
             }
 
             // Source 3 : Schema JSON-LD
-            if (!priceFound) {
+            if (!priceFound && !isInvalidTitle) {
                 const jsonLdMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i);
                 if (jsonLdMatch && jsonLdMatch[1]) {
                     try {
@@ -306,7 +321,7 @@ class AliExpressService {
             }
 
             // Source 4 : Regex HTML
-            if (!priceFound) {
+            if (!priceFound && !isInvalidTitle) {
                 const priceMatch = html.match(/formattedActivityPrice":"([^"]+)"/) ||
                                    html.match(/activityAmount":\{"value":([\d.]+)/) ||
                                    html.match(/minAmount":\{"value":([\d.]+)/) ||
