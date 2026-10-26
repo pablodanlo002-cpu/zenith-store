@@ -1392,6 +1392,18 @@
                         </div>
                     </div>
                     <div style="padding: 1.5rem;">
+                        <!-- BOUTON 1-CLIC ALIEXPRESS MAGIQUE (EXTENSION FAVORIS) -->
+                        <div style="background: rgba(99, 102, 241, 0.08); border: 1px dashed var(--accent-primary); border-radius: 8px; padding: 12px 16px; margin-bottom: 1.25rem; font-size: 12.5px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <strong style="color: var(--accent-primary);"><i class="fas fa-magic"></i> Bouton d'Import 1-Clic AliExpress :</strong>
+                                <span style="color: var(--text-muted); margin-left: 6px;">Glissez ce bouton vers votre barre de favoris Chrome. En naviguant sur AliExpress, cliquez dessus pour importer <b>n'importe quel produit</b> instantanément avec son vrai titre et ses photos HD !</span>
+                            </div>
+                            <a href="javascript:(function(){const title=(document.querySelector('meta[property=\'og:title\']')?.content||document.title).replace(/ - AliExpress.*$/i,'').trim();const img=document.querySelector('meta[property=\'og:image\']')?.content||'';const url=window.location.href;window.open('https://zenith-store-eap1.onrender.com/admin.html?import_url='+encodeURIComponent(url)+'&import_title='+encodeURIComponent(title)+'&import_img='+encodeURIComponent(img),'_blank');})();" 
+                               class="btn-primary" style="padding: 6px 14px; font-size: 11.5px; text-decoration: none; cursor: grab;" onclick="alert('Astuce : Glissez ce bouton vers votre barre de favoris Chrome (Ctrl+Shift+B) ! Lorsque vous êtes sur une page produit AliExpress, cliquez sur ce favori pour l\'importer en 1 clic dans votre boutique.'); return false;">
+                                ⭐ Importer sur Zenith Store
+                            </a>
+                        </div>
+
                         <div style="display: flex; gap: 10px; margin-bottom: 1.5rem;">
                             <input type="text" id="aliImportInput" class="search-input" style="flex: 1; padding: 0.75rem 1rem;" placeholder="Ex: 1005012626624444 ou https://fr.aliexpress.com/item/1005012626624444.html">
                             <button class="btn-primary" id="btnPreviewAli" onclick="previewAliExpressProduct()" style="padding: 0.75rem 1.5rem;">
@@ -3231,7 +3243,45 @@
     document.addEventListener('DOMContentLoaded', async () => {
         const isAuthed = await checkAdminAuth();
         if (isAuthed) {
-            loadAllData();
+            await loadAllData();
+
+            // Détection d'un import déclenché via le bouton 1-Clic AliExpress
+            const urlParams = new URLSearchParams(window.location.search);
+            const importUrl = urlParams.get('import_url');
+            const importTitle = urlParams.get('import_title');
+            const importImg = urlParams.get('import_img');
+            if (importUrl || importTitle) {
+                switchTab('aliexpress');
+                if (importUrl) document.getElementById('aliImportInput').value = importUrl;
+                document.getElementById('aliPreviewCard').style.display = 'block';
+                if (importTitle) document.getElementById('aliPreviewTitle').value = decodeURIComponent(importTitle);
+                if (importImg) {
+                    const cleanImg = decodeURIComponent(importImg);
+                    document.getElementById('aliPreviewImg').src = cleanImg;
+                    const inp = document.getElementById('aliPreviewImgInput');
+                    if (inp) inp.value = cleanImg;
+                }
+                const lowerT = (importTitle || '').toLowerCase();
+                const catSel = document.getElementById('aliPreviewCategory');
+                if (lowerT.includes('écran') || lowerT.includes('ecran') || lowerT.includes('monitor')) catSel.value = 'ecrans';
+                else if (lowerT.includes('souris') || lowerT.includes('mouse')) catSel.value = 'souris';
+                else if (lowerT.includes('clavier') || lowerT.includes('keyboard')) catSel.value = 'claviers';
+                else if (lowerT.includes('casque') || lowerT.includes('headset')) catSel.value = 'casques';
+                else if (lowerT.includes('écouteur') || lowerT.includes('ecouteur') || lowerT.includes('earphone')) catSel.value = 'ecouteurs';
+                else if (lowerT.includes('tapis') || lowerT.includes('mousepad')) catSel.value = 'tapis';
+                else catSel.value = 'accessoires';
+
+                document.getElementById('aliPreviewCost').value = '20.00';
+                document.getElementById('aliPreviewPrice').value = '39.99';
+                document.getElementById('aliPreviewOldPrice').value = '59.99';
+                document.getElementById('aliPreviewDiscount').value = '33';
+                currentPreviewData = {
+                    id: 'prod-ali-custom-' + Date.now(),
+                    aliexpress: { productId: importUrl || 'custom' }
+                };
+                updateMarginPreview();
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
         }
     });
 </script>
