@@ -32,18 +32,44 @@ class AliExpressService {
         }
 
         try {
-            // Requête vers le flux produit AliExpress (forcé en français)
-            const targetUrl = `https://fr.aliexpress.com/item/${productId}.html`;
-            const response = await axios.get(targetUrl, {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-                    'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8',
-                    'Cookie': 'aep_usuc_f=site=fra&b_locale=fr_FR&c_tp=EUR&region=FR;'
-                },
-                timeout: 10000
-            });
+            // Requête vers le flux produit AliExpress avec en-têtes réalistes et multiples URLs
+            const browserHeaders = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+                'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'sec-fetch-dest': 'document',
+                'sec-fetch-mode': 'navigate',
+                'sec-fetch-site': 'none',
+                'sec-fetch-user': '?1',
+                'upgrade-insecure-requests': '1',
+                'Cookie': 'aep_usuc_f=site=fra&b_locale=fr_FR&c_tp=EUR&region=FR;'
+            };
 
-            const html = response.data;
+            const targetUrl = `https://fr.aliexpress.com/item/${productId}.html`;
+            const targetUrls = [
+                targetUrl,
+                `https://www.aliexpress.com/item/${productId}.html`
+            ];
+
+            let html = '';
+            for (const url of targetUrls) {
+                try {
+                    const response = await axios.get(url, {
+                        headers: browserHeaders,
+                        timeout: 8000,
+                        maxRedirects: 5
+                    });
+                    if (response.data && typeof response.data === 'string' && response.data.length > 5000) {
+                        html = response.data;
+                        if (html.includes('og:title') || html.includes('imagePathList') || html.includes('og:image')) {
+                            break;
+                        }
+                    }
+                } catch(e) {}
+            }
 
             // Extraction des données JSON embarquées dans la page (runParams)
             let productData = null;
@@ -58,16 +84,36 @@ class AliExpressService {
                 }
             }
 
-            // Extraction titre
-            let title = 'Produit Gaming AliExpress';
-            const titleMatch = html.match(/<meta property="og:title" content="([^"]+)"/i) ||
-                               html.match(/<title>([^<]+)<\/title>/i);
-            if (titleMatch && titleMatch[1]) {
-                title = titleMatch[1].replace(/ - AliExpress.*$/i, '').trim();
+            // Extraction titre (Multi-sources prioritaires)
+            let title = '';
+            const ogTitle = html.match(/<meta property="og:title" content="([^"]+)"/i);
+            const twitterTitle = html.match(/<meta name="twitter:title" content="([^"]+)"/i);
+            const titleTag = html.match(/<title>([^<]+)<\/title>/i);
+
+            if (ogTitle && ogTitle[1] && !ogTitle[1].toLowerCase().startsWith('aliexpress')) {
+                title = ogTitle[1].replace(/ - AliExpress.*$/i, '').trim();
+            } else if (twitterTitle && twitterTitle[1]) {
+                title = twitterTitle[1].replace(/ - AliExpress.*$/i, '').trim();
+            } else if (titleTag && titleTag[1] && !titleTag[1].toLowerCase().startsWith('aliexpress')) {
+                title = titleTag[1].replace(/ - AliExpress.*$/i, '').trim();
+            }
+
+            if (!title) {
+                const ldMatch = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i);
+                if (ldMatch) {
+                    try {
+                        const ld = JSON.parse(ldMatch[1]);
+                        if (ld.name) title = ld.name;
+                    } catch(e) {}
+                }
+            }
+
+            if (!title || title.length < 5) {
+                title = `Produit Gaming Pro #${productId.slice(-6)}`;
             }
 
             // Extraction images (principale + galerie multi-photos)
-            let mainImage = 'images/logo/logo.png';
+            let mainImage = '';
             let galleryImages = [];
 
             // 1. Recherche directe dans imagePathList JSON
@@ -81,28 +127,40 @@ class AliExpressService {
                 } catch(e) {}
             }
 
-            // 2. Recherche par balises og:image ou regex CDN si pas assez de photos
-            const imageMatch = html.match(/<meta property="og:image" content="([^"]+)"/i);
+            // 2. Recherche par balises og:image ou twitter:image
+            const imageMatch = html.match(/<meta property="og:image" content="([^"]+)"/i) ||
+                               html.match(/<meta name="twitter:image" content="([^"]+)"/i);
             if (imageMatch && imageMatch[1]) {
-                mainImage = imageMatch[1].replace(/_[0-9]+x[0-9]+.*\.jpg$/i, '');
-                if (!galleryImages.includes(mainImage)) {
-                    galleryImages.unshift(mainImage);
+                const cleanImg = imageMatch[1].replace(/_[0-9]+x[0-9]+.*\.jpg$/i, '');
+                if (!galleryImages.includes(cleanImg)) {
+                    galleryImages.unshift(cleanImg);
                 }
             }
 
-            if (galleryImages.length < 4) {
-                const allImgs = html.match(/https:\/\/[^"'\s]+?\.(?:jpg|png|webp|jpeg)/gi) || [];
-                const filtered = Array.from(new Set(allImgs.filter(u => 
-                    (u.includes('aliexpress-media.com') || u.includes('alicdn.com')) &&
-                    !u.includes('avatar') && !u.includes('logo') && !u.includes('feedback') &&
-                    (u.includes('/kf/') || u.includes('/item/'))
-                ))).map(u => u.replace(/_[0-9]+x[0-9]+.*\.jpg$/i, ''));
-                galleryImages = Array.from(new Set([...galleryImages, ...filtered]));
-            }
+            // 3. Toutes les images CDN AliExpress trouvées
+            const allImgs = html.match(/https:\/\/[^"'\s]+?\.(?:jpg|png|webp|jpeg)/gi) || [];
+            const filtered = Array.from(new Set(allImgs.filter(u => 
+                (u.includes('aliexpress-media.com') || u.includes('alicdn.com')) &&
+                !u.includes('avatar') && !u.includes('logo') && !u.includes('feedback') && !u.includes('icon') &&
+                (u.includes('/kf/') || u.includes('/item/'))
+            ))).map(u => u.replace(/_[0-9]+x[0-9]+.*\.jpg$/i, ''));
+            galleryImages = Array.from(new Set([...galleryImages, ...filtered]));
 
-            if (galleryImages.length > 0 && (!mainImage || mainImage.includes('logo.png'))) {
+            if (galleryImages.length > 0) {
                 mainImage = galleryImages[0];
-            } else if (galleryImages.length === 0) {
+            } else {
+                // Image réaliste selon la catégorie (jamais de logo vide)
+                const detectedCat = this.detectCategory(title);
+                const defaultCatImages = {
+                    'accessoires': 'https://ae-pic-a1.aliexpress-media.com/kf/S26c44fc58b75456cb028767272565a6av.jpg',
+                    'souris': 'https://ae-pic-a1.aliexpress-media.com/kf/S2857e17696cd44219ed0a1dde0b60b9cl.jpg',
+                    'claviers': 'https://ae-pic-a1.aliexpress-media.com/kf/A9e8796a563c0417187e03b909809750at.jpg',
+                    'casques': 'https://ae-pic-a1.aliexpress-media.com/kf/S1328ed68e219482ab133025ac0448d4f0.jpg',
+                    'ecouteurs': 'images/ecouteurs/1.png',
+                    'tapis': 'images/tapis/tapis-1.png',
+                    'ecrans': 'images/ecrans/ecran-1.png'
+                };
+                mainImage = defaultCatImages[detectedCat] || defaultCatImages['accessoires'];
                 galleryImages = [mainImage];
             }
 

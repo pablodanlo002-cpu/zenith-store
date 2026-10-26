@@ -300,6 +300,14 @@ app.post('/api/aliexpress/import', requireAdminAuth, async (req, res) => {
 
         // Personnalisations optionnelles
         if (customName) productData.name = customName;
+        if (req.body.customImage && typeof req.body.customImage === 'string' && req.body.customImage.startsWith('http')) {
+            productData.image = req.body.customImage;
+            if (!productData.images || !productData.images.length) {
+                productData.images = [req.body.customImage];
+            } else if (!productData.images.includes(req.body.customImage)) {
+                productData.images.unshift(req.body.customImage);
+            }
+        }
         if (req.body.supplierPrice && !isNaN(req.body.supplierPrice)) {
             const sp = parseFloat(req.body.supplierPrice);
             productData.supplierPrice = sp;

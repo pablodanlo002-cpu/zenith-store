@@ -1405,6 +1405,10 @@
                                 <div>
                                     <img id="aliPreviewImg" src="" alt="Aperçu" style="width: 100%; height: 200px; object-fit: contain; background: #000; border-radius: 8px; border: 1px solid var(--border-subtle);">
                                     <div id="aliPreviewGallery" style="display: flex; gap: 6px; margin-top: 8px; overflow-x: auto;"></div>
+                                    <div style="margin-top: 8px;">
+                                        <label style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase;">Image principale (URL) :</label>
+                                        <input type="text" id="aliPreviewImgInput" class="search-input" style="width: 100%; font-size: 11px; padding: 4px 8px; margin-top: 2px;" placeholder="URL directe de l'image..." oninput="document.getElementById('aliPreviewImg').src = this.value">
+                                    </div>
                                 </div>
                                 <div style="display: flex; flex-direction: column; gap: 1rem;">
                                     <div>
@@ -2729,7 +2733,11 @@
                 const suggestedDiscount = Math.round(((suggestedOldPrice - suggestedPrice) / suggestedOldPrice) * 100);
 
                 document.getElementById('aliPreviewCard').style.display = 'block';
-                document.getElementById('aliPreviewImg').src = data.preview.image || '';
+                const mainImgSrc = data.preview.image || '';
+                document.getElementById('aliPreviewImg').src = mainImgSrc;
+                const imgInput = document.getElementById('aliPreviewImgInput');
+                if (imgInput) imgInput.value = mainImgSrc;
+
                 document.getElementById('aliPreviewTitle').value = data.preview.name || data.preview.title || '';
                 document.getElementById('aliPreviewCost').value = cost.toFixed(2);
                 document.getElementById('aliPreviewPrice').value = suggestedPrice.toFixed(2);
@@ -2742,8 +2750,8 @@
 
                 const gallery = document.getElementById('aliPreviewGallery');
                 if (data.preview.images && data.preview.images.length) {
-                    gallery.innerHTML = data.preview.images.slice(0, 5).map(img => `
-                        <img src="${img}" style="width: 36px; height: 36px; object-fit: contain; background: #000; border-radius: 4px; border: 1px solid var(--border-subtle); cursor: pointer;" onclick="document.getElementById('aliPreviewImg').src='${img}'">
+                    gallery.innerHTML = data.preview.images.slice(0, 6).map(img => `
+                        <img src="${img}" style="width: 36px; height: 36px; object-fit: contain; background: #000; border-radius: 4px; border: 1px solid var(--border-subtle); cursor: pointer;" onclick="document.getElementById('aliPreviewImg').src='${img}'; const inp = document.getElementById('aliPreviewImgInput'); if (inp) inp.value='${img}';">
                     `).join('');
                 } else {
                     gallery.innerHTML = '';
@@ -2821,6 +2829,7 @@
         if (!currentPreviewData) return;
         const input = document.getElementById('aliImportInput').value.trim();
         const customTitle = document.getElementById('aliPreviewTitle').value.trim();
+        const customImage = (document.getElementById('aliPreviewImgInput')?.value || '').trim() || document.getElementById('aliPreviewImg').src;
         const category = document.getElementById('aliPreviewCategory').value;
         const customPrice = parseFloat(document.getElementById('aliPreviewPrice').value);
         const supplierPrice = parseFloat(document.getElementById('aliPreviewCost').value) || currentPreviewData.price;
@@ -2839,6 +2848,7 @@
                 body: JSON.stringify({
                     urlOrId: input,
                     customName: customTitle,
+                    customImage: customImage,
                     category: category,
                     customPrice: customPrice,
                     supplierPrice: supplierPrice,
