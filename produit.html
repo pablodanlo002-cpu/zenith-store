@@ -591,6 +591,9 @@
                 if (data && data.success && data.products && data.products.length > 0) {
                     productsList = data.products;
                     window.allProducts = productsList;
+                    if (typeof allProducts !== 'undefined') {
+                        try { allProducts = productsList; } catch(e){}
+                    }
                 }
             } catch(e) {}
 
@@ -742,21 +745,29 @@
             }
         }
 
+        // Fonction utilitaire pour obtenir le produit actif (supporte les IDs AliExpress et le catalogue dynamique)
+        function getActiveProduct() {
+            const list = (window.allProducts && window.allProducts.length > 0) ? window.allProducts : (typeof allProducts !== 'undefined' ? allProducts : []);
+            return list.find(p => p.id === currentProductId || (p.aliexpress && p.aliexpress.productId === currentProductId)) || null;
+        }
+
         // Ajouter au panier
         function addToCart() {
-            const currentProduct = allProducts.find(p => p.id === currentProductId);
+            const currentProduct = getActiveProduct();
             if (!currentProduct) return;
             
-            const quantity = parseInt(document.getElementById('quantity').value);
+            const quantity = parseInt(document.getElementById('quantity').value) || 1;
             const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
+            const prodKey = currentProduct.id;
             
-            const existingItem = cart.items.find(item => item.id === currentProductId);
+            const existingItem = cart.items.find(item => item.id === prodKey);
             
             if (existingItem) {
                 existingItem.quantity += quantity;
             } else {
                 const item = {
-                    id: currentProductId,
+                    id: prodKey,
+                    aliexpressId: (currentProduct.aliexpress && currentProduct.aliexpress.productId) ? currentProduct.aliexpress.productId : prodKey,
                     name: currentProduct.name,
                     quantity: quantity,
                     price: currentProduct.price,
@@ -785,7 +796,7 @@
 
         // Gestion Wishlist & Comparateur sur la page produit
         function updateProductActionButtons() {
-            const currentProduct = (typeof allProducts !== 'undefined') ? allProducts.find(p => p.id === currentProductId) : null;
+            const currentProduct = getActiveProduct();
             if (!currentProduct) return;
             
             // Wishlist
@@ -828,7 +839,7 @@
         }
 
         function toggleCurrentProductWishlist() {
-            const currentProduct = (typeof allProducts !== 'undefined') ? allProducts.find(p => p.id === currentProductId) : null;
+            const currentProduct = getActiveProduct();
             if (!currentProduct) return;
             if (typeof toggleWishlist === 'function') {
                 toggleWishlist(currentProduct.id, currentProduct.name, currentProduct.price, currentProduct.image, `produit.html?id=${currentProduct.id}`);
@@ -837,7 +848,7 @@
         }
 
         function toggleCurrentProductCompare() {
-            const currentProduct = (typeof allProducts !== 'undefined') ? allProducts.find(p => p.id === currentProductId) : null;
+            const currentProduct = getActiveProduct();
             if (!currentProduct) return;
             if (typeof toggleComparison === 'function') {
                 toggleComparison(currentProduct.id, currentProduct.name, currentProduct.price, currentProduct.image, `produit.html?id=${currentProduct.id}`, {

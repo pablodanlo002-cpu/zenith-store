@@ -380,6 +380,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const queryOrderId = urlParams.get('order_id') || urlParams.get('num');
             const isSuccess = urlParams.get('success');
+            const sessionId = urlParams.get('session_id') || '';
 
             if (isSuccess) {
                 const banner = document.getElementById('orderSuccessBanner');
@@ -391,7 +392,8 @@
             // 1. Tenter de récupérer la commande spécifique depuis le serveur sécurisé si demandée
             if (queryOrderId) {
                 try {
-                    const res = await fetch(`${API_BASE}/api/tracking/${encodeURIComponent(queryOrderId)}`);
+                    const sessionParam = sessionId ? `?session_id=${encodeURIComponent(sessionId)}` : '';
+                    const res = await fetch(`${API_BASE}/api/tracking/${encodeURIComponent(queryOrderId)}${sessionParam}`);
                     if (res.ok) {
                         const data = await res.json();
                         if (data && data.order) {

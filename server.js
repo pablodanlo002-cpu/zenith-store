@@ -111,9 +111,8 @@ try {
     if (!fs.existsSync(DATA_DIR)) {
         fs.mkdirSync(DATA_DIR, { recursive: true });
     }
-    if (!fs.existsSync(PRODUCTS_FILE) || !fs.readFileSync(PRODUCTS_FILE, 'utf8').trim() || fs.readFileSync(PRODUCTS_FILE, 'utf8').trim() === '[]') {
-        fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(defaultCatalog, null, 2), 'utf-8');
-        console.log('📦 Catalogue initial restauré automatiquement (9 produits).');
+    if (!fs.existsSync(PRODUCTS_FILE)) {
+        fs.writeFileSync(PRODUCTS_FILE, '[]', 'utf-8');
     }
     if (!fs.existsSync(ORDERS_FILE)) {
         fs.writeFileSync(ORDERS_FILE, '[]', 'utf-8');
@@ -128,19 +127,15 @@ function readJSON(filePath, fallback = []) {
         if (!fs.existsSync(filePath)) {
             const dir = path.dirname(filePath);
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-            const initialData = filePath.includes('products.json') ? defaultCatalog : fallback;
-            fs.writeFileSync(filePath, JSON.stringify(initialData, null, 2), 'utf-8');
-            return initialData;
+            fs.writeFileSync(filePath, JSON.stringify(fallback, null, 2), 'utf-8');
+            return fallback;
         }
         const data = fs.readFileSync(filePath, 'utf-8');
         const parsed = JSON.parse(data);
-        if (!Array.isArray(parsed)) {
-            return fallback;
-        }
-        return parsed;
+        return Array.isArray(parsed) ? parsed : fallback;
     } catch (err) {
         console.error(`Erreur lecture ${filePath}:`, err.message);
-        return filePath.includes('products.json') ? defaultCatalog : fallback;
+        return fallback;
     }
 }
 
@@ -180,7 +175,7 @@ app.get('/api/admin/verify', (req, res) => {
 });
 
 // Suivi colis public sécurisé (sans divulguer la liste des commandes ou les marges)
-app.get('/api/tracking/:query', (req, res) => {
+app.get('/api/tracking/:query', async (req, res) => {
     const q = req.params.query.trim().toLowerCase();
     const orders = readJSON(ORDERS_FILE, []);
     const found = orders.find(o => 
@@ -190,6 +185,25 @@ app.get('/api/tracking/:query', (req, res) => {
     if (!found) {
         return res.status(404).json({ success: false, error: 'Commande introuvable.' });
     }
+
+    // Auto-validation immédiate si le client revient avec une session Stripe validée
+    const sessionId = req.query.session_id;
+    if (found.status === 'pending_payment' && isStripeConfigured && stripe && sessionId) {
+        try {
+            const sess = await stripe.checkout.sessions.retrieve(sessionId);
+            if (sess && (sess.payment_status === 'paid' || sess.status === 'complete')) {
+                found.status = 'paid';
+                if (found.aliexpress_fulfillment) {
+                    found.aliexpress_fulfillment.status = 'ready_for_supplier';
+                }
+                writeJSON(ORDERS_FILE, orders);
+                console.log(`✅ [Stripe] Paiement validé automatiquement pour #${found.id}`);
+            }
+        } catch (e) {
+            console.warn('[Stripe] Vérification session:', e.message);
+        }
+    }
+
     return res.json({
         success: true,
         order: {
@@ -461,7 +475,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
                 payment_method_types: ['card'],
                 line_items: lineItems,
                 mode: 'payment',
-                success_url: `${process.env.SITE_URL || 'http://localhost:3000'}/commandes.html?order_id=${orderId}&success=true`,
+                success_url: `${process.env.SITE_URL || 'http://localhost:3000'}/commandes.html?order_id=${orderId}&success=true&session_id={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${process.env.SITE_URL || 'http://localhost:3000'}/panier.html?canceled=true`,
                 customer_email: customer ? customer.email : undefined,
                 client_reference_id: orderId
