@@ -90,26 +90,54 @@ app.use((req, res, next) => {
 // Servir tous les fichiers statiques du site (HTML, CSS, JS, Images)
 app.use(express.static(path.join(__dirname)));
 
-// Chemins des données
-const PRODUCTS_FILE = path.join(__dirname, 'data', 'products.json');
-const ORDERS_FILE = path.join(__dirname, 'data', 'orders.json');
+// Chemins des données & Catalogue de secours
+const defaultCatalog = require('./default-catalog.js');
+const DATA_DIR = path.join(__dirname, 'data');
+const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
+const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
+
+// S'assurer que le dossier data/ et les fichiers initiaux existent
+try {
+    if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    if (!fs.existsSync(PRODUCTS_FILE) || !fs.readFileSync(PRODUCTS_FILE, 'utf8').trim() || fs.readFileSync(PRODUCTS_FILE, 'utf8').trim() === '[]') {
+        fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(defaultCatalog, null, 2), 'utf-8');
+        console.log('📦 Catalogue initial restauré automatiquement (9 produits).');
+    }
+    if (!fs.existsSync(ORDERS_FILE)) {
+        fs.writeFileSync(ORDERS_FILE, '[]', 'utf-8');
+    }
+} catch (e) {
+    console.warn('Initialisation data/ warning:', e.message);
+}
 
 // Fonctions utilitaires JSON
 function readJSON(filePath, fallback = []) {
     try {
         if (!fs.existsSync(filePath)) {
-            fs.writeFileSync(filePath, JSON.stringify(fallback, null, 2), 'utf-8');
-            return fallback;
+            const dir = path.dirname(filePath);
+            if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+            const initialData = filePath.includes('products.json') ? defaultCatalog : fallback;
+            fs.writeFileSync(filePath, JSON.stringify(initialData, null, 2), 'utf-8');
+            return initialData;
         }
         const data = fs.readFileSync(filePath, 'utf-8');
-        return JSON.parse(data);
+        const parsed = JSON.parse(data);
+        if (filePath.includes('products.json') && (!Array.isArray(parsed) || parsed.length === 0)) {
+            fs.writeFileSync(filePath, JSON.stringify(defaultCatalog, null, 2), 'utf-8');
+            return defaultCatalog;
+        }
+        return parsed;
     } catch (err) {
         console.error(`Erreur lecture ${filePath}:`, err.message);
-        return fallback;
+        return filePath.includes('products.json') ? defaultCatalog : fallback;
     }
 }
 
 function writeJSON(filePath, data) {
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
 }
 
