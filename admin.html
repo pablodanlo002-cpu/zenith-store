@@ -1415,11 +1415,13 @@
                                         <div>
                                             <label style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Catégorie :</label>
                                             <select id="aliPreviewCategory" class="form-select" style="width: 100%; margin-top: 4px;">
-                                                <option value="accessoires">Accessoires</option>
+                                                <option value="ecouteurs">Écouteurs</option>
                                                 <option value="casques">Casques</option>
                                                 <option value="claviers">Claviers</option>
                                                 <option value="souris">Souris</option>
+                                                <option value="tapis">Tapis de Souris</option>
                                                 <option value="ecrans">Écrans</option>
+                                                <option value="accessoires">Accessoires</option>
                                             </select>
                                         </div>
                                         <div>
@@ -2733,6 +2735,10 @@
                 document.getElementById('aliPreviewPrice').value = suggestedPrice.toFixed(2);
                 document.getElementById('aliPreviewOldPrice').value = suggestedOldPrice.toFixed(2);
                 document.getElementById('aliPreviewDiscount').value = suggestedDiscount;
+                if (data.preview.category) {
+                    const catSelect = document.getElementById('aliPreviewCategory');
+                    if (catSelect) catSelect.value = data.preview.category;
+                }
 
                 const gallery = document.getElementById('aliPreviewGallery');
                 if (data.preview.images && data.preview.images.length) {

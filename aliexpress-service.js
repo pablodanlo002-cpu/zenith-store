@@ -237,7 +237,7 @@ class AliExpressService {
         if (lower.includes('souris') || lower.includes('mouse')) return 'souris';
         if (lower.includes('clavier') || lower.includes('keyboard')) return 'claviers';
         if (lower.includes('casque') || lower.includes('headset') || lower.includes('headphone')) return 'casques';
-        if (lower.includes('écouteur') || lower.includes('earphone') || lower.includes('iem')) return 'ecouteurs';
+        if (lower.includes('écouteur') || lower.includes('ecouteur') || lower.includes('earphone') || lower.includes('in-ear') || lower.includes('earbud') || lower.includes('iem') || lower.includes('kopfhörer') || lower.includes('kopfhorer')) return 'ecouteurs';
         if (lower.includes('tapis') || lower.includes('mousepad')) return 'tapis';
         if (lower.includes('écran') || lower.includes('monitor')) return 'ecrans';
         return 'accessoires';
