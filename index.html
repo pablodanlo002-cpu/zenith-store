@@ -1893,26 +1893,44 @@
         // Charger et afficher les produits dynamiquement avec leurs catégories
         async function loadAndRenderProducts() {
             let products = [];
+            let serverResponded = false;
             try {
                 const res = await fetch('/api/products');
-                const data = await res.json();
-                if (data && data.success && data.products && data.products.length > 0) {
-                    products = data.products;
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.success && Array.isArray(data.products)) {
+                        products = data.products;
+                        serverResponded = true;
+                    }
                 }
             } catch (e) {
-                // Fallback sur similar-products.js
-                if (typeof allProducts !== 'undefined' && allProducts.length > 0) {
-                    products = allProducts;
-                }
+                console.warn('API /api/products non joignable:', e.message);
             }
 
-            if (!products || products.length === 0) return;
+            // Si le serveur est inaccessible (ex: mode hors ligne), fallback local
+            if (!serverResponded && typeof allProducts !== 'undefined') {
+                products = allProducts;
+            }
 
             const grid = document.querySelector('.product-grid');
             if (!grid) return;
 
             const viewAll = document.querySelector('.view-all');
             if (viewAll) viewAll.textContent = `Voir tout (${products.length}) →`;
+
+            if (products.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1.5rem; background: rgba(18, 18, 22, 0.6); border: 1px dashed #383848; border-radius: 16px; margin: 2rem 0;">
+                        <i class="fas fa-boxes-stacked" style="font-size: 3rem; margin-bottom: 1rem; color: #8b5cf6;"></i>
+                        <h3 style="color: #fff; font-size: 1.35rem; margin-bottom: 0.5rem; font-weight: 700;">Catalogue en cours d'approvisionnement</h3>
+                        <p style="font-size: 0.95rem; color: #a1a1aa; max-width: 500px; margin: 0 auto 1.5rem auto;">De nouveaux articles arrivent très prochainement. Restez connectés !</p>
+                        <a href="admin.html" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: 600;">
+                            <i class="fas fa-plus"></i> Importer des produits (Admin)
+                        </a>
+                    </div>
+                `;
+                return;
+            }
 
             grid.innerHTML = products.map((prod, index) => {
                 const category = prod.category || 'accessoires';

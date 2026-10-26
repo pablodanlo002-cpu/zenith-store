@@ -1352,6 +1352,9 @@
                                 <i class="fas fa-search"></i>
                                 <input type="text" class="search-input" id="productSearchInput" placeholder="Filtrer par nom de produit..." oninput="filterProductsTable()">
                             </div>
+                            <button class="btn-secondary" onclick="clearCatalog()" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.3);">
+                                <i class="fas fa-trash"></i> Vider le Catalogue
+                            </button>
                             <button class="btn-primary" onclick="switchTab('aliexpress')">
                                 <i class="fas fa-plus"></i> Importer AliExpress
                             </button>
@@ -2337,6 +2340,25 @@
             }
         } catch (e) {
             alert('Erreur lors de la suppression du produit');
+        }
+    }
+
+    async function clearCatalog() {
+        if (!confirm('⚠️ Êtes-vous certain de vouloir supprimer TOUS les produits du catalogue ? Vous pourrez ensuite importer vos propres produits un par un depuis AliExpress.')) return;
+
+        try {
+            const res = await adminFetch(API_BASE + '/api/products/clear', { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                globalProducts = [];
+                renderProducts();
+                renderKPIs();
+                alert('✅ Le catalogue a été entièrement vidé ! Vous pouvez maintenant importer vos nouveaux produits.');
+            } else {
+                alert('Erreur: ' + (data.error || 'Impossible de vider'));
+            }
+        } catch(e) {
+            alert('Erreur serveur lors de la suppression.');
         }
     }
 

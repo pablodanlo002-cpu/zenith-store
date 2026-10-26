@@ -87,6 +87,16 @@ app.use((req, res, next) => {
     next();
 });
 
+// Compatibilité images : servir automatiquement l'image depuis la racine si le sous-dossier n'existe pas
+app.use('/images', (req, res, next) => {
+    const filename = path.basename(req.path);
+    const rootPath = path.join(__dirname, filename);
+    if (fs.existsSync(rootPath)) {
+        return res.sendFile(rootPath);
+    }
+    next();
+});
+
 // Servir tous les fichiers statiques du site (HTML, CSS, JS, Images)
 app.use(express.static(path.join(__dirname)));
 
@@ -124,9 +134,8 @@ function readJSON(filePath, fallback = []) {
         }
         const data = fs.readFileSync(filePath, 'utf-8');
         const parsed = JSON.parse(data);
-        if (filePath.includes('products.json') && (!Array.isArray(parsed) || parsed.length === 0)) {
-            fs.writeFileSync(filePath, JSON.stringify(defaultCatalog, null, 2), 'utf-8');
-            return defaultCatalog;
+        if (!Array.isArray(parsed)) {
+            return fallback;
         }
         return parsed;
     } catch (err) {
@@ -698,6 +707,14 @@ app.delete('/api/products/:id', requireAdminAuth, (req, res) => {
     writeJSON(PRODUCTS_FILE, products);
     syncToSimilarProductsJS(products);
     res.json({ success: true, message: 'Produit supprimé avec succès' });
+});
+
+// Vider tout le catalogue (Admin uniquement)
+app.post('/api/products/clear', requireAdminAuth, (req, res) => {
+    writeJSON(PRODUCTS_FILE, []);
+    syncToSimilarProductsJS([]);
+    console.log('🗑️ Catalogue vidé par l\'administrateur.');
+    res.json({ success: true, message: 'Catalogue entièrement vidé.' });
 });
 
 // Réinitialiser les commandes et clients à zéro (Admin uniquement)

@@ -683,6 +683,20 @@
                 if (breadcrumbProduct) {
                     breadcrumbProduct.textContent = currentProduct.name;
                 }
+            } else {
+                const mainWrapper = document.querySelector('.product-container');
+                if (mainWrapper) {
+                    mainWrapper.innerHTML = `
+                        <div style="text-align: center; padding: 5rem 1.5rem; width: 100%;">
+                            <i class="fas fa-circle-exclamation" style="font-size: 3rem; color: #f59e0b; margin-bottom: 1.25rem;"></i>
+                            <h2 style="color: #fff; font-size: 1.5rem; margin-bottom: 0.75rem;">Ce produit n'est plus disponible</h2>
+                            <p style="color: #a1a1aa; margin-bottom: 2rem;">Cet article a été retiré du catalogue ou son lien a expiré.</p>
+                            <a href="index.html" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600;">
+                                <i class="fas fa-arrow-left"></i> Retour à la boutique
+                            </a>
+                        </div>
+                    `;
+                }
             }
             
             const productName = currentProduct ? currentProduct.name : 'FiiO JD1 IEM Gaming Écouteurs';
