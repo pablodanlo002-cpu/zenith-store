@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Chat | Zenith Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+        }
+
+        /* HEADER */
+        .header {
+            background: #111;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            color: #8b5cf6;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid #2a2a2a;
+            color: #888;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            border-color: #8b5cf6;
+            color: #8b5cf6;
+        }
+
+        .archive-btn {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #8b5cf6;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .archive-btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+        }
+
+        /* STATS */
+        .stats {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: #111;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* LAYOUT */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 2rem 2rem;
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 2rem;
+            height: calc(100vh - 240px);
+        }
+
+        /* CONVERSATIONS LIST */
+        .conversations-panel {
+            background: #111;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .conversations-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .conversations-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .conversation-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .conversation-item:hover {
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .conversation-item.active {
+            background: rgba(139, 92, 246, 0.15);
+            border-left: 3px solid #8b5cf6;
+        }
+
+        .conv-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .conv-email {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 6px;
+        }
+
+        .conv-preview {
+            font-size: 13px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conv-time {
+            font-size: 11px;
+            color: #555;
+            margin-top: 6px;
+        }
+
+        .unread-badge {
+            background: #ef4444;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        /* CHAT AREA */
+        .chat-panel {
+            background: #111;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-client-info h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .chat-client-info p {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .close-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .close-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 75%;
+        }
+
+        .message.client {
+            align-self: flex-start;
+        }
+
+        .message.admin {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(139, 92, 246, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8b5cf6;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .message.admin .message-avatar {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-bubble {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #fff;
+        }
+
+        .message.admin .message-bubble {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #666;
+            margin-top: 6px;
+            padding: 0 4px;
+        }
+
+        .chat-input-area {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-input-area textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+            resize: none;
+            height: 80px;
+            transition: 0.2s;
+        }
+
+        .chat-input-area textarea:focus {
+            outline: none;
+            border-color: #8b5cf6;
+        }
+
+        .chat-input-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .input-hint {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .send-btn {
+            background: #8b5cf6;
+            border: none;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .send-btn:hover {
+            background: #7c3aed;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #111;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: 1px solid #2a2a2a;
+            color: #888;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .modal-close:hover {
+            border-color: #8b5cf6;
+            color: #8b5cf6;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .archive-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .archive-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .archive-name {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .archive-email {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .archive-meta {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .archive-messages {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .archive-msg {
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .archive-msg.client {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .archive-msg.admin {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .archive-msg-header {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <a href="admin.html" class="logo">
+                    <i class="fas fa-comments"></i>
+                    Support Chat
+                </a>
+            </div>
+            <div style="display: flex; gap: 16px;">
+                <button class="archive-btn" onclick="showArchives()">
+                    <i class="fas fa-archive"></i> Archives
+                </button>
+                <a href="admin.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-label">Conversations</div>
+            <div class="stat-value" id="totalConversations">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Non lus</div>
+            <div class="stat-value" id="unreadCount" style="color: #ef4444;">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Aujourd'hui</div>
+            <div class="stat-value" id="todayCount" style="color: #8b5cf6;">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Temps moyen</div>
+            <div class="stat-value" id="avgResponse">-</div>
+        </div>
+    </div>
+
+    <!-- CONTAINER -->
+    <div class="container">
+        <!-- CONVERSATIONS LIST -->
+        <div class="conversations-panel">
+            <div class="conversations-header">
+                <h3>Conversations actives</h3>
+            </div>
+            <div class="conversations-list" id="conversationsList">
+                <div class="empty-state">
+                    <i class="fas fa-comments"></i>
+                    <p>Aucune conversation</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHAT AREA -->
+        <div class="chat-panel" id="chatPanel">
+            <div class="empty-state">
+                <i class="fas fa-comment-dots"></i>
+                <p>Sélectionnez une conversation</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ARCHIVES -->
+    <div class="modal" id="archiveModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Conversations archivées</h3>
+                <button class="modal-close" onclick="closeArchiveModal()">
+                    <i class="fas fa-times"></i> Fermer
+                </button>
+            </div>
+            <div class="modal-body" id="archiveContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let conversations = {};
+        let currentConversation = null;
+
+        // Charger les conversations
+        function loadConversations() {
+            const allConversations = JSON.parse(localStorage.getItem('adminChatConversations')) || {};
+            
+            // Filtrer uniquement les conversations actives
+            conversations = {};
+            Object.keys(allConversations).forEach(key => {
+                if (allConversations[key].active !== false) {
+                    conversations[key] = allConversations[key];
+                }
+            });
+            
+            displayConversations();
+            updateStats();
+        }
+
+        // Afficher la liste des conversations
+        function displayConversations() {
+            const container = document.getElementById('conversationsList');
+            const conversationsArray = Object.values(conversations);
+
+            if (conversationsArray.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <p>Aucune conversation</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = conversationsArray.map(conv => {
+                const lastMsg = conv.messages[conv.messages.length - 1];
+                return `
+                    <div class="conversation-item ${currentConversation === conv.id ? 'active' : ''}" 
+                         onclick="openConversation('${conv.id}')">
+                        <div class="conv-name">
+                            ${conv.clientName}
+                            ${conv.unread ? '<span class="unread-badge">Nouveau</span>' : ''}
+                        </div>
+                        <div class="conv-email">${conv.clientEmail}</div>
+                        <div class="conv-preview">${lastMsg.text}</div>
+                        <div class="conv-time">${new Date(lastMsg.timestamp).toLocaleString('fr-FR')}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Ouvrir une conversation
+        function openConversation(conversationId) {
+            currentConversation = conversationId;
+            const conv = conversations[conversationId];
+            
+            if (!conv) return;
+
+            // Marquer comme lu
+            conv.unread = false;
+            localStorage.setItem('adminChatConversations', JSON.stringify({...conversations}));
+
+            const chatPanel = document.getElementById('chatPanel');
+            chatPanel.innerHTML = `
+                <div class="chat-header">
+                    <div class="chat-client-info">
+                        <h3>${conv.clientName}</h3>
+                        <p>${conv.clientEmail}</p>
+                    </div>
+                    <button class="close-btn" onclick="closeConversation('${conversationId}')">
+                        <i class="fas fa-times-circle"></i> Clôturer
+                    </button>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    ${conv.messages.map(msg => `
+                        <div class="message ${msg.sender === 'user' ? 'client' : 'admin'}">
+                            <div class="message-avatar">
+                                ${msg.sender === 'user' ? conv.clientName.charAt(0).toUpperCase() : 'A'}
+                            </div>
+                            <div class="message-content">
+                                <div class="message-bubble">${msg.text}</div>
+                                <div class="message-time">${new Date(msg.timestamp).toLocaleTimeString('fr-FR')}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="chat-input-area">
+                    <textarea id="replyMessage" placeholder="Tapez votre réponse..."></textarea>
+                    <div class="chat-input-actions">
+                        <span class="input-hint">
+                            <i class="fas fa-info-circle"></i> Entrée pour envoyer
+                        </span>
+                        <button class="send-btn" onclick="sendReply()">
+                            <i class="fas fa-paper-plane"></i> Envoyer
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Scroll vers le bas
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Raccourci clavier
+            document.getElementById('replyMessage').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendReply();
+                }
+            });
+
+            displayConversations();
+            updateStats();
+        }
+
+        // Envoyer une réponse
+        function sendReply() {
+            const textarea = document.getElementById('replyMessage');
+            const message = textarea.value.trim();
+
+            if (!message || !currentConversation) return;
+
+            const conv = conversations[currentConversation];
+            conv.messages.push({
+                text: message,
+                sender: 'admin',
+                timestamp: Date.now()
+            });
+
+            // Sauvegarder
+            localStorage.setItem('adminChatConversations', JSON.stringify(conversations));
+
+            // Vider le textarea
+            textarea.value = '';
+
+            // Mettre à jour uniquement les messages
+            updateMessagesOnly(currentConversation);
+        }
+
+        // Mettre à jour uniquement les messages
+        function updateMessagesOnly(conversationId) {
+            const allConversations = JSON.parse(localStorage.getItem('adminChatConversations')) || {};
+            const conv = allConversations[conversationId];
+            
+            if (!conv) return;
+
+            conversations[conversationId] = conv;
+
+            const messagesContainer = document.getElementById('chatMessages');
+            const textarea = document.getElementById('replyMessage');
+            
+            if (!messagesContainer) return;
+
+            const currentMessageCount = messagesContainer.children.length;
+            const newMessageCount = conv.messages.length;
+
+            if (newMessageCount !== currentMessageCount) {
+                let savedText = '';
+                let savedSelectionStart = 0;
+                let savedSelectionEnd = 0;
+                
+                if (textarea) {
+                    savedText = textarea.value;
+                    savedSelectionStart = textarea.selectionStart;
+                    savedSelectionEnd = textarea.selectionEnd;
+                }
+
+                messagesContainer.innerHTML = conv.messages.map(msg => `
+                    <div class="message ${msg.sender === 'user' ? 'client' : 'admin'}">
+                        <div class="message-avatar">
+                            ${msg.sender === 'user' ? conv.clientName.charAt(0).toUpperCase() : 'A'}
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">${msg.text}</div>
+                            <div class="message-time">${new Date(msg.timestamp).toLocaleTimeString('fr-FR')}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                if (textarea) {
+                    textarea.value = savedText;
+                    textarea.setSelectionRange(savedSelectionStart, savedSelectionEnd);
+                    textarea.focus();
+                }
+            }
+            
+            if (conv.unread) {
+                conv.unread = false;
+                allConversations[conversationId] = conv;
+                localStorage.setItem('adminChatConversations', JSON.stringify(allConversations));
+            }
+        }
+
+        // Clôturer une conversation
+        function closeConversation(conversationId) {
+            if (!confirm('Clôturer cette conversation ? Elle sera archivée.')) return;
+
+            const conv = conversations[conversationId];
+            
+            conv.active = false;
+            conv.closedAt = Date.now();
+            conv.closedBy = 'admin';
+            
+            conversations[conversationId] = conv;
+            localStorage.setItem('adminChatConversations', JSON.stringify(conversations));
+            
+            setTimeout(() => {
+                let archives = JSON.parse(localStorage.getItem('chatArchives') || '[]');
+                archives.push(conv);
+                localStorage.setItem('chatArchives', JSON.stringify(archives));
+
+                const allConvs = JSON.parse(localStorage.getItem('adminChatConversations')) || {};
+                delete allConvs[conversationId];
+                localStorage.setItem('adminChatConversations', JSON.stringify(allConvs));
+
+                if (localStorage.getItem('activeChatSession') === conversationId) {
+                    localStorage.removeItem('activeChatSession');
+                }
+            }, 8000);
+
+            currentConversation = null;
+            loadConversations();
+            
+            const chatPanel = document.getElementById('chatPanel');
+            chatPanel.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                    <p>Conversation clôturée</p>
+                </div>
+            `;
+        }
+
+        // Mettre à jour les stats
+        function updateStats() {
+            const conversationsArray = Object.values(conversations);
+            document.getElementById('totalConversations').textContent = conversationsArray.length;
+            
+            const unread = conversationsArray.filter(c => c.unread).length;
+            document.getElementById('unreadCount').textContent = unread;
+
+            const today = conversationsArray.filter(c => {
+                const lastMsg = c.messages[c.messages.length - 1];
+                const msgDate = new Date(lastMsg.timestamp);
+                const todayDate = new Date();
+                return msgDate.toDateString() === todayDate.toDateString();
+            }).length;
+            document.getElementById('todayCount').textContent = today;
+        }
+
+        // Afficher les archives
+        function showArchives() {
+            const archives = JSON.parse(localStorage.getItem('chatArchives') || '[]');
+            const modal = document.getElementById('archiveModal');
+            const content = document.getElementById('archiveContent');
+            
+            if (archives.length === 0) {
+                content.innerHTML = '<div class="empty-state"><i class="fas fa-archive"></i><p>Aucune conversation archivée</p></div>';
+            } else {
+                content.innerHTML = archives.reverse().map(arch => `
+                    <div class="archive-item">
+                        <div class="archive-header">
+                            <div>
+                                <div class="archive-name">${arch.clientName}</div>
+                                <div class="archive-email">${arch.clientEmail}</div>
+                            </div>
+                            <div class="archive-meta">
+                                <div>Clôturée le ${new Date(arch.closedAt).toLocaleString('fr-FR')}</div>
+                                <div>${arch.messages.length} messages</div>
+                            </div>
+                        </div>
+                        <details>
+                            <summary style="cursor: pointer; color: #8b5cf6; font-weight: 600; font-size: 13px; padding: 8px 0;">
+                                Voir les messages
+                            </summary>
+                            <div class="archive-messages">
+                                ${arch.messages.map(msg => `
+                                    <div class="archive-msg ${msg.sender === 'user' ? 'client' : 'admin'}">
+                                        <div class="archive-msg-header">
+                                            ${msg.sender === 'user' ? 'Client' : 'Admin'} - ${new Date(msg.timestamp).toLocaleString('fr-FR')}
+                                        </div>
+                                        <div>${msg.text}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </details>
+                    </div>
+                `).join('');
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeArchiveModal() {
+            document.getElementById('archiveModal').classList.remove('active');
+        }
+
+        // Fermer modal en cliquant outside
+        document.getElementById('archiveModal').addEventListener('click', (e) => {
+            if (e.target.id === 'archiveModal') closeArchiveModal();
+        });
+
+        // Auto-refresh toutes les 10 secondes (optimisé)
+        setInterval(() => {
+            loadConversations();
+            if (currentConversation) {
+                const conv = conversations[currentConversation];
+                if (conv) {
+                    updateMessagesOnly(currentConversation);
+                }
+            }
+        }, 10000);
+
+        // Charger au démarrage
+        loadConversations();
+    </script>
+</body>
+</html>

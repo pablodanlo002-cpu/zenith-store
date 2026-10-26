@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Compte | Zenith Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+        }
+
+        .header {
+            background: #111;
+            border-bottom: 1px solid #1a1a1a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .logo {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid #2a2a2a;
+            color: #8b5cf6;
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .account-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .user-info h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .user-info p {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 2rem;
+            border-bottom: 1px solid #1a1a1a;
+            margin-bottom: 2.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 0;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            transition: 0.2s;
+        }
+
+        .tab:hover {
+            color: #fff;
+        }
+
+        .tab.active {
+            color: #8b5cf6;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #8b5cf6;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .card {
+            background: #111;
+            border: 1px solid #1a1a1a;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+        }
+
+        input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: #8b5cf6;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #7c3aed;
+        }
+
+        .btn-danger {
+            background: transparent;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state i {
+            font-size: 56px;
+            color: #222;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .order-item {
+            padding: 1rem;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .order-status {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(251, 191, 36, 0.1);
+            color: #fbbf24;
+        }
+
+        .status-delivered {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #111;
+            border: 1px solid #1a1a1a;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #8b5cf6;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script src="breadcrumb.js"></script>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="images/logo/logo.png" alt="Zenith Store" style="height: 24px;">
+                <span>ZENITH STORE</span>
+            </a>
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+        </div>
+    </header>
+
+    <div class="main">
+        <div class="account-header">
+            <div class="user-avatar" id="userAvatar">P</div>
+            <div class="user-info">
+                <h1 id="userName">Utilisateur</h1>
+                <p id="userEmail">email@example.com</p>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showContent('overview')">Vue d'ensemble</button>
+            <button class="tab" onclick="showContent('info')">Informations</button>
+            <button class="tab" onclick="showContent('orders')">Commandes</button>
+            <button class="tab" onclick="showContent('security')">Sécurité</button>
+        </div>
+
+        <!-- VUE D'ENSEMBLE -->
+        <div class="content active" id="overview">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">Commandes</div>
+                    <div class="stat-value" id="orderCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total dépensé</div>
+                    <div class="stat-value" id="totalSpent">0€</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Points fidélité</div>
+                    <div class="stat-value">0</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Dernières commandes</h2>
+                <div id="recentOrders"></div>
+            </div>
+        </div>
+
+        <!-- INFORMATIONS -->
+        <div class="content" id="info">
+            <div class="card">
+                <h2 class="card-title">Informations personnelles</h2>
+                <form onsubmit="updateInfo(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nom complet</label>
+                            <input type="text" id="infoName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="infoEmail" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Téléphone</label>
+                            <input type="tel" id="infoPhone" placeholder="0612345678">
+                        </div>
+                        <div class="form-group">
+                            <label>Date de naissance</label>
+                            <input type="date" id="infoBirthdate">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- COMMANDES -->
+        <div class="content" id="orders">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 class="card-title" style="margin-bottom: 0;">Historique des commandes</h2>
+                    <button class="btn btn-primary" onclick="createTestOrder()" style="padding: 8px 20px; font-size: 13px;">
+                        <i class="fas fa-plus"></i> Créer commande test (0€)
+                    </button>
+                </div>
+                <div id="allOrders"></div>
+            </div>
+        </div>
+
+        <!-- SÉCURITÉ -->
+        <div class="content" id="security">
+            <div class="card">
+                <h2 class="card-title">Modifier le mot de passe</h2>
+                <form onsubmit="updatePassword(event)">
+                    <div class="form-group">
+                        <label>Mot de passe actuel</label>
+                        <input type="password" id="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nouveau mot de passe</label>
+                        <input type="password" id="newPassword" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmer le mot de passe</label>
+                        <input type="password" id="confirmPassword" required minlength="6">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Zone de danger</h2>
+                <p style="color: #888; font-size: 14px; margin-bottom: 1rem;">Une fois déconnecté, tu devras te reconnecter pour accéder à ton compte.</p>
+                <button class="btn btn-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Se déconnecter
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkAuth() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return user;
+        }
+
+        function loadData() {
+            const user = checkAuth();
+            if (!user) return;
+
+            // Header
+            const initial = user.name ? user.name[0].toUpperCase() : user.email[0].toUpperCase();
+            document.getElementById('userAvatar').textContent = initial;
+            document.getElementById('userName').textContent = user.name || 'Utilisateur';
+            document.getElementById('userEmail').textContent = user.email;
+
+            // Form
+            document.getElementById('infoName').value = user.name || '';
+            document.getElementById('infoEmail').value = user.email;
+            document.getElementById('infoPhone').value = user.phone || '';
+            document.getElementById('infoBirthdate').value = user.birthdate || '';
+            
+            // Charger les commandes
+            loadOrders(user);
+        }
+        
+        function loadOrders(user) {
+            const orders = JSON.parse(localStorage.getItem('orders_' + user.id)) || [];
+            
+            // Stats
+            document.getElementById('orderCount').textContent = orders.length;
+            const totalSpent = orders.reduce((sum, order) => sum + order.total, 0);
+            document.getElementById('totalSpent').textContent = totalSpent.toFixed(2) + '€';
+            
+            // Recent orders (overview)
+            const recentDiv = document.getElementById('recentOrders');
+            if (orders.length === 0) {
+                recentDiv.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h3>Aucune commande</h3>
+                        <p>Tu n'as pas encore passé de commande</p>
+                    </div>
+                `;
+            } else {
+                const recent = orders.slice(-3).reverse();
+                recentDiv.innerHTML = recent.map(order => `
+                    <div style="padding: 1rem; border-bottom: 1px solid #1a1a1a;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <strong>${order.id}</strong>
+                            <span style="color: #fbbf24;">En attente</span>
+                        </div>
+                        <div style="font-size: 14px; color: #888;">
+                            ${new Date(order.date).toLocaleDateString('fr-FR')} • ${order.items.length} article(s)
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // All orders
+            const allDiv = document.getElementById('allOrders');
+            if (orders.length === 0) {
+                allDiv.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <h3>Pas encore de commandes</h3>
+                        <p>Commence tes achats dès maintenant</p>
+                    </div>
+                `;
+            } else {
+                allDiv.innerHTML = orders.slice().reverse().map(order => {
+                    const statusColors = {
+                        'pending': '#fbbf24',
+                        'processing': '#3b82f6',
+                        'delivered': '#10b981',
+                        'cancelled': '#ef4444'
+                    };
+                    const statusLabels = {
+                        'pending': 'En attente',
+                        'processing': 'En cours',
+                        'delivered': 'Livrée',
+                        'cancelled': 'Annulée'
+                    };
+                    return `
+                        <div style="border: 1px solid #1a1a1a; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <strong style="font-size: 16px;">${order.id}</strong>
+                                    <div style="font-size: 13px; color: #888; margin-top: 4px;">
+                                        ${new Date(order.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                    </div>
+                                </div>
+                                <span style="padding: 6px 12px; background: rgba(251, 191, 36, 0.1); color: ${statusColors[order.status]}; border-radius: 6px; font-size: 13px; font-weight: 600;">
+                                    ${statusLabels[order.status]}
+                                </span>
+                            </div>
+                            <div style="border-top: 1px solid #1a1a1a; padding-top: 1rem;">
+                                ${order.items.map(item => `
+                                    <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem;">
+                                        <img src="${item.image}" style="width: 50px; height: 50px; object-fit: contain; background: #0a0a0a; border-radius: 6px; padding: 6px;">
+                                        <div style="flex: 1;">
+                                            <div style="font-size: 14px; font-weight: 500;">${item.name}</div>
+                                            <div style="font-size: 13px; color: #888;">Quantité: ${item.quantity}</div>
+                                        </div>
+                                        <div style="font-weight: 600; color: #8b5cf6;">${item.price}€</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div style="border-top: 1px solid #1a1a1a; padding-top: 1rem; margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 14px; color: #888;">Total</span>
+                                <span style="font-size: 20px; font-weight: 700;">${order.total.toFixed(2)}€</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function showContent(id) {
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function updateInfo(e) {
+            e.preventDefault();
+            
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            user.name = document.getElementById('infoName').value;
+            user.phone = document.getElementById('infoPhone').value;
+            user.birthdate = document.getElementById('infoBirthdate').value;
+            
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            const idx = users.findIndex(u => u.id === user.id);
+            if (idx !== -1) {
+                users[idx] = user;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+            
+            alert('Informations mises à jour');
+            loadData();
+        }
+
+        function updatePassword(e) {
+            e.preventDefault();
+            
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            
+            if (newPass !== confirm) {
+                alert('❌ Les mots de passe ne correspondent pas');
+                return;
+            }
+            
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            if (user.password && user.password !== current) {
+                alert('❌ Mot de passe actuel incorrect');
+                return;
+            }
+            
+            // VÉRIFIER QUE LE NOUVEAU MOT DE PASSE EST DIFFÉRENT
+            if (user.password && user.password === newPass) {
+                alert('❌ Le nouveau mot de passe doit être différent de l\'ancien');
+                return;
+            }
+            
+            user.password = newPass;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            const idx = users.findIndex(u => u.id === user.id);
+            if (idx !== -1) {
+                users[idx].password = newPass;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+            
+            alert('✅ Mot de passe mis à jour avec succès');
+            e.target.reset();
+        }
+
+        function logout() {
+            if (confirm('Tu veux vraiment te déconnecter ?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            }
+        }
+        
+        function createTestOrder() {
+            const user = checkAuth();
+            if (!user) return;
+            
+            // Créer une commande test avec des produits fictifs et vrais prix
+            const testItems = [
+                {
+                    name: 'FiiO JD1 Gaming Écouteurs',
+                    price: 79.90,
+                    quantity: 1,
+                    image: 'images/ecouteurs/1.png'
+                },
+                {
+                    name: 'AJAZZ AJ179 V2 Souris Gaming',
+                    price: 74.99,
+                    quantity: 1,
+                    image: 'images/souris/souris-1.png'
+                }
+            ];
+            
+            // Calculer le total
+            const subtotal = testItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal >= 50 ? 0 : 4.99;
+            const total = subtotal + shipping;
+            
+            const testOrder = {
+                id: 'CMD' + Date.now(),
+                date: new Date().toISOString(),
+                status: 'pending',
+                subtotal: subtotal,
+                shipping: shipping,
+                total: total,
+                items: testItems
+            };
+            
+            const orders = JSON.parse(localStorage.getItem('orders_' + user.id)) || [];
+            orders.push(testOrder);
+            localStorage.setItem('orders_' + user.id, JSON.stringify(orders));
+            
+            alert('Commande test créée ! Total: ' + total.toFixed(2) + '€');
+            loadOrders(user);
+        }
+
+        loadData();
+    </script>
+
+    <!-- Scripts optimisés -->
+    <script src="breadcrumb.js" async></script>
+</body>
+</html>

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FiiO JD1 - Écouteurs Gaming IEM | ZENITH STORE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* HEADER */
+        .header {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .cart-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: #ffffff;
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        /* BREADCRUMB */
+        .breadcrumb {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 24px 0;
+            display: flex;
+            gap: 8px;
+            font-size: 14px;
+            color: #737373;
+        }
+
+        .breadcrumb a {
+            color: #8b5cf6;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* PRODUCT DETAIL */
+        .product-detail {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        /* GALLERY */
+        .product-gallery {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .main-image {
+            background: #1a1a1a;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .thumbnail {
+            background: #1a1a1a;
+            border: 2px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1;
+        }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: #8b5cf6;
+            transform: translateY(-4px);
+        }
+
+        .thumbnail img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* PRODUCT INFO */
+        .product-info-section {
+            padding-top: 20px;
+        }
+
+        .product-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        .product-brand {
+            color: #8b5cf6;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+        }
+
+        .product-title {
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stars {
+            color: #fbbf24;
+            font-size: 16px;
+        }
+
+        .rating-count {
+            color: #737373;
+            font-size: 14px;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .current-price {
+            font-size: 42px;
+            font-weight: 900;
+            color: #ffffff;
+        }
+
+        .old-price {
+            font-size: 24px;
+            color: #737373;
+            text-decoration: line-through;
+        }
+
+        .discount {
+            background: #dc2626;
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .stock {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            margin-bottom: 24px;
+            padding: 12px 16px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            width: fit-content;
+        }
+
+        .stock-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+
+        .stock-text {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .product-description {
+            font-size: 15px;
+            color: #a1a1a1;
+            line-height: 1.8;
+            margin-bottom: 32px;
+        }
+
+        .features-list {
+            margin-bottom: 32px;
+        }
+
+        .features-list h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .features-list ul {
+            list-style: none;
+        }
+
+        .features-list li {
+            padding: 12px 0;
+            padding-left: 32px;
+            position: relative;
+            color: #a1a1a1;
+            font-size: 15px;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .buy-section {
+            background: rgba(26, 26, 26, 0.5);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .quantity-selector label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .qty-btn {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid #8b5cf6;
+            color: #ffffff;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            background: #8b5cf6;
+        }
+
+        .qty-input {
+            background: transparent;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #ffffff;
+            width: 60px;
+            height: 36px;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .btn-add-cart {
+            width: 100%;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: #ffffff;
+            padding: 16px 32px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .btn-add-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-buy-now {
+            width: 100%;
+            background: transparent;
+            color: #8b5cf6;
+            padding: 16px 32px;
+            border-radius: 8px;
+            border: 2px solid #8b5cf6;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-buy-now:hover {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .product-detail {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .product-gallery {
+                position: static;
+            }
+
+            .product-title {
+                font-size: 28px;
+            }
+
+            .current-price {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script src="breadcrumb.js"></script>
+    <script src="notifications.js"></script>
+    <script src="wishlist.js"></script>
+    <script src="comparator.js"></script>
+    <script src="reviews.js"></script>
+    <script src="similar-products.js"></script>
+    <script src="navigation-history.js"></script>
+    <script src="stock-indicator.js"></script>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="images/logo/logo.png" alt="" style="height: 35px; margin-right: 10px; vertical-align: middle;">
+                ZENITH STORE
+            </a>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <a href="suivi.html" style="color: #a78bfa; text-decoration: none; font-size: 13px; font-weight: 600; padding: 8px 14px; border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px; display: flex; align-items: center; gap: 6px;">
+                    <i class="fas fa-truck"></i> Suivi colis
+                </a>
+                <button class="cart-btn" onclick="window.location.href='panier.html'">
+                    Panier (<span id="cartCount">0</span>)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+        <a href="index.html">Accueil</a>
+        <span>/</span>
+        <a href="index.html#products">Écouteurs</a>
+        <span>/</span>
+        <span>FiiO JD1</span>
+    </div>
+
+    <!-- PRODUCT DETAIL -->
+    <div class="product-detail">
+        
+        <!-- GALLERY -->
+        <div class="product-gallery">
+            <div class="main-image">
+                <img id="mainImg" src="images/ecouteurs/1.png" alt="FiiO JD1">
+            </div>
+            <div class="thumbnail-grid">
+                <div class="thumbnail active" onclick="changeImage('images/ecouteurs/1.png', this)">
+                    <img src="images/ecouteurs/1.png" alt="Vue 1">
+                </div>
+                <div class="thumbnail" onclick="changeImage('images/ecouteurs/2.png', this)">
+                    <img src="images/ecouteurs/2.png" alt="Vue 2">
+                </div>
+                <div class="thumbnail" onclick="changeImage('images/ecouteurs/3.png', this)">
+                    <img src="images/ecouteurs/3.png" alt="Vue 3">
+                </div>
+                <div class="thumbnail" onclick="changeImage('images/ecouteurs/4.png', this)">
+                    <img src="images/ecouteurs/4.png" alt="Vue 4">
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCT INFO -->
+        <div class="product-info-section">
+            <span class="product-badge">Nouveau 2026</span>
+            <div class="product-brand">FiiO</div>
+            <h1 class="product-title">JD1 IEM Gaming Écouteurs</h1>
+
+            <div class="rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">(128 avis)</span>
+            </div>
+
+            <div class="product-price">
+                <span class="current-price">79,90€</span>
+                <span class="old-price">149,90€</span>
+                <span class="discount">-47%</span>
+            </div>
+
+            <!-- STOCK INDICATOR -->
+            <div id="stockIndicatorContainer"></div>
+
+            <p class="product-description">
+                Les FiiO JD1, c'est le genre d'écouteurs où tu te dis "comment c'est possible à ce prix". 
+                Le driver LCP de 10mm envoie un son vraiment propre — des basses bien présentes sans noyer le reste, et des aigus précis qui te permettent d'entendre les pas en jeu. 
+                Le câble est détachable en 2-pin, donc si tu l'abîmes tu remplaces juste le câble. Et oui, ils sont certifiés Hi-Res Audio.
+            </p>
+
+            <div class="features-list">
+                <h3>Ce qu'il faut retenir :</h3>
+                <ul>
+                    <li>Driver LCP de 10mm</li>
+                    <li>Certification Hi-Res Audio officielle</li>
+                    <li>Câble détachable avec connecteur 2-pin 0.78mm</li>
+                    <li>Design ergonomique pour un confort prolongé</li>
+                    <li>Bonne isolation passive contre les bruits extérieurs</li>
+                    <li>Réponse en fréquence : 20Hz - 40kHz</li>
+                    <li>Impédance : 32Ω - Compatible tous appareils</li>
+                    <li>4 paires d'embouts incluses (S, M, L, XL)</li>
+                </ul>
+            </div>
+
+            <div class="buy-section">
+                <div class="quantity-selector">
+                    <label>Quantité :</label>
+                    <div class="quantity-controls">
+                        <button class="qty-btn" onclick="decrementQty()">−</button>
+                        <input type="number" id="quantity" class="qty-input" value="1" min="1" max="10">
+                        <button class="qty-btn" onclick="incrementQty()">+</button>
+                    </div>
+                </div>
+
+                <button class="btn-add-cart" onclick="addToCart()">
+                    <i class="fas fa-shopping-cart"></i> Ajouter au panier
+                </button>
+                <button class="btn-buy-now" onclick="buyNow()">
+                    <i class="fas fa-bolt"></i> Acheter maintenant
+                </button>
+
+                <div class="product-actions-secondary" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px;">
+                    <button type="button" id="btnProductWishlist" onclick="toggleCurrentProductWishlist()" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 12px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s;">
+                        <i class="far fa-heart" id="wishlistIcon"></i> <span id="wishlistText">Ajouter aux favoris</span>
+                    </button>
+                    <button type="button" id="btnProductCompare" onclick="toggleCurrentProductCompare()" style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); color: #8b5cf6; padding: 12px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s;">
+                        <i class="fas fa-balance-scale" id="compareIcon"></i> <span id="compareText">Comparer</span>
+                    </button>
+                </div>
+
+                <!-- BADGE DÉLAIS & LIVRAISON RASSURANTE -->
+                <div style="margin-top: 18px; padding: 14px 16px; background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.25); border-radius: 10px; font-size: 13px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                        <span style="color: #a78bfa; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-truck-fast"></i> Livraison Suivie : 8 à 12 jours ouvrés
+                        </span>
+                        <a href="suivi.html" style="color: #10b981; text-decoration: none; font-size: 11px; font-weight: 700;">Suivi en direct →</a>
+                    </div>
+                    <div style="color: #aaa; font-size: 11.5px; line-height: 1.5;">
+                        🛡️ <strong>Préparation soignée :</strong> 2-3 jours (contrôle qualité & emballage anti-choc)<br>
+                        🚚 <strong>Acheminement sécurisé :</strong> 6-9 jours avec numéro de suivi transporteur
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SECTION AVIS & NOTES -->
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem 2rem;">
+        <div id="reviewsSection"></div>
+    </div>
+
+    <!-- SECTION PRODUITS SIMILAIRES -->
+    <div id="similarProductsSection"></div>
+
+    <!-- SCRIPTS SYSTEME -->
+    <script src="notifications.js"></script>
+    <script src="similar-products.js"></script>
+    <script src="reviews.js"></script>
+    <script src="stock-indicator.js"></script>
+    <script src="wishlist.js"></script>
+    <script src="comparator.js"></script>
+
+    <script>
+        // Obtenir l'ID du produit depuis l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentProductId = urlParams.get('id') || 'prod-1'; // Par défaut prod-1
+        
+        // Charger le widget d'avis et les produits similaires
+        document.addEventListener('DOMContentLoaded', async function() {
+            let productsList = (typeof allProducts !== 'undefined') ? allProducts : [];
+            try {
+                const res = await fetch('/api/products');
+                const data = await res.json();
+                if (data && data.success && data.products && data.products.length > 0) {
+                    productsList = data.products;
+                    window.allProducts = productsList;
+                }
+            } catch(e) {}
+
+            // Obtenir les données du produit
+            const currentProduct = productsList.find(p => p.id === currentProductId || (p.aliexpress && p.aliexpress.productId === currentProductId));
+            
+            if (currentProduct) {
+                // Mettre à jour dynamiquement les infos du produit
+                document.title = `${currentProduct.name} | ZENITH STORE`;
+                document.querySelector('.product-brand').textContent = currentProduct.brand;
+                document.querySelector('.product-title').textContent = currentProduct.name;
+                document.querySelector('.current-price').textContent = `${currentProduct.price.toFixed(2)}€`;
+                
+                if (currentProduct.oldPrice) {
+                    document.querySelector('.old-price').textContent = `${currentProduct.oldPrice.toFixed(2)}€`;
+                    document.querySelector('.discount').textContent = `-${currentProduct.discount}%`;
+                } else {
+                    document.querySelector('.old-price').style.display = 'none';
+                    document.querySelector('.discount').style.display = 'none';
+                }
+                
+                // Mettre à jour l'image principale et la galerie de miniatures (jusqu'à 4 photos différentes)
+                const productImages = (currentProduct.images && Array.isArray(currentProduct.images) && currentProduct.images.length > 0)
+                    ? currentProduct.images
+                    : [currentProduct.image];
+
+                document.getElementById('mainImg').src = productImages[0];
+                document.getElementById('mainImg').alt = currentProduct.name;
+                
+                // Mettre à jour les miniatures dynamiquement
+                const thumbGrid = document.querySelector('.thumbnail-grid');
+                if (thumbGrid) {
+                    thumbGrid.innerHTML = '';
+                    const displayImages = productImages.slice(0, 4);
+                    while (displayImages.length < 4 && displayImages.length > 0) {
+                        displayImages.push(displayImages[0]);
+                    }
+
+                    displayImages.forEach((imgSrc, index) => {
+                        const thumb = document.createElement('div');
+                        thumb.className = `thumbnail ${index === 0 ? 'active' : ''}`;
+                        thumb.onclick = function() {
+                            changeImage(imgSrc, this);
+                        };
+                        const img = document.createElement('img');
+                        img.src = imgSrc;
+                        img.alt = `Photo ${index + 1} - ${currentProduct.name}`;
+                        thumb.appendChild(img);
+                        thumbGrid.appendChild(thumb);
+                    });
+                }
+                
+                // Description & Caractéristiques pour les produits AliExpress
+                const descEl = document.querySelector('.product-description');
+                if (descEl) {
+                    if (currentProduct.description) {
+                        descEl.textContent = currentProduct.description;
+                    } else if (currentProduct.id.startsWith('prod-ali-')) {
+                        descEl.innerHTML = `<strong>${currentProduct.name}</strong><br><br>Sélectionné pour ses performances et sa qualité de fabrication. Produit officiel certifié conforme aux normes européennes CE. Expédition suivie directe depuis l'entrepôt fournisseur avec garantie Zenith Store.`;
+                    }
+                }
+
+                if (currentProduct.tags && currentProduct.tags.length > 0 && currentProduct.id.startsWith('prod-ali-')) {
+                    const featuresUl = document.querySelector('.features-list ul');
+                    if (featuresUl) {
+                        featuresUl.innerHTML = currentProduct.tags.map(t => `<li>${t}</li>`).join('') +
+                            `<li>Garantie 2 ans Zenith Store</li><li>Support client 7j/7</li><li>Livraison rapide suivie</li>`;
+                    }
+                }
+
+                // Mettre à jour les notes
+                const stars = '★'.repeat(Math.floor(currentProduct.rating)) + '☆'.repeat(5 - Math.floor(currentProduct.rating));
+                document.querySelector('.stars').textContent = stars;
+                document.querySelector('.rating-count').textContent = `(${currentProduct.reviews} avis)`;
+                
+                // Afficher l'indicateur de stock détaillé
+                const stockContainer = document.getElementById('stockIndicatorContainer');
+                if (stockContainer) {
+                    stockContainer.innerHTML = '';
+                    const stockIndicator = createStockIndicator(currentProduct.id, 'detailed');
+                    stockContainer.appendChild(stockIndicator);
+                }
+                
+                // Mettre à jour le breadcrumb
+                const breadcrumbCategory = document.querySelector('.breadcrumb a[href="index.html#products"]');
+                if (breadcrumbCategory) {
+                    breadcrumbCategory.textContent = currentProduct.category.charAt(0).toUpperCase() + currentProduct.category.slice(1);
+                }
+                const breadcrumbProduct = document.querySelector('.breadcrumb span:last-child');
+                if (breadcrumbProduct) {
+                    breadcrumbProduct.textContent = currentProduct.name;
+                }
+            }
+            
+            const productName = currentProduct ? currentProduct.name : 'FiiO JD1 IEM Gaming Écouteurs';
+            const reviewsWidget = createReviewsWidget(currentProductId, productName);
+            document.getElementById('reviewsSection').appendChild(reviewsWidget);
+
+            // Charger les produits similaires
+            const similarSection = createSimilarProductsSection(currentProductId);
+            if (similarSection) {
+                document.getElementById('similarProductsSection').appendChild(similarSection);
+            }
+            if (typeof updateProductActionButtons === 'function') {
+                updateProductActionButtons();
+            }
+        });
+        
+        // Charger le compteur panier
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
+            const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalItems;
+        }
+
+        // Changer l'image principale
+        function changeImage(src, thumb) {
+            document.getElementById('mainImg').src = src;
+            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+            thumb.classList.add('active');
+        }
+
+        // Quantité
+        function incrementQty() {
+            const input = document.getElementById('quantity');
+            if (input.value < 10) {
+                input.value = parseInt(input.value) + 1;
+            }
+        }
+
+        function decrementQty() {
+            const input = document.getElementById('quantity');
+            if (input.value > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+
+        // Ajouter au panier
+        function addToCart() {
+            const currentProduct = allProducts.find(p => p.id === currentProductId);
+            if (!currentProduct) return;
+            
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
+            
+            const existingItem = cart.items.find(item => item.id === currentProductId);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                const item = {
+                    id: currentProductId,
+                    name: currentProduct.name,
+                    quantity: quantity,
+                    price: currentProduct.price,
+                    image: currentProduct.image
+                };
+                
+                cart.items.push(item);
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            // Notification
+            if (typeof showNotification === 'function') {
+                showNotification(`${quantity} produit(s) ajouté(s) au panier !`, 'success');
+            } else {
+                alert(`${quantity} produit(s) ajouté(s) au panier !`);
+            }
+        }
+
+        // Acheter maintenant
+        function buyNow() {
+            addToCart();
+            window.location.href = 'panier.html';
+        }
+
+        // Gestion Wishlist & Comparateur sur la page produit
+        function updateProductActionButtons() {
+            const currentProduct = (typeof allProducts !== 'undefined') ? allProducts.find(p => p.id === currentProductId) : null;
+            if (!currentProduct) return;
+            
+            // Wishlist
+            const isLiked = typeof isInWishlist === 'function' && isInWishlist(currentProduct.id);
+            const btnWishlist = document.getElementById('btnProductWishlist');
+            const wishlistIcon = document.getElementById('wishlistIcon');
+            const wishlistText = document.getElementById('wishlistText');
+            if (btnWishlist && wishlistIcon && wishlistText) {
+                if (isLiked) {
+                    btnWishlist.style.background = 'rgba(239, 68, 68, 0.25)';
+                    btnWishlist.style.borderColor = '#ef4444';
+                    wishlistIcon.className = 'fas fa-heart';
+                    wishlistText.textContent = 'Dans tes favoris';
+                } else {
+                    btnWishlist.style.background = 'rgba(239, 68, 68, 0.1)';
+                    btnWishlist.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+                    wishlistIcon.className = 'far fa-heart';
+                    wishlistText.textContent = 'Ajouter aux favoris';
+                }
+            }
+            
+            // Comparateur
+            const isComparing = typeof isInComparison === 'function' && isInComparison(currentProduct.id);
+            const btnCompare = document.getElementById('btnProductCompare');
+            const compareIcon = document.getElementById('compareIcon');
+            const compareText = document.getElementById('compareText');
+            if (btnCompare && compareIcon && compareText) {
+                if (isComparing) {
+                    btnCompare.style.background = 'rgba(139, 92, 246, 0.25)';
+                    btnCompare.style.borderColor = '#8b5cf6';
+                    compareIcon.className = 'fas fa-check-circle';
+                    compareText.textContent = 'Dans le comparateur';
+                } else {
+                    btnCompare.style.background = 'rgba(139, 92, 246, 0.1)';
+                    btnCompare.style.borderColor = 'rgba(139, 92, 246, 0.3)';
+                    compareIcon.className = 'fas fa-balance-scale';
+                    compareText.textContent = 'Comparer';
+                }
+            }
+        }
+
+        function toggleCurrentProductWishlist() {
+            const currentProduct = (typeof allProducts !== 'undefined') ? allProducts.find(p => p.id === currentProductId) : null;
+            if (!currentProduct) return;
+            if (typeof toggleWishlist === 'function') {
+                toggleWishlist(currentProduct.id, currentProduct.name, currentProduct.price, currentProduct.image, `produit.html?id=${currentProduct.id}`);
+            }
+            updateProductActionButtons();
+        }
+
+        function toggleCurrentProductCompare() {
+            const currentProduct = (typeof allProducts !== 'undefined') ? allProducts.find(p => p.id === currentProductId) : null;
+            if (!currentProduct) return;
+            if (typeof toggleComparison === 'function') {
+                toggleComparison(currentProduct.id, currentProduct.name, currentProduct.price, currentProduct.image, `produit.html?id=${currentProduct.id}`, {
+                    type: currentProduct.category || 'Gaming',
+                    brand: currentProduct.brand || 'Zenith'
+                });
+            }
+            updateProductActionButtons();
+        }
+
+        // Initialiser
+        updateCartCount();
+        setTimeout(updateProductActionButtons, 100);
+    </script>
+
+</body>
+</html>

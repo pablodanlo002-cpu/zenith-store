@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Codes Promo | Zenith Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .test-section {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        h1 {
+            color: #8b5cf6;
+            margin-bottom: 10px;
+            font-size: 36px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h2 {
+            color: #a78bfa;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+
+        .codes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .code-card {
+            background: rgba(139, 92, 246, 0.1);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .code-card:hover {
+            border-color: rgba(139, 92, 246, 0.6);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .code-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .code-name {
+            font-size: 20px;
+            font-weight: 700;
+            font-family: monospace;
+            margin-bottom: 4px;
+        }
+
+        .code-desc {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .code-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .code-detail {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .code-detail i {
+            width: 20px;
+            color: #8b5cf6;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
+        }
+
+        .simulator {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .simulator-input {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .simulator-input input {
+            flex: 1;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .result-box {
+            background: linear-gradient(145deg, #1a1a1a, #151515);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+            font-size: 20px;
+            font-weight: 700;
+            padding-top: 20px;
+            margin-top: 10px;
+            border-top: 2px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .result-label {
+            color: #888;
+        }
+
+        .result-value {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .discount-value {
+            color: #10b981;
+        }
+
+        .final-value {
+            color: #8b5cf6;
+            font-size: 28px;
+        }
+    </style>
+</head>
+<body>
+    <script src="notifications.js"></script>
+    <script src="promo-code.js"></script>
+
+    <div class="container">
+        <div class="test-section">
+            <h1><i class="fas fa-ticket-alt"></i> Test Codes Promo</h1>
+            <p class="subtitle">
+                Testez le système de codes promotionnels avec validation, calculs automatiques et interface utilisateur complète.
+            </p>
+
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> Fonctionnalités</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px;">
+                    <div>
+                        <strong style="color: #8b5cf6;">Types de réductions :</strong>
+                        <ul style="margin: 8px 0 0 20px; color: #aaa;">
+                            <li>Pourcentage (-10%, -20%, etc.)</li>
+                            <li>Montant fixe (-15€, -50€, etc.)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong style="color: #10b981;">Validations :</strong>
+                        <ul style="margin: 8px 0 0 20px; color: #aaa;">
+                            <li>Date d'expiration</li>
+                            <li>Montant minimum requis</li>
+                            <li>Limite d'utilisations</li>
+                            <li>Code actif/inactif</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong style="color: #f59e0b;">Interface :</strong>
+                        <ul style="margin: 8px 0 0 20px; color: #aaa;">
+                            <li>Widget interactif</li>
+                            <li>Liste des codes disponibles</li>
+                            <li>Messages d'erreur clairs</li>
+                            <li>Application en un clic</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simulateur -->
+        <div class="test-section">
+            <h2>🧮 Simulateur de Réduction</h2>
+            <p class="subtitle">Testez n'importe quel code avec un montant de panier personnalisé</p>
+            
+            <div class="simulator">
+                <div class="simulator-input">
+                    <input 
+                        type="number" 
+                        id="cartAmount" 
+                        placeholder="Montant du panier (€)" 
+                        value="100"
+                        min="0"
+                        step="0.01"
+                    >
+                    <input 
+                        type="text" 
+                        id="testCode" 
+                        placeholder="CODE PROMO" 
+                        style="text-transform: uppercase;"
+                    >
+                    <button class="btn" onclick="testPromoCode()" style="width: auto; padding: 15px 40px;">
+                        <i class="fas fa-calculator"></i> Calculer
+                    </button>
+                </div>
+                
+                <div id="simulatorResult"></div>
+            </div>
+        </div>
+
+        <!-- Codes disponibles -->
+        <div class="test-section">
+            <h2>🎫 Codes Promo Disponibles</h2>
+            <p class="subtitle">Cliquez sur "Copier" pour copier un code et le tester</p>
+            
+            <div class="codes-grid" id="codesGrid"></div>
+        </div>
+
+        <!-- Widget de démonstration -->
+        <div class="test-section">
+            <h2>🎨 Widget de Code Promo</h2>
+            <p class="subtitle">Aperçu du widget tel qu'il apparaîtra sur la page panier</p>
+            
+            <div id="widgetDemo"></div>
+        </div>
+    </div>
+
+    <script>
+        // Charger les codes disponibles
+        function loadAvailableCodes() {
+            const container = document.getElementById('codesGrid');
+            const codes = PromoCode.getAll();
+            
+            container.innerHTML = '';
+            
+            Object.values(codes).forEach(promo => {
+                const card = document.createElement('div');
+                card.className = 'code-card';
+                card.style.borderColor = `${promo.color}40`;
+                
+                const isExpired = new Date() > new Date(promo.expiryDate);
+                const status = !promo.active ? 'Inactif' : isExpired ? 'Expiré' : 'Actif';
+                const statusColor = !promo.active || isExpired ? '#ef4444' : '#10b981';
+                
+                card.innerHTML = `
+                    <div class="code-header">
+                        <div class="code-icon" style="background: ${promo.color}20; color: ${promo.color};">
+                            <i class="fas fa-${promo.icon}"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div class="code-name" style="color: ${promo.color};">${promo.code}</div>
+                            <div class="code-desc">${promo.description}</div>
+                        </div>
+                        <div style="
+                            background: ${statusColor}20;
+                            color: ${statusColor};
+                            padding: 6px 12px;
+                            border-radius: 6px;
+                            font-size: 11px;
+                            font-weight: 700;
+                        ">
+                            ${status}
+                        </div>
+                    </div>
+                    
+                    <div class="code-details">
+                        <div class="code-detail">
+                            <i class="fas fa-percentage"></i>
+                            <span>${promo.type === 'percentage' ? `${promo.value}% de réduction` : `${promo.value}€ de réduction`}</span>
+                        </div>
+                        ${promo.minAmount > 0 ? `
+                            <div class="code-detail">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>Minimum ${promo.minAmount}€</span>
+                            </div>
+                        ` : ''}
+                        ${promo.maxDiscount ? `
+                            <div class="code-detail">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Max ${promo.maxDiscount}€</span>
+                            </div>
+                        ` : ''}
+                        <div class="code-detail">
+                            <i class="fas fa-calendar"></i>
+                            <span>Expire le ${new Date(promo.expiryDate).toLocaleDateString('fr-FR')}</span>
+                        </div>
+                        ${promo.usageLimit ? `
+                            <div class="code-detail">
+                                <i class="fas fa-users"></i>
+                                <span>${promo.usageLimit} utilisations max</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <button class="btn" onclick="copyCode('${promo.code}')" style="background: ${promo.color};">
+                        <i class="fas fa-copy"></i> Copier le code
+                    </button>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Copier un code
+        function copyCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                showNotification(`Code "${code}" copié !`, 'success');
+                document.getElementById('testCode').value = code;
+            });
+        }
+
+        // Tester un code promo
+        function testPromoCode() {
+            const amount = parseFloat(document.getElementById('cartAmount').value) || 0;
+            const code = document.getElementById('testCode').value.trim().toUpperCase();
+            
+            if (!code) {
+                showNotification('Veuillez entrer un code promo', 'error');
+                return;
+            }
+            
+            const validation = PromoCode.validate(code, amount);
+            const resultContainer = document.getElementById('simulatorResult');
+            
+            if (validation.valid) {
+                resultContainer.innerHTML = `
+                    <div class="result-box" style="border: 2px solid #10b981;">
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            margin-bottom: 20px;
+                            padding-bottom: 20px;
+                            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+                        ">
+                            <i class="fas fa-check-circle" style="font-size: 32px; color: #10b981;"></i>
+                            <div>
+                                <div style="font-size: 20px; font-weight: 700; color: #10b981; margin-bottom: 4px;">
+                                    Code Valide !
+                                </div>
+                                <div style="font-size: 14px; color: #888;">
+                                    ${validation.promo.description}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-row">
+                            <span class="result-label">Montant initial</span>
+                            <span class="result-value">${amount.toFixed(2)}€</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Réduction (${validation.promo.type === 'percentage' ? validation.promo.value + '%' : validation.promo.value + '€'})</span>
+                            <span class="result-value discount-value">-${validation.discount.toFixed(2)}€</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Total à payer</span>
+                            <span class="result-value final-value">${validation.finalAmount.toFixed(2)}€</span>
+                        </div>
+                    </div>
+                `;
+                showNotification('Code valide ! 🎉', 'success');
+            } else {
+                resultContainer.innerHTML = `
+                    <div class="result-box" style="border: 2px solid #ef4444;">
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            color: #ef4444;
+                        ">
+                            <i class="fas fa-times-circle" style="font-size: 32px;"></i>
+                            <div>
+                                <div style="font-size: 20px; font-weight: 700; margin-bottom: 4px;">
+                                    Code Invalide
+                                </div>
+                                <div style="font-size: 14px; color: #888;">
+                                    ${validation.error}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                showNotification(validation.error, 'error');
+            }
+        }
+
+        // Charger le widget de démo
+        function loadWidgetDemo() {
+            const container = document.getElementById('widgetDemo');
+            
+            // Créer un panier de test
+            const testCart = {
+                items: [
+                    { name: 'Produit Test 1', price: 50, quantity: 1 },
+                    { name: 'Produit Test 2', price: 30, quantity: 2 }
+                ],
+                promoCode: null
+            };
+            
+            localStorage.setItem('cart', JSON.stringify(testCart));
+            
+            const cartTotal = 110; // 50 + 30*2
+            const widget = PromoCode.createWidget(cartTotal);
+            container.appendChild(widget);
+        }
+
+        // Initialiser
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAvailableCodes();
+            loadWidgetDemo();
+        });
+    </script>
+</body>
+</html>

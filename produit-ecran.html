@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Écran Gaming LXZ 24.5" 200Hz | ZENITH STORE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #ffffff; line-height: 1.6; }
+        .header { background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(139, 92, 246, 0.1); position: sticky; top: 0; z-index: 1000; }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 70px; }
+        .logo { font-size: 24px; font-weight: 900; color: #ffffff; text-decoration: none; }
+        .cart-btn { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: #ffffff; padding: 10px 24px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; }
+        .breadcrumb { max-width: 1400px; margin: 0 auto; padding: 24px 24px 0; display: flex; gap: 8px; font-size: 14px; color: #737373; }
+        .breadcrumb a { color: #8b5cf6; text-decoration: none; }
+        .product-detail { max-width: 1400px; margin: 0 auto; padding: 40px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+        .product-gallery { position: sticky; top: 100px; height: fit-content; }
+        .main-image { background: #1a1a1a; border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 16px; padding: 20px; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; min-height: 500px; }
+        .main-image img { max-width: 100%; max-height: 100%; object-fit: contain; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
+        .thumbnail-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .thumbnail { background: #1a1a1a; border: 2px solid rgba(139, 92, 246, 0.2); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; aspect-ratio: 1; }
+        .thumbnail:hover, .thumbnail.active { border-color: #8b5cf6; transform: translateY(-4px); }
+        .thumbnail img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .product-info-section { padding-top: 20px; }
+        .product-badge { display: inline-block; background: #dc2626; color: #ffffff; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; margin-bottom: 16px; }
+        .product-brand { color: #8b5cf6; font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+        .product-title { font-size: 36px; font-weight: 900; margin-bottom: 16px; }
+        .rating { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+        .stars { color: #fbbf24; font-size: 16px; }
+        .rating-count { color: #737373; font-size: 14px; }
+        .product-price { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(139, 92, 246, 0.2); }
+        .current-price { font-size: 42px; font-weight: 900; }
+        .old-price { font-size: 24px; color: #737373; text-decoration: line-through; }
+        .discount { background: #dc2626; color: #ffffff; padding: 6px 12px; border-radius: 6px; font-size: 14px; font-weight: 700; }
+        .stock { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; padding: 12px 16px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; width: fit-content; }
+        .stock-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; }
+        .stock-text { color: #10b981; font-weight: 600; }
+        .product-description { font-size: 15px; color: #a1a1a1; line-height: 1.8; margin-bottom: 32px; }
+        .features-list { margin-bottom: 32px; }
+        .features-list h3 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+        .features-list ul { list-style: none; }
+        .features-list li { padding: 12px 0 12px 32px; position: relative; color: #a1a1a1; font-size: 15px; }
+        .features-list li::before { content: "✓"; position: absolute; left: 0; color: #10b981; font-weight: bold; font-size: 18px; }
+        .buy-section { background: rgba(26, 26, 26, 0.5); border: 1px solid rgba(139, 92, 246, 0.2); padding: 32px; border-radius: 16px; margin-bottom: 32px; }
+        .quantity-selector { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+        .quantity-controls { display: flex; align-items: center; gap: 12px; }
+        .qty-btn { background: rgba(139, 92, 246, 0.2); border: 1px solid #8b5cf6; color: #ffffff; width: 36px; height: 36px; border-radius: 8px; font-size: 18px; cursor: pointer; }
+        .qty-btn:hover { background: #8b5cf6; }
+        .qty-input { background: transparent; border: 1px solid rgba(139, 92, 246, 0.3); color: #ffffff; width: 60px; height: 36px; text-align: center; border-radius: 8px; font-weight: 600; }
+        .btn-add-cart { width: 100%; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: #ffffff; padding: 16px 32px; border-radius: 8px; border: none; font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 12px; }
+        .btn-buy-now { width: 100%; background: transparent; color: #8b5cf6; padding: 16px 32px; border-radius: 8px; border: 2px solid #8b5cf6; font-weight: 700; font-size: 16px; cursor: pointer; }
+        @media (max-width: 768px) { .product-detail { grid-template-columns: 1fr; gap: 40px; } .product-title { font-size: 28px; } }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="images/logo/logo.png" alt="" style="height: 35px; margin-right: 10px; vertical-align: middle;">
+                ZENITH STORE
+            </a>
+            <button class="cart-btn" onclick="window.location.href='panier.html'">
+                Panier (<span id="cartCount">0</span>)
+            </button>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <a href="index.html">Accueil</a>
+        <span>/</span>
+        <a href="index.html#products">Écrans Gaming</a>
+        <span>/</span>
+        <span>LXZ 24.5" 200Hz</span>
+    </div>
+
+    <div class="product-detail">
+        
+        <div class="product-gallery">
+            <div class="main-image">
+                <img id="mainImg" src="images/ecrans/ecran-1.png" alt="LXZ Écran Gaming">
+            </div>
+            <div class="thumbnail-grid">
+                <div class="thumbnail active" onclick="changeImage('images/ecrans/ecran-1.png', this)">
+                    <img src="images/ecrans/ecran-1.png" alt="Vue 1">
+                </div>
+                <div class="thumbnail" onclick="changeImage('images/ecrans/ecran-2.png', this)">
+                    <img src="images/ecrans/ecran-2.png" alt="Vue 2">
+                </div>
+                <div class="thumbnail" onclick="changeImage('images/ecrans/ecran-3.png', this)">
+                    <img src="images/ecrans/ecran-3.png" alt="Vue 3">
+                </div>
+                <div class="thumbnail" onclick="changeImage('images/ecrans/ecran-4.png', this)">
+                    <img src="images/ecrans/ecran-4.png" alt="Vue 4">
+                </div>
+            </div>
+        </div>
+
+        <div class="product-info-section">
+            <span class="product-badge">-14% PROMO</span>
+            <div class="product-brand">LXZ</div>
+            <h1 class="product-title">Écran Gaming 24.5" 200Hz Full HD</h1>
+
+            <div class="rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">(97 avis)</span>
+            </div>
+
+            <div class="product-price">
+                <span class="current-price">179,99€</span>
+                <span class="old-price">209,99€</span>
+                <span class="discount">-14%</span>
+            </div>
+
+            <div class="stock">
+                <span class="stock-dot"></span>
+                <span class="stock-text">En stock - Expédition sous 24h</span>
+            </div>
+
+            <p class="product-description">
+                Un écran 24.5" en dalle IPS, 200Hz, 1ms de réponse — c'est ce qu'il faut pour du FPS compétitif sans se ruiner.
+                Les couleurs sont fidèles, les angles de vision sont corrects, et le FreeSync fait son job pour éviter le tearing.
+                Il a aussi des haut-parleurs intégrés (pratique en dépannage) et les connectiques classiques : HDMI 2.0 et DisplayPort.
+                Rien de révolutionnaire, juste un bon écran gaming à prix honnête.
+            </p>
+
+            <div class="features-list">
+                <h3>Ce qu'il faut retenir</h3>
+                <ul>
+                    <li>Dalle IPS 24.5 pouces Full HD (1920x1080)</li>
+                    <li>Taux de rafraîchissement : 200Hz</li>
+                    <li>Temps de réponse : 1ms (MPRT)</li>
+                    <li>AMD FreeSync Premium — anti-tearing</li>
+                    <li>Haut-parleurs stéréo intégrés 2x3W</li>
+                    <li>Connectiques : HDMI 2.0 + DisplayPort 1.2</li>
+                    <li>Support VESA 75x75mm inclus</li>
+                    <li>Certification TÜV Rheinland Low Blue Light</li>
+                </ul>
+            </div>
+
+            <div class="buy-section">
+                <div class="quantity-selector">
+                    <label>Quantité :</label>
+                    <div class="quantity-controls">
+                        <button class="qty-btn" onclick="decrementQty()">−</button>
+                        <input type="number" id="quantity" class="qty-input" value="1" min="1" max="10">
+                        <button class="qty-btn" onclick="incrementQty()">+</button>
+                    </div>
+                </div>
+
+                <button class="btn-add-cart" onclick="addToCart()">
+                    <i class="fas fa-shopping-cart"></i> Ajouter au panier
+                </button>
+                <button class="btn-buy-now" onclick="buyNow()">
+                    <i class="fas fa-bolt"></i> Acheter maintenant
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
+            const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalItems;
+        }
+
+        function changeImage(src, thumb) {
+            document.getElementById('mainImg').src = src;
+            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+            thumb.classList.add('active');
+        }
+
+        function incrementQty() {
+            const input = document.getElementById('quantity');
+            if (input.value < 10) input.value = parseInt(input.value) + 1;
+        }
+
+        function decrementQty() {
+            const input = document.getElementById('quantity');
+            if (input.value > 1) input.value = parseInt(input.value) - 1;
+        }
+
+        function addToCart() {
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
+            
+            cart.items.push({
+                id: '1005013234055626',
+                name: 'Écran Gaming LXZ 24.5" 200Hz Full HD',
+                quantity: quantity,
+                price: 179.99,
+                image: 'images/ecrans/ecran-1.png'
+            });
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            alert(`${quantity} produit(s) ajouté(s) au panier !`);
+        }
+
+        function buyNow() {
+            addToCart();
+            window.location.href = 'panier.html';
+        }
+
+        updateCartCount();
+    </script>
+
+</body>
+</html>

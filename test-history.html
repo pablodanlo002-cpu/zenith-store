@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Historique de Navigation | Zenith Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .test-section {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        h1 {
+            color: #8b5cf6;
+            margin-bottom: 10px;
+            font-size: 36px;
+        }
+
+        h2 {
+            color: #a78bfa;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: #fff;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .history-list {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .history-item {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .history-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .history-info {
+            flex: 1;
+        }
+
+        .history-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .history-meta {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            color: #aaa;
+        }
+
+        .info-box li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <script src="similar-products.js"></script>
+    <script src="navigation-history.js"></script>
+
+    <div class="container">
+        <div class="test-section">
+            <h1><i class="fas fa-history"></i> Test Historique de Navigation</h1>
+            <p class="subtitle">
+                Cette page permet de tester le système d'historique de navigation. 
+                Naviguez entre les pages et revenez ici pour voir votre historique.
+            </p>
+
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> Comment ça marche ?</h3>
+                <ul>
+                    <li>✅ Chaque page visitée est automatiquement enregistrée</li>
+                    <li>✅ Un widget flottant (bouton violet en bas à droite) affiche les 5 dernières pages</li>
+                    <li>✅ Cliquez sur une page dans l'historique pour y retourner rapidement</li>
+                    <li>✅ L'historique se limite à 20 pages maximum</li>
+                    <li>✅ Bouton "Effacer" pour réinitialiser l'historique</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🧭 Navigation Rapide</h2>
+            <p style="color: #888; margin-bottom: 20px;">Visitez différentes pages pour construire votre historique :</p>
+            
+            <div class="btn-group">
+                <button class="btn" onclick="window.location.href='index.html'">
+                    <i class="fas fa-home"></i> Accueil
+                </button>
+                <button class="btn" onclick="window.location.href='produit.html?id=prod-1'">
+                    <i class="fas fa-headphones"></i> Écouteurs FiiO
+                </button>
+                <button class="btn" onclick="window.location.href='produit.html?id=prod-2'">
+                    <i class="fas fa-headset"></i> Casque Gaming
+                </button>
+                <button class="btn" onclick="window.location.href='produit.html?id=prod-3'">
+                    <i class="fas fa-mouse"></i> Souris Gaming
+                </button>
+                <button class="btn" onclick="window.location.href='favoris.html'">
+                    <i class="fas fa-heart"></i> Mes Favoris
+                </button>
+                <button class="btn" onclick="window.location.href='panier.html'">
+                    <i class="fas fa-shopping-cart"></i> Mon Panier
+                </button>
+                <button class="btn" onclick="window.location.href='comparateur.html'">
+                    <i class="fas fa-balance-scale"></i> Comparateur
+                </button>
+                <button class="btn" onclick="window.location.href='compte.html'">
+                    <i class="fas fa-user"></i> Mon Compte
+                </button>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 Votre Historique Actuel</h2>
+            <div class="btn-group" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 20px;">
+                <button class="btn btn-secondary" onclick="refreshHistory()">
+                    <i class="fas fa-sync"></i> Actualiser
+                </button>
+                <button class="btn btn-danger" onclick="clearAndRefresh()">
+                    <i class="fas fa-trash"></i> Effacer l'historique
+                </button>
+            </div>
+            
+            <div id="historyList" class="history-list"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🎨 Aperçu du Widget</h2>
+            <p style="color: #888; margin-bottom: 20px;">
+                Le widget flottant est visible en bas à droite de cette page. 
+                Cliquez sur le bouton violet avec l'icône d'horloge pour l'ouvrir/fermer.
+            </p>
+            <div style="background: rgba(139, 92, 246, 0.05); padding: 20px; border-radius: 10px; text-align: center;">
+                <p style="color: #8b5cf6; font-weight: 600; margin-bottom: 10px;">
+                    <i class="fas fa-arrow-down"></i> Regardez en bas à droite de la page
+                </p>
+                <p style="color: #888; font-size: 14px;">
+                    Le bouton circulaire violet permet d'accéder rapidement à votre historique
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fonction pour afficher l'historique
+        function displayHistory() {
+            const history = getNavigationHistory();
+            const container = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-history"></i>
+                        <p>Aucune page visitée pour le moment</p>
+                        <p style="font-size: 14px; margin-top: 10px;">
+                            Naviguez sur le site pour commencer à construire votre historique
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            // Afficher en ordre inverse (plus récent en premier)
+            history.reverse().forEach((page, index) => {
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                
+                const icon = getPageIconHTML(page.pageName);
+                const timeAgo = getTimeAgo(page.timestamp);
+                const isCurrentPage = page.url === (window.location.pathname + window.location.search);
+                
+                item.innerHTML = `
+                    <div class="history-icon">${icon}</div>
+                    <div class="history-info">
+                        <div class="history-title">
+                            ${page.pageName}
+                            ${isCurrentPage ? '<span style="color: #10b981; font-size: 12px; margin-left: 10px;">● Page actuelle</span>' : ''}
+                        </div>
+                        <div class="history-meta">
+                            <i class="fas fa-clock"></i> ${timeAgo} • 
+                            <i class="fas fa-link"></i> ${page.url}
+                        </div>
+                    </div>
+                    ${!isCurrentPage ? `
+                        <button onclick="window.location.href='${page.url}'" style="
+                            background: rgba(139, 92, 246, 0.2);
+                            border: 1px solid rgba(139, 92, 246, 0.5);
+                            color: #8b5cf6;
+                            padding: 8px 16px;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-weight: 600;
+                            font-size: 12px;
+                            transition: all 0.3s;
+                        " onmouseover="this.style.background='rgba(139, 92, 246, 0.3)'" onmouseout="this.style.background='rgba(139, 92, 246, 0.2)'">
+                            Visiter
+                        </button>
+                    ` : ''}
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+        
+        // Fonction helper pour les icônes
+        function getPageIconHTML(pageName) {
+            if (pageName.includes('Accueil')) return '<i class="fas fa-home"></i>';
+            if (pageName.includes('Panier')) return '<i class="fas fa-shopping-cart"></i>';
+            if (pageName.includes('Favoris')) return '<i class="fas fa-heart"></i>';
+            if (pageName.includes('Comparateur')) return '<i class="fas fa-balance-scale"></i>';
+            if (pageName.includes('Compte')) return '<i class="fas fa-user"></i>';
+            if (pageName.includes('Admin')) return '<i class="fas fa-shield-alt"></i>';
+            return '<i class="fas fa-file"></i>';
+        }
+        
+        // Actualiser l'affichage
+        function refreshHistory() {
+            displayHistory();
+        }
+        
+        // Effacer et actualiser
+        function clearAndRefresh() {
+            if (confirm('Êtes-vous sûr de vouloir effacer tout l\'historique ?')) {
+                clearNavigationHistory();
+                displayHistory();
+            }
+        }
+        
+        // Afficher l'historique au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            displayHistory();
+        });
+    </script>
+</body>
+</html>

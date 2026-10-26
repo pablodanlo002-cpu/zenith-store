@@ -1,0 +1,179 @@
+╔══════════════════════════════════════════════════════════════╗
+║              GUIDE DU CHAT SUPPORT - ZENITH STORE            ║
+╚══════════════════════════════════════════════════════════════╝
+
+📌 COMMENT ÇA MARCHE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. CÔTÉ CLIENT (sur le site)
+   - Un bouton flottant violet en bas à droite
+   - Le client clique dessus pour ouvrir le chat
+   - Il peut envoyer des messages
+   - Un bot répond automatiquement pour les questions simples
+   - La conversation reste active jusqu'à ce que TU la clôtures
+
+2. CÔTÉ ADMIN (toi)
+   - Ouvre : admin-chat.html
+   - Tu vois toutes les conversations ACTIVES
+   - Tu peux répondre directement
+   - Tu clôtures quand c'est terminé
+   - Les conversations clôturées vont dans les Archives
+
+
+📱 POUR LES CLIENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le bouton de chat apparaît en bas à droite sur toutes les pages.
+
+Réponses automatiques du bot :
+- "bonjour" → Message de bienvenue
+- "livraison" → Infos livraison gratuite 2-5 jours
+- "retour" → Retours sous 30 jours
+- "paiement" → CB, PayPal, Apple Pay...
+- "promo" → Newsletter pour codes promo
+- "aide" → Liste des sujets d'aide
+
+Si le bot ne sait pas répondre :
+→ "Un conseiller vous répondra dans quelques instants"
+
+
+💼 POUR TOI (ADMIN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Ouvrir l'interface admin :
+   → Ouvre admin-chat.html dans ton navigateur
+
+2. Tu verras :
+   ┌─────────────────────────────────────┐
+   │ STATISTIQUES                        │
+   │ - Nombre total de conversations     │
+   │ - Messages non lus                  │
+   │ - Conversations du jour             │
+   └─────────────────────────────────────┘
+
+   ┌─────────────┬─────────────────────┐
+   │ LISTE DES   │   ZONE DE CHAT      │
+   │ CONVERSATIONS│                     │
+   │             │   [Messages]         │
+   │ Client 1    │                     │
+   │ Client 2    │   [Zone de réponse] │
+   │ Client 3    │   [Clôturer]        │
+   └─────────────┴─────────────────────┘
+
+3. Pour répondre :
+   - Clique sur une conversation à gauche
+   - Tape ta réponse en bas
+   - Appuie sur Entrée ou clique "Envoyer"
+
+4. Pour clôturer :
+   - Clique sur "Clôturer" en haut à droite
+   - Confirme
+   - La conversation disparaît de la liste active
+   - Elle est archivée automatiquement
+
+5. Pour voir les archives :
+   - Clique sur "Archives" en haut
+   - Tu vois toutes les conversations clôturées
+   - Tu peux lire l'historique complet
+
+
+🔄 CYCLE DE VIE D'UNE CONVERSATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Client ouvre le chat → Conversation créée
+2. Client envoie message → Marqué "Nouveau" pour toi
+3. Tu réponds → Marqué comme lu
+4. Échange de messages → Conversation reste active
+5. Tu clôtures → Conversation archivée
+6. Client rouvre le chat → NOUVELLE conversation créée
+
+
+💾 SAUVEGARDE DES CONVERSATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AVANT (problème) :
+✗ Conversations supprimées après 30min
+✗ Historique perdu
+
+MAINTENANT (solution) :
+✓ Conversations sauvegardées en permanence
+✓ Restent actives jusqu'à clôture manuelle
+✓ Archives conservées indéfiniment
+✓ Historique complet accessible
+
+
+📊 DONNÉES STOCKÉES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+localStorage.adminChatConversations
+→ Conversations actives
+
+localStorage.chatArchives  
+→ Conversations clôturées
+
+localStorage.activeChatSession
+→ Session en cours du client
+
+
+🔧 PERSONNALISER LES RÉPONSES AUTOMATIQUES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ouvre : live-chat.js
+Cherche : botResponses
+
+Tu peux modifier/ajouter des réponses :
+
+    botResponses: {
+        'ton_mot_clé': 'Ta réponse automatique',
+        'bonjour': 'Bonjour ! Comment puis-je vous aider ?',
+        // Ajoute tes propres réponses ici
+    }
+
+
+🚀 UTILISATION QUOTIDIENNE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MATIN :
+□ Ouvre admin-chat.html
+□ Vérifie les nouvelles conversations
+□ Réponds aux messages non lus
+
+DURANT LA JOURNÉE :
+□ Garde l'onglet ouvert
+□ Rafraîchissement auto toutes les 5s
+□ Badge "Nouveau" pour nouveaux messages
+
+SOIR :
+□ Clôture les conversations terminées
+□ Archive automatique
+
+
+💡 ASTUCES PRO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ Ne clôture que quand le problème est résolu
+✓ Vérifie les archives si client revient
+✓ Les conversations actives = à traiter
+✓ Badge rouge = urgent
+✓ Rafraîchissement auto = pas besoin de recharger
+
+
+⚠️ IMPORTANT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Une fois clôturée, la conversation ne peut plus être rouverte
+• Le client devra démarrer une nouvelle conversation
+• Garde l'onglet admin ouvert pour recevoir les messages en temps réel
+• Les archives ne sont jamais supprimées automatiquement
+
+
+═══════════════════════════════════════════════════════════════
+
+RÉSUMÉ RAPIDE :
+
+1. Client écrit → Conversation active
+2. Tu réponds → Conversation reste active  
+3. Tu clôtures → Archivée
+4. Simple et efficace !
+
+═══════════════════════════════════════════════════════════════

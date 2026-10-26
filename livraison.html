@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livraison | Zenith Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: #111111;
+            border-bottom: 1px solid #222;
+            padding: 1rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: #8b5cf6;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+
+        .shipping-option {
+            background: #111111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .shipping-option h3 {
+            color: #8b5cf6;
+            margin-bottom: 0.5rem;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: #8b5cf6;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 2rem;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="images/logo/logo.png" alt="" style="height: 35px; margin-right: 10px; vertical-align: middle;">
+                ZENITH STORE
+            </a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Livraison</h1>
+        
+        <h2>Combien ça coûte ?</h2>
+        
+        <div class="shipping-option">
+            <h3>Standard — gratuite dès 50€</h3>
+            <p>
+                <strong>Délai :</strong> 3 à 5 jours ouvrés<br>
+                <strong>Tarif :</strong> 4,99€ (gratuit si ta commande dépasse 50€)<br>
+                <strong>Suivi :</strong> Tu reçois un numéro de tracking par email
+            </p>
+        </div>
+
+        <div class="shipping-option">
+            <h3>Express — pour les pressés</h3>
+            <p>
+                <strong>Délai :</strong> 24 à 48h<br>
+                <strong>Tarif :</strong> 9,99€<br>
+                <strong>Suivi :</strong> Suivi en temps réel
+            </p>
+        </div>
+
+        <div class="shipping-option">
+            <h3>Point Relais</h3>
+            <p>
+                <strong>Délai :</strong> 3 à 4 jours ouvrés<br>
+                <strong>Tarif :</strong> 3,99€<br>
+                <strong>Pratique</strong> si t'es jamais chez toi pour réceptionner
+            </p>
+        </div>
+
+        <h2>Comment ça se passe ?</h2>
+        <p>
+            Tu commandes, on prépare ton colis dans la journée (si c'est avant 14h un jour ouvré). Dès qu'il part, tu reçois un email avec le lien de suivi. Y'a plus qu'à attendre le livreur.
+        </p>
+
+        <h2>Où est-ce qu'on livre ?</h2>
+        <p>
+            Partout en France métropolitaine, Corse incluse. Pour les DOM-TOM ou l'international, écris-nous à support@zenithstore.com et on te fait un devis.
+        </p>
+
+        <a href="index.html" class="back-btn">← Retour à la boutique</a>
+    </div>
+</body>
+</html>

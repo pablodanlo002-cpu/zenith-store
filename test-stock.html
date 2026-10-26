@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Indicateurs de Stock | Zenith Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .test-section {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        h1 {
+            color: #8b5cf6;
+            margin-bottom: 10px;
+            font-size: 36px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h2 {
+            color: #a78bfa;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        h3 {
+            color: #c4b5fd;
+            margin: 20px 0 15px 0;
+            font-size: 18px;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .demo-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .demo-label {
+            color: #8b5cf6;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .stock-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stock-item {
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .stock-info {
+            flex: 1;
+        }
+
+        .stock-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .stock-id {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .stock-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-box h3 {
+            color: #3b82f6;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            color: #aaa;
+        }
+
+        .info-box li {
+            margin-bottom: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <script src="similar-products.js"></script>
+    <script src="notifications.js"></script>
+    <script src="stock-indicator.js"></script>
+
+    <div class="container">
+        <div class="test-section">
+            <h1><i class="fas fa-boxes"></i> Test Indicateurs de Stock</h1>
+            <p class="subtitle">
+                Testez les différents styles d'indicateurs de stock et simulez des changements en temps réel.
+            </p>
+
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> Fonctionnalités</h3>
+                <ul>
+                    <li>✅ <strong>3 styles d'affichage</strong> : Default, Compact, Détaillé</li>
+                    <li>✅ <strong>3 états de stock</strong> : En stock, Stock limité, Rupture</li>
+                    <li>✅ <strong>Animations</strong> : Pulse, shimmer, transitions fluides</li>
+                    <li>✅ <strong>Barre de progression</strong> visuelle du stock</li>
+                    <li>✅ <strong>Notifications</strong> quand produit disponible</li>
+                    <li>✅ <strong>Simulation temps réel</strong> : ventes et réapprovisionnements</li>
+                    <li>✅ <strong>LocalStorage</strong> : Persistance des données</li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn" onclick="refreshAllStock()">
+                    <i class="fas fa-sync"></i> Actualiser
+                </button>
+                <button class="btn btn-success" onclick="startSimulation()">
+                    <i class="fas fa-play"></i> Démarrer Simulation
+                </button>
+                <button class="btn btn-danger" onclick="stopSimulation()">
+                    <i class="fas fa-stop"></i> Arrêter Simulation
+                </button>
+                <button class="btn btn-danger" onclick="resetStock()">
+                    <i class="fas fa-redo"></i> Réinitialiser Stock
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="test-section">
+            <h2>📊 Statistiques Globales</h2>
+            <div class="stats-grid" id="statsGrid"></div>
+        </div>
+
+        <!-- Style Default -->
+        <div class="test-section">
+            <h2>🎨 Style "Default" - Badge simple</h2>
+            <p class="subtitle">Idéal pour les cartes produits sur la page d'accueil</p>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <div class="demo-label">
+                        <i class="fas fa-check-circle"></i> En Stock
+                    </div>
+                    <div data-stock-product="prod-1" data-stock-style="default"></div>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-label">
+                        <i class="fas fa-exclamation-triangle"></i> Stock Limité
+                    </div>
+                    <div data-stock-product="prod-6" data-stock-style="default"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Style Compact -->
+        <div class="test-section">
+            <h2>📦 Style "Compact" - Mini badge</h2>
+            <p class="subtitle">Pour les listes et comparateurs</p>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <div class="demo-label">
+                        <i class="fas fa-compress"></i> Compact - Disponible
+                    </div>
+                    <div data-stock-product="prod-2" data-stock-style="compact"></div>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-label">
+                        <i class="fas fa-compress"></i> Compact - Limité
+                    </div>
+                    <div data-stock-product="prod-6" data-stock-style="compact"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Style Detailed -->
+        <div class="test-section">
+            <h2>🔍 Style "Detailed" - Complet avec barre</h2>
+            <p class="subtitle">Pour les pages produits individuelles</p>
+            
+            <h3>Produit en stock :</h3>
+            <div data-stock-product="prod-3" data-stock-style="detailed"></div>
+            
+            <h3>Produit en stock limité :</h3>
+            <div data-stock-product="prod-6" data-stock-style="detailed"></div>
+        </div>
+
+        <!-- Liste des produits -->
+        <div class="test-section">
+            <h2>📋 Gestion du Stock par Produit</h2>
+            <div class="stock-list" id="stockList"></div>
+        </div>
+    </div>
+
+    <script>
+        let simulationInterval = null;
+
+        // Initialiser l'affichage
+        function initDisplay() {
+            refreshAllStock();
+            displayStockList();
+            updateStats();
+        }
+
+        // Actualiser tous les indicateurs
+        function refreshAllStock() {
+            StockIndicator.refresh();
+        }
+
+        // Afficher la liste des stocks
+        function displayStockList() {
+            const container = document.getElementById('stockList');
+            container.innerHTML = '';
+
+            allProducts.forEach(product => {
+                const stock = StockIndicator.get(product.id);
+                
+                const item = document.createElement('div');
+                item.className = 'stock-item';
+                item.innerHTML = `
+                    <div class="stock-info">
+                        <div class="stock-name">${product.name}</div>
+                        <div class="stock-id">ID: ${product.id}</div>
+                        <div style="margin-top: 10px;" data-stock-product="${product.id}" data-stock-style="compact"></div>
+                    </div>
+                    <div class="stock-actions">
+                        <button class="btn btn-success" onclick="addStock('${product.id}', 5)" title="Ajouter 5 unités">
+                            <i class="fas fa-plus"></i> +5
+                        </button>
+                        <button class="btn btn-danger" onclick="removeStock('${product.id}', 1)" title="Vendre 1 unité">
+                            <i class="fas fa-minus"></i> -1
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+
+            StockIndicator.refresh();
+        }
+
+        // Ajouter du stock
+        function addStock(productId, quantity) {
+            const stock = StockIndicator.get(productId);
+            if (stock.current + quantity <= stock.max) {
+                stock.current += quantity;
+                
+                // Mettre à jour le statut
+                if (stock.current > stock.threshold) {
+                    stock.status = 'in-stock';
+                } else if (stock.current > 0) {
+                    stock.status = 'low-stock';
+                }
+                
+                localStorage.setItem('stockData', JSON.stringify(stockData));
+                
+                showNotification(`+${quantity} unités ajoutées !`, 'success');
+                displayStockList();
+                updateStats();
+            } else {
+                showNotification('Stock maximum atteint !', 'error');
+            }
+        }
+
+        // Retirer du stock
+        function removeStock(productId, quantity) {
+            if (StockIndicator.decrease(productId, quantity)) {
+                showNotification(`-${quantity} unité vendue !`, 'success');
+                displayStockList();
+                updateStats();
+            } else {
+                showNotification('Stock insuffisant !', 'error');
+            }
+        }
+
+        // Réinitialiser le stock
+        function resetStock() {
+            if (confirm('Réinitialiser tous les stocks aux valeurs par défaut ?')) {
+                localStorage.removeItem('stockData');
+                location.reload();
+            }
+        }
+
+        // Démarrer la simulation
+        function startSimulation() {
+            if (simulationInterval) {
+                showNotification('La simulation est déjà en cours !', 'info');
+                return;
+            }
+
+            StockIndicator.init(true);
+            
+            simulationInterval = setInterval(() => {
+                displayStockList();
+                updateStats();
+            }, 5000);
+
+            showNotification('Simulation démarrée ! Les stocks vont changer automatiquement.', 'success');
+        }
+
+        // Arrêter la simulation
+        function stopSimulation() {
+            if (simulationInterval) {
+                clearInterval(simulationInterval);
+                simulationInterval = null;
+                showNotification('Simulation arrêtée.', 'info');
+            }
+        }
+
+        // Mettre à jour les statistiques
+        function updateStats() {
+            let totalStock = 0;
+            let totalMax = 0;
+            let inStockCount = 0;
+            let lowStockCount = 0;
+            let outOfStockCount = 0;
+
+            Object.keys(stockData).forEach(productId => {
+                const stock = stockData[productId];
+                totalStock += stock.current;
+                totalMax += stock.max;
+                
+                if (stock.status === 'in-stock') inStockCount++;
+                else if (stock.status === 'low-stock') lowStockCount++;
+                else outOfStockCount++;
+            });
+
+            const percentage = totalMax > 0 ? Math.round((totalStock / totalMax) * 100) : 0;
+
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value" style="color: #8b5cf6;">${totalStock}</div>
+                    <div class="stat-label">Unités en Stock</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: #10b981;">${inStockCount}</div>
+                    <div class="stat-label">Produits Disponibles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: #f59e0b;">${lowStockCount}</div>
+                    <div class="stat-label">Stock Limité</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: #ef4444;">${outOfStockCount}</div>
+                    <div class="stat-label">Ruptures</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: #8b5cf6;">${percentage}%</div>
+                    <div class="stat-label">Taux de Disponibilité</div>
+                </div>
+            `;
+        }
+
+        // Initialiser au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            initDisplay();
+        });
+    </script>
+</body>
+</html>

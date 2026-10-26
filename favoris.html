@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Favoris | Zenith Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+        }
+
+        .header {
+            background: #111;
+            border-bottom: 1px solid #1a1a1a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .logo img {
+            height: 24px;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .icon-link {
+            position: relative;
+            color: #fff;
+            text-decoration: none;
+            font-size: 20px;
+            padding: 8px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .icon-link:hover {
+            color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .icon-link.active {
+            color: #ef4444;
+        }
+
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        h1 i {
+            color: #ef4444;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 3rem;
+        }
+
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: #111;
+            border: 1px solid #1a1a1a;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            border-color: #8b5cf6;
+            transform: translateY(-4px);
+        }
+
+        .product-image {
+            aspect-ratio: 1;
+            background: #0a0a0a;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.9);
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            z-index: 10;
+        }
+
+        .remove-btn:hover {
+            background: #ef4444;
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #8b5cf6;
+            margin-bottom: 1rem;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #8b5cf6;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #7c3aed;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #2a2a2a;
+            color: #888;
+        }
+
+        .btn-secondary:hover {
+            border-color: #8b5cf6;
+            color: #8b5cf6;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 6rem 2rem;
+        }
+
+        .empty i {
+            font-size: 80px;
+            color: #1a1a1a;
+            margin-bottom: 2rem;
+        }
+
+        .empty h2 {
+            font-size: 24px;
+            margin-bottom: 1rem;
+        }
+
+        .empty p {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .empty .btn {
+            display: inline-flex;
+            width: auto;
+            padding: 1rem 2rem;
+        }
+
+        .stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background: #111;
+            border: 1px solid #1a1a1a;
+            border-radius: 12px;
+        }
+
+        .stat-item {
+            flex: 1;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #8b5cf6;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="images/logo/logo.png" alt="Zenith Store">
+                <span>ZENITH STORE</span>
+            </a>
+            
+            <div class="nav-icons">
+                <a href="favoris.html" class="icon-link wishlist-link active" title="Favoris">
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count">0</span>
+                </a>
+                <a href="panier.html" class="icon-link" title="Panier">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
+                <a href="compte.html" class="icon-link" title="Mon compte">
+                    <i class="fas fa-user"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="main">
+        <h1><i class="fas fa-heart"></i> Mes Favoris</h1>
+        <p class="subtitle">Tes produits préférés au même endroit</p>
+
+        <div id="statsContainer"></div>
+        <div id="wishlistContainer"></div>
+    </div>
+
+    <script>
+        function loadWishlist() {
+            const wishlist = getWishlist();
+            const container = document.getElementById('wishlistContainer');
+            const statsContainer = document.getElementById('statsContainer');
+            
+            if (wishlist.length === 0) {
+                container.innerHTML = `
+                    <div class="empty">
+                        <i class="far fa-heart"></i>
+                        <h2>Aucun favori</h2>
+                        <p>Tu n'as pas encore ajouté de produits à tes favoris</p>
+                        <a href="index.html" class="btn btn-primary">
+                            <i class="fas fa-shopping-bag"></i>
+                            Découvrir nos produits
+                        </a>
+                    </div>
+                `;
+                statsContainer.innerHTML = '';
+                return;
+            }
+            
+            // Stats
+            const totalValue = wishlist.reduce((sum, item) => sum + item.price, 0);
+            statsContainer.innerHTML = `
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Produits favoris</div>
+                        <div class="stat-value">${wishlist.length}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Valeur totale</div>
+                        <div class="stat-value">${totalValue.toFixed(2)}€</div>
+                    </div>
+                </div>
+            `;
+            
+            // Grid
+            container.innerHTML = `
+                <div class="wishlist-grid">
+                    ${wishlist.map(item => `
+                        <div class="product-card" data-product-id="${item.id}">
+                            <div class="product-image">
+                                <img src="${item.image}" alt="${item.name}" loading="lazy">
+                                <button class="remove-btn" onclick="removeFromWishlistAndReload('${item.id}')">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-name">${item.name}</div>
+                                <div class="product-price">${item.price.toFixed(2)}€</div>
+                                <div class="product-actions">
+                                    <a href="${item.url}" class="btn btn-secondary">
+                                        <i class="fas fa-eye"></i> Voir
+                                    </a>
+                                    <button class="btn btn-primary" onclick="addToCartFromWishlist('${item.id}', '${item.name}', ${item.price}, '${item.image}')">
+                                        <i class="fas fa-shopping-cart"></i> Ajouter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        function removeFromWishlistAndReload(productId) {
+            removeFromWishlist(productId);
+            loadWishlist();
+        }
+        
+        function addToCartFromWishlist(productId, productName, productPrice, productImage) {
+            // Ajouter au panier
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    image: productImage,
+                    quantity: 1
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            showNotification('Ajouté au panier', productName + ' a été ajouté à ton panier', 'success');
+            
+            // Mettre à jour le badge du panier
+            updateCartCount();
+        }
+        
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            // Cette fonction sera gérée par le header global plus tard
+        }
+        
+        // Charger au démarrage
+        loadWishlist();
+    </script>
+
+    <!-- Scripts optimisés -->
+    <script src="notifications.js"></script>
+    <script src="wishlist.js"></script>
+    <script src="breadcrumb.js" async></script>
+    <script src="navigation-history.js" async></script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAZZ AKP153 Console Macros - Zenith Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: #111111;
+            border-bottom: 1px solid #222;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #8b5cf6;
+        }
+
+        .cart-btn {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .cart-btn:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+        }
+
+        .product-container {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .product-images {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .main-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #111111;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #222;
+            padding: 20px;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            image-rendering: crisp-edges;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            background: #111111;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .gallery-item:hover {
+            border-color: #8b5cf6;
+        }
+
+        .gallery-item.active {
+            border-color: #8b5cf6;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            image-rendering: crisp-edges;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .product-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            color: #8b5cf6;
+            font-weight: 700;
+        }
+
+        .product-description {
+            color: #888;
+            line-height: 1.8;
+        }
+
+        .product-features {
+            background: #111111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .product-features h3 {
+            margin-bottom: 1rem;
+            color: #8b5cf6;
+        }
+
+        .product-features ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .product-features li {
+            color: #ccc;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .product-features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #8b5cf6;
+            font-weight: bold;
+        }
+
+        .add-to-cart {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 1.2rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            background: #111111;
+            border-top: 1px solid #222;
+            padding: 3rem 2rem 1rem;
+            margin-top: 5rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: #8b5cf6;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: #888;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #8b5cf6;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #222;
+            color: #666;
+        }
+
+        @media (max-width: 968px) {
+            .product-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="images/logo/logo.png" alt="" style="height: 35px; margin-right: 10px; vertical-align: middle;">
+                ZENITH STORE
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Tous</a></li>
+                <li><a href="index.html#ecouteurs">Écouteurs</a></li>
+                <li><a href="index.html#casques">Casques</a></li>
+                <li><a href="index.html#souris">Souris</a></li>
+                <li><a href="index.html#claviers">Claviers</a></li>
+                <li><a href="index.html#tapis">Tapis</a></li>
+                <li><a href="index.html#ecrans">Écrans</a></li>
+                <li><a href="index.html#accessoires">Accessoires</a></li>
+                <li><a href="panier.html" class="cart-btn">Panier (<span id="cart-count">0</span>)</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="product-container">
+        <div class="product-images">
+            <div class="main-image">
+                <img src="images/accessoires/accessoire-1.png" alt="AJAZZ AKP153 Console Macros" id="mainImage">
+            </div>
+            <div class="image-gallery">
+                <div class="gallery-item active" onclick="changeImage('images/accessoires/accessoire-1.png', this)">
+                    <img src="images/accessoires/accessoire-1.png" alt="Vue 1">
+                </div>
+                <div class="gallery-item" onclick="changeImage('images/accessoires/accessoire-2.png', this)">
+                    <img src="images/accessoires/accessoire-2.png" alt="Vue 2">
+                </div>
+                <div class="gallery-item" onclick="changeImage('images/accessoires/accessoire-3.png', this)">
+                    <img src="images/accessoires/accessoire-3.png" alt="Vue 3">
+                </div>
+                <div class="gallery-item" onclick="changeImage('images/accessoires/accessoire-4.png', this)">
+                    <img src="images/accessoires/accessoire-4.png" alt="Vue 4">
+                </div>
+            </div>
+        </div>
+
+        <div class="product-info">
+            <h1 class="product-title">AJAZZ AKP153 Console Macros Gaming</h1>
+            <div class="product-price">149,99€</div>
+            
+            <p class="product-description">
+                L'AJAZZ AKP153, c'est une petite console avec des touches mécaniques programmables, des molettes et un écran LCD couleur. Tu configures tes raccourcis dessus et ça t'évite de jongler entre 15 combinaisons clavier. Utile pour le stream (scènes OBS, mute micro, lancer un son), pour le gaming (macros, quick buy), ou même pour bosser (raccourcis Photoshop, montage vidéo). Ça marche sur PC et Mac, plug & play.
+            </p>
+
+            <div class="product-features">
+                <h3>Ce qu'il faut retenir</h3>
+                <ul>
+                    <li>Écran LCD couleur pour affichage des raccourcis</li>
+                    <li>Touches mécaniques programmables</li>
+                    <li>Molettes de contrôle multifonctions</li>
+                    <li>Compatible PC et Mac</li>
+                    <li>Logiciel de configuration inclus</li>
+                    <li>RGB personnalisable</li>
+                    <li>Construction solide, bien finie</li>
+                    <li>Plug & Play - installation facile</li>
+                </ul>
+            </div>
+
+            <button class="add-to-cart" onclick="addToCart()">Ajouter au panier</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Boutique</h4>
+                <ul>
+                    <li><a href="index.html#ecouteurs">Écouteurs</a></li>
+                    <li><a href="index.html#casques">Casques</a></li>
+                    <li><a href="index.html#souris">Souris</a></li>
+                    <li><a href="index.html#claviers">Claviers</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Garantie</a></li>
+                    <li><a href="#">Retours</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Informations</h4>
+                <ul>
+                    <li><a href="#">À propos</a></li>
+                    <li><a href="#">Livraison</a></li>
+                    <li><a href="#">CGV</a></li>
+                    <li><a href="#">Confidentialité</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Suivez-nous</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">YouTube</a></li>
+                    <li><a href="#">Discord</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Zenith Store. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        const product = {
+            id: 7,
+            name: "AJAZZ AKP153 Console Macros Gaming",
+            price: 149.99,
+            image: "images/accessoires/accessoire-1.png",
+            aliexpressId: "1005012031666768"
+        };
+
+        function changeImage(src, element) {
+            document.getElementById('mainImage').src = src;
+            document.querySelectorAll('.gallery-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        function addToCart() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({...product, quantity: 1});
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            alert('Produit ajouté au panier !');
+        }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').textContent = totalItems;
+        }
+
+        updateCartCount();
+    </script>
+</body>
+</html>

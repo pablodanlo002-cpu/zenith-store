@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenith Store — Matos Gaming au Meilleur Prix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Désactiver console.log pour les performances -->
+    <script>
+    // Mode production - désactive console.log
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        console.log = function() {};
+        console.warn = function() {};
+        console.info = function() {};
+    }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* HEADER */
+        .header {
+            background: rgba(17, 17, 17, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .logo {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .logo:hover {
+            transform: translateY(-1px);
+        }
+
+        .logo img {
+            filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.4));
+            transition: all 0.3s;
+        }
+
+        .logo:hover img {
+            filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.8));
+        }
+
+        .nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav a {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            white-space: nowrap;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            left: 12px;
+            right: 12px;
+            height: 2px;
+            background: #8b5cf6;
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .nav a:hover {
+            color: #fff;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .nav a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav a.active {
+            color: #ffffff;
+            background: rgba(139, 92, 246, 0.15);
+        }
+
+        .nav a.active::after {
+            transform: scaleX(1);
+        }
+
+        .cart-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: #ffffff;
+            padding: 12px 28px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cart-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cart-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
+        }
+
+        .cart-btn:active {
+            transform: translateY(0);
+        }
+
+        .wishlist-btn-header {
+            position: relative;
+            background: transparent;
+            border: 2px solid #ef4444;
+            color: #ef4444;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .wishlist-btn-header:hover {
+            background: rgba(239, 68, 68, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
+        }
+
+        .wishlist-btn-header:active {
+            transform: translateY(0);
+        }
+
+        /* HERO BANNER */
+        .hero-banner {
+            padding: 120px 24px 80px;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            background: #0a0a0a;
+        }
+
+        /* HERO SLIDER */
+        .hero-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(rgba(10, 10, 10, 0.5), rgba(10, 10, 10, 0.7));
+        }
+
+        .hero-slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        /* SLIDER CONTROLS */
+        .slider-dots {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 2;
+        }
+
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .slider-dot.active {
+            background: #8b5cf6;
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 0 16px rgba(139, 92, 246, 0.8);
+            transform: scale(1.2);
+        }
+
+        .slider-dot:hover {
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(1.1);
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #a78bfa 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: #e0e0e0;
+            margin-bottom: 24px;
+            max-width: 600px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: #ffffff;
+            padding: 14px 40px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.6);
+        }
+
+        /* PRODUCTS SECTION */
+        .products-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .view-all {
+            color: #8b5cf6;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: color 0.3s;
+        }
+
+        .view-all:hover {
+            color: #a78bfa;
+        }
+
+        /* PRODUCT GRID */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 32px;
+        }
+
+        .product-card {
+            background: linear-gradient(145deg, #1a1a1a 0%, #151515 100%);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #a78bfa, #8b5cf6);
+            background-size: 200% 100%;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .product-card:hover::before {
+            opacity: 1;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .product-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.4);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .product-image {
+            background: #0f0f0f;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            transition: transform 0.4s;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-brand {
+            color: #8b5cf6;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .product-features {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .feature-tag {
+            background: rgba(139, 92, 246, 0.1);
+            color: #a78bfa;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .current-price {
+            font-size: 28px;
+            font-weight: 900;
+            color: #ffffff;
+        }
+
+        .old-price {
+            font-size: 18px;
+            color: #737373;
+            text-decoration: line-through;
+        }
+
+        .discount {
+            background: #dc2626;
+            color: #ffffff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        .btn-add, .btn-cart {
+            flex: 1;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: #ffffff;
+            padding: 14px 20px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-add::before, .btn-cart::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-add:hover::before, .btn-cart:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-add:hover, .btn-cart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.55);
+            color: #ffffff;
+        }
+
+        .btn-quick {
+            background: transparent;
+            color: #8b5cf6;
+            padding: 14px 20px;
+            border-radius: 10px;
+            border: 2px solid #8b5cf6;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-quick:hover {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: #a78bfa;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        /* STOCK INDICATOR */
+        .stock {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .stock-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+            }
+        }
+
+        .stock-text {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        /* RATING */
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .stars {
+            color: #fbbf24;
+            font-size: 14px;
+        }
+
+        .rating-count {
+            color: #737373;
+            font-size: 13px;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: linear-gradient(180deg, #0a0a0a 0%, #111111 100%);
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 60px 24px 24px;
+            margin-top: 80px;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #8b5cf6, transparent);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #999;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: inline-block;
+            position: relative;
+            padding-left: 0;
+        }
+
+        .footer-links a::before {
+            content: '→';
+            position: absolute;
+            left: -20px;
+            opacity: 0;
+            transition: all 0.3s;
+            color: #8b5cf6;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+            padding-left: 20px;
+        }
+
+        .footer-links a:hover::before {
+            opacity: 1;
+            left: 0;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid rgba(139, 92, 246, 0.1);
+            text-align: center;
+            color: #737373;
+            font-size: 14px;
+        }
+
+        /* CATEGORIES */
+        .categories-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .categories-grid {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .category-btn {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: #a1a1a1;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .category-btn i {
+            font-size: 12px;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            border-color: #8b5cf6;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* INFO CARDS */
+        /* REASSURANCE / TRUST BAR */
+        .trust-bar-section {
+            background: #0d0d0d;
+            border-top: 1px solid rgba(139, 92, 246, 0.12);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.12);
+            padding: 24px 0;
+            margin: 40px 0 60px 0;
+        }
+
+        .trust-bar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            background: rgba(26, 26, 26, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .trust-item:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(139, 92, 246, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .trust-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #a78bfa;
+            flex-shrink: 0;
+        }
+
+        .trust-text h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 2px;
+            letter-spacing: -0.01em;
+        }
+
+        .trust-text p {
+            font-size: 12px;
+            color: #888888;
+            line-height: 1.4;
+        }
+
+        /* BRAND MANIFESTO / BENTO SECTION */
+        .brand-section {
+            max-width: 1400px;
+            margin: 0 auto 100px auto;
+            padding: 0 24px;
+        }
+
+        .brand-header {
+            margin-bottom: 36px;
+        }
+
+        .brand-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #a78bfa;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 14px;
+        }
+
+        .brand-title {
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .brand-subtitle {
+            font-size: 16px;
+            color: #888888;
+            margin-top: 8px;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 24px;
+        }
+
+        .bento-card {
+            background: linear-gradient(145deg, #161616 0%, #111111 100%);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: 20px;
+            padding: 36px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bento-card:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.6), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bento-card:hover::before {
+            opacity: 1;
+        }
+
+        .bento-top-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #8b5cf6;
+            margin-bottom: 16px;
+        }
+
+        .bento-card h3 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 14px;
+            line-height: 1.3;
+        }
+
+        .bento-card p {
+            font-size: 14px;
+            color: #999999;
+            line-height: 1.7;
+        }
+
+        .bento-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .bento-pill {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #cccccc;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bento-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        @media (max-width: 992px) {
+            .trust-bar-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .trust-bar-container {
+                grid-template-columns: 1fr;
+            }
+            .brand-title {
+                font-size: 28px;
+            }
+            .bento-card {
+                padding: 24px;
+            }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 42px;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+
+            .nav {
+                display: none;
+            }
+
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="images/logo/logo.png" alt="Zenith Store" style="height: 24px;">
+                <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.5px;">ZENITH STORE</span>
+            </a>
+            <nav class="nav">
+                <a href="#products" onclick="filterCategory(event, 'tous')" class="active">Tous</a>
+                <a href="#products" onclick="filterCategory(event, 'ecouteurs')">Écouteurs</a>
+                <a href="#products" onclick="filterCategory(event, 'casques')">Casques</a>
+                <a href="#products" onclick="filterCategory(event, 'souris')">Souris</a>
+                <a href="#products" onclick="filterCategory(event, 'claviers')">Claviers</a>
+                <a href="#products" onclick="filterCategory(event, 'tapis')">Tapis de Souris</a>
+                <a href="#products" onclick="filterCategory(event, 'ecrans')">Écrans</a>
+                <a href="#products" onclick="filterCategory(event, 'accessoires')">Accessoires</a>
+            </nav>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Changer le thème">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <button class="user-btn" id="userBtn" onclick="toggleUserMenu()" style="background: transparent; border: 1px solid rgba(139, 92, 246, 0.4); color: #8b5cf6; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s;">
+                    <i class="fas fa-user"></i> Mon compte
+                </button>
+                <button class="cart-btn" onclick="window.location.href='panier.html'">
+                    Panier (<span id="cartCount">0</span>)
+                </button>
+            </div>
+            
+            <!-- USER MENU DROPDOWN -->
+            <div id="userMenu" style="display: none; position: absolute; top: 70px; right: 24px; background: #111; border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 12px; padding: 12px 0; min-width: 220px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 9999;">
+                <div id="userMenuContent"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CATEGORIES -->
+    <section class="categories-section" style="display: none;">
+        <div class="categories-grid">
+            <button class="category-btn active" data-category="tous">
+                <i class="fas fa-th"></i> Tous
+            </button>
+            <button class="category-btn" data-category="ecouteurs">
+                <i class="fas fa-headphones"></i> Écouteurs
+            </button>
+            <button class="category-btn" data-category="casques">
+                <i class="fas fa-headset"></i> Casques
+            </button>
+            <button class="category-btn" data-category="souris">
+                <i class="fas fa-mouse"></i> Souris
+            </button>
+            <button class="category-btn" data-category="claviers">
+                <i class="fas fa-keyboard"></i> Claviers
+            </button>
+            <button class="category-btn" data-category="tapis">
+                <i class="fas fa-grip-horizontal"></i> Tapis
+            </button>
+            <button class="category-btn" data-category="ecrans">
+                <i class="fas fa-desktop"></i> Écrans
+            </button>
+            <button class="category-btn" data-category="accessoires">
+                <i class="fas fa-plug"></i> Accessoires
+            </button>
+        </div>
+    </section>
+
+    <!-- HERO BANNER -->
+    <section class="hero-banner">
+        <!-- SLIDER BACKGROUNDS -->
+        <div class="hero-slider">
+            <div class="hero-slide active" style="background-image: url('images/banners/banner-1.jpg.png');"></div>
+            <div class="hero-slide" style="background-image: url('images/banners/banner-2.jpg.png');"></div>
+            <div class="hero-slide" style="background-image: url('images/banners/banner-3.jpg.png');"></div>
+            <div class="hero-slide" style="background-image: url('images/banners/banner-4.jpg.png');"></div>
+            <div class="hero-slide" style="background-image: url('images/banners/banner-5.jpg.png');"></div>
+            <div class="hero-slide" style="background-image: url('images/banners/banner-6.jpg.png');"></div>
+        </div>
+
+        <div class="hero-content">
+            <span class="hero-badge">COLLECTION ÉTÉ 2026</span>
+            <h1 class="hero-title">
+                Ton Setup Gaming<br>
+                <span class="hero-gradient">Commence Ici</span>
+            </h1>
+            <p class="hero-subtitle">
+                Casques, souris, claviers, écrans — on a testé et sélectionné le meilleur matos gaming sans te ruiner. Livraison rapide, retours faciles.
+            </p>
+            <button class="hero-btn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+                Voir les produits
+            </button>
+        </div>
+
+        <!-- SLIDER DOTS -->
+        <div class="slider-dots">
+            <div class="slider-dot active" onclick="goToSlide(0)"></div>
+            <div class="slider-dot" onclick="goToSlide(1)"></div>
+            <div class="slider-dot" onclick="goToSlide(2)"></div>
+            <div class="slider-dot" onclick="goToSlide(3)"></div>
+            <div class="slider-dot" onclick="goToSlide(4)"></div>
+            <div class="slider-dot" onclick="goToSlide(5)"></div>
+        </div>
+    </section>
+
+    <!-- PRODUCTS SECTION -->
+    <section id="products" class="products-section">
+        <div class="section-header">
+            <h2 class="section-title">Nos produits</h2>
+            <a href="#products" class="view-all" onclick="scrollToProducts(event)">Voir tout (7) →</a>
+        </div>
+
+        <div class="product-grid">
+            
+            <!-- PRODUCT CARD - FiiO JD1 -->
+            <div class="product-card" data-category="ecouteurs" onclick="window.location.href='produit.html?id=prod-1'" style="cursor: pointer;">
+                <span class="product-badge">Nouveau</span>
+                <div class="product-image">
+                    <img src="images/ecouteurs/1.png" alt="FiiO JD1" loading="lazy">
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">FiiO</div>
+                    <h3 class="product-name">JD1 IEM Gaming Écouteurs</h3>
+                    
+                    <div class="rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-count">(128 avis)</span>
+                    </div>
+
+                    <div class="product-features">
+                        <span class="feature-tag">Driver LCP 10mm</span>
+                        <span class="feature-tag">Hi-Res Audio</span>
+                        <span class="feature-tag">2-Pin Cable</span>
+                    </div>
+
+                    <div class="stock">
+                        <span class="stock-dot"></span>
+                        <span class="stock-text">En stock - 14 unités</span>
+                    </div>
+
+                    <div class="product-price">
+                        <span class="current-price">79,90€</span>
+                        <span class="old-price">149,90€</span>
+                        <span class="discount">-47%</span>
+                    </div>
+
+                    <div class="product-actions">
+                        <button class="btn-add" onclick="addToCart(event)">Ajouter au panier</button>
+                        <button class="btn-quick" onclick="quickView(event)">Aperçu</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUCT CARD - BINNUNE Casque -->
+            <div class="product-card" data-category="casques" onclick="window.location.href='produit.html?id=prod-2'" style="cursor: pointer;">
+                <span class="product-badge">-40%</span>
+                <div class="product-image">
+                    <img src="images/casques/casque-1.png" alt="BINNUNE Casque Gaming" loading="lazy">
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">BINNUNE</div>
+                    <h3 class="product-name">Casque Gaming Sans Fil 2.4GHz</h3>
+                    
+                    <div class="rating">
+                        <span class="stars">★★★★☆</span>
+                        <span class="rating-count">(84 avis)</span>
+                    </div>
+
+                    <div class="product-features">
+                        <span class="feature-tag">Sans Fil 2.4GHz</span>
+                        <span class="feature-tag">PS5/PS4/PC</span>
+                        <span class="feature-tag">Bluetooth</span>
+                    </div>
+
+                    <div class="stock">
+                        <span class="stock-dot"></span>
+                        <span class="stock-text">En stock - 6 unités</span>
+                    </div>
+
+                    <div class="product-price">
+                        <span class="current-price">59,99€</span>
+                        <span class="old-price">99,99€</span>
+                        <span class="discount">-40%</span>
+                    </div>
+
+                    <div class="product-actions">
+                        <button class="btn-add" onclick="addToCartCasque(event)">Ajouter au panier</button>
+                        <button class="btn-quick" onclick="quickView(event)">Aperçu</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUCT CARD - AJAZZ Souris -->
+            <div class="product-card" data-category="souris" onclick="window.location.href='produit.html?id=prod-3'" style="cursor: pointer;">
+                <span class="product-badge">Populaire</span>
+                <div class="product-image">
+                    <img src="images/souris/souris-2.png" alt="AJAZZ AJ179 V2 Souris Gaming" loading="lazy">
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">AJAZZ</div>
+                    <h3 class="product-name">AJ179 V2 Souris Gaming Tri-Mode</h3>
+                    
+                    <div class="rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-count">(213 avis)</span>
+                    </div>
+
+                    <div class="product-features">
+                        <span class="feature-tag">12000 DPI</span>
+                        <span class="feature-tag">Ultra-légère 56g</span>
+                        <span class="feature-tag">Tri-Mode</span>
+                    </div>
+
+                    <div class="stock">
+                        <span class="stock-dot"></span>
+                        <span class="stock-text">En stock - 9 unités</span>
+                    </div>
+
+                    <div class="product-price">
+                        <span class="current-price">74,99€</span>
+                        <span class="old-price">169,99€</span>
+                        <span class="discount">-56%</span>
+                    </div>
+
+                    <div class="product-actions">
+                        <button class="btn-add" onclick="addToCartSouris(event)">Ajouter au panier</button>
+                        <button class="btn-quick" onclick="quickView(event)">Aperçu</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUCT CARD - AJAZZ Clavier -->
+            <div class="product-card" data-category="claviers" onclick="window.location.href='produit.html?id=prod-4'" style="cursor: pointer;">
+                <span class="product-badge">-33%</span>
+                <div class="product-image">
+                    <img src="images/claviers/clavier-1.png" alt="AJAZZ AK992 Clavier Mécanique" loading="lazy">
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">AJAZZ</div>
+                    <h3 class="product-name">AK992 Clavier Mécanique 98 Touches</h3>
+                    
+                    <div class="rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-count">(156 avis)</span>
+                    </div>
+
+                    <div class="product-features">
+                        <span class="feature-tag">98 Touches</span>
+                        <span class="feature-tag">Hot-Swap</span>
+                        <span class="feature-tag">RGB</span>
+                    </div>
+
+                    <div class="stock">
+                        <span class="stock-dot"></span>
+                        <span class="stock-text">En stock - 11 unités</span>
+                    </div>
+
+                    <div class="product-price">
+                        <span class="current-price">99,99€</span>
+                        <span class="old-price">149,99€</span>
+                        <span class="discount">-33%</span>
+                    </div>
+
+                    <div class="product-actions">
+                        <button class="btn-add" onclick="addToCartClavier(event)">Ajouter au panier</button>
+                        <button class="btn-quick" onclick="quickView(event)">Aperçu</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUCT CARD - Tapis de Souris -->
+            <div class="product-card" data-category="tapis" onclick="window.location.href='produit.html?id=prod-5'" style="cursor: pointer;">
+                <span class="product-badge">-30%</span>
+                <div class="product-image">
+                    <img src="images/tapis/tapis-1.png" alt="Tapis de Souris Gaming XXL" loading="lazy">
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">GAMING PRO</div>
+                    <h3 class="product-name">Tapis de Souris Gaming XXL Spider</h3>
+                    
+                    <div class="rating">
+                        <span class="stars">★★★★☆</span>
+                        <span class="rating-count">(67 avis)</span>
+                    </div>
+
+                    <div class="product-features">
+                        <span class="feature-tag">XXL 80x30cm</span>
+                        <span class="feature-tag">Antidérapant</span>
+                        <span class="feature-tag">Design Spider</span>
+                    </div>
+
+                    <div class="stock">
+                        <span class="stock-dot"></span>
+                        <span class="stock-text">En stock - 23 unités</span>
+                    </div>
+
+                    <div class="product-price">
+                        <span class="current-price">34,99€</span>
+                        <span class="old-price">49,99€</span>
+                        <span class="discount">-30%</span>
+                    </div>
+
+                    <div class="product-actions">
+                        <button class="btn-add" onclick="addToCartTapis(event)">Ajouter au panier</button>
+                        <button class="btn-quick" onclick="quickView(event)">Aperçu</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUCT CARD - Écran Gaming -->
+            <div class="product-card" data-category="ecrans" onclick="window.location.href='produit.html?id=prod-6'" style="cursor: pointer;">
+                <span class="product-badge">Dernières pièces</span>
+                <div class="product-image">
+                    <img src="images/ecrans/ecran-1.png" alt="Écran Gaming LXZ 24.5" loading="lazy">
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">LXZ</div>
+                    <h3 class="product-name">Écran Gaming 24.5" 200Hz Full HD</h3>
+                    
+                    <div class="rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-count">(192 avis)</span>
+                    </div>
+
+                    <div class="product-features">
+                        <span class="feature-tag">200Hz</span>
+                        <span class="feature-tag">1ms</span>
+                        <span class="feature-tag">FreeSync</span>
+                    </div>
+
+                    <div class="stock">
+                        <span class="stock-dot"></span>
+                        <span class="stock-text">En stock - 3 unités</span>
+                    </div>
+
+                    <div class="product-price">
+                        <span class="current-price">179,99€</span>
+                        <span class="old-price">209,99€</span>
+                        <span class="discount">-14%</span>
+                    </div>
+
+                    <div class="product-actions">
+                        <button class="btn-add" onclick="addToCartEcran(event)">Ajouter au panier</button>
+                        <button class="btn-quick" onclick="quickView(event)">Aperçu</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUCT CARD - Console Macros -->
+            <div class="product-card" data-category="accessoires" onclick="window.location.href='produit.html?id=prod-7'" style="cursor: pointer;">
+                <span class="product-badge">-25%</span>
+                <div class="product-image">
+                    <img src="images/accessoires/accessoire-1.png" alt="AJAZZ Console Macros" loading="lazy">
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">AJAZZ</div>
+                    <h3 class="product-name">AKP153 Console Macros Programmable</h3>
+                    
+                    <div class="rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-count">(43 avis)</span>
+                    </div>
+
+                    <div class="product-features">
+                        <span class="feature-tag">Écran LCD</span>
+                        <span class="feature-tag">Programmable</span>
+                        <span class="feature-tag">15 Touches</span>
+                    </div>
+
+                    <div class="stock">
+                        <span class="stock-dot"></span>
+                        <span class="stock-text">En stock - 14 unités</span>
+                    </div>
+
+                    <div class="product-price">
+                        <span class="current-price">149,99€</span>
+                        <span class="old-price">199,99€</span>
+                        <span class="discount">-25%</span>
+                    </div>
+
+                    <div class="product-actions">
+                        <button class="btn-add" onclick="addToCartAccessoire(event)">Ajouter au panier</button>
+                        <button class="btn-quick" onclick="quickView(event)">Aperçu</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 
+            AJOUTE TES PROCHAINS PRODUITS ICI 
+            Copie-colle la structure ci-dessus et modifie:
+            - l'image (src="images/XX.png")
+            - le nom du produit
+            - le prix
+            - etc.
+            -->
+
+        </div>
+    </section>
+
+    <!-- BARRE DE REASSURANCE PRO (FINE & HORIZONTALE) -->
+    <section class="trust-bar-section">
+        <div class="trust-bar-container">
+            <div class="trust-item">
+                <div class="trust-icon"><i class="fas fa-truck-fast"></i></div>
+                <div class="trust-text">
+                    <h4>Expédié sous 24h</h4>
+                    <p>Envoi soigné, gratuit dès 50€ d'achat</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon"><i class="fas fa-shield-halved"></i></div>
+                <div class="trust-text">
+                    <h4>Garantie 2 ans</h4>
+                    <p>SAV direct en France, sans prise de tête</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon"><i class="fas fa-rotate-left"></i></div>
+                <div class="trust-text">
+                    <h4>30 jours d'essai</h4>
+                    <p>Pas convaincu ? Retour & remboursement simple</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon"><i class="fas fa-lock"></i></div>
+                <div class="trust-text">
+                    <h4>Paiement 100% sécurisé</h4>
+                    <p>CB, PayPal et option 3x sans frais</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MANIFESTE ZENITH (BENTO GRID MODERNE AU LIEU DES CARRES IA) -->
+    <section class="brand-section">
+        <div class="brand-header">
+            <span class="brand-tag"><i class="fas fa-crosshairs"></i> Notre sélection</span>
+            <h2 class="brand-title">On vend uniquement ce qu'on brancherait<br>sur notre propre setup.</h2>
+            <p class="brand-subtitle">Pas de catalogue infini de 10 000 produits génériques. Que du matos testé, approuvé et vendu au juste prix.</p>
+        </div>
+
+        <div class="bento-grid">
+            <!-- CARTE PRINCIPALE -->
+            <div class="bento-card">
+                <div>
+                    <div class="bento-top-badge"><i class="fas fa-gamepad"></i> Testé en conditions réelles</div>
+                    <h3>0 compromis sur la réactivité et la prise en main</h3>
+                    <p>
+                        Avant de proposer un clavier, une souris ou un casque, on joue avec pendant des heures. 
+                        On mesure la réactivité des switches, la précision du capteur et le confort sur les longues sessions. 
+                        Si les finitions sont douteuses ou que le confort ne suit pas, le produit ne rentre jamais dans la boutique.
+                    </p>
+                </div>
+                <div class="bento-pills">
+                    <span class="bento-pill"><i class="fas fa-check" style="color: #10b981;"></i> Latence ultra-faible</span>
+                    <span class="bento-pill"><i class="fas fa-check" style="color: #10b981;"></i> Capteurs précis</span>
+                    <span class="bento-pill"><i class="fas fa-check" style="color: #10b981;"></i> Switches durables</span>
+                    <span class="bento-pill"><i class="fas fa-check" style="color: #10b981;"></i> Confort longue session</span>
+                </div>
+            </div>
+
+            <!-- COLONNE SECONDAIRE -->
+            <div class="bento-stack">
+                <div class="bento-card">
+                    <div>
+                        <div class="bento-top-badge"><i class="fas fa-tag"></i> Circuit direct</div>
+                        <h3>Prix fabricant, zéro intermédiaire</h3>
+                        <p>
+                            On travaille directement avec les marques pour couper les marges de grossistes inutiles. 
+                            Tu paies le juste tarif pour du matériel compétitif, sans payer 40% de plus pour un logo marketing.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bento-card">
+                    <div>
+                        <div class="bento-top-badge"><i class="fas fa-headset"></i> Support humain</div>
+                        <h3>SAV direct & assistance par des gamers</h3>
+                        <p>
+                            Une question de compatibilité ou un souci technique ? Tu nous écris et on te répond nous-mêmes dans la journée. 
+                            Pas de robot IA qui tourne en boucle, juste de l'entraide directe.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>À Propos</h3>
+                <ul class="footer-links">
+                    <li><a href="a-propos.html">Notre histoire</a></li>
+                    <li><a href="a-propos.html">Nos valeurs</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Aide & Suivi</h3>
+                <ul class="footer-links">
+                    <li><a href="suivi.html">Suivi de colis</a></li>
+                    <li><a href="commandes.html">Mes commandes & Factures</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="livraison.html">Livraison (8-12j)</a></li>
+                    <li><a href="retours.html">Retours & Garantie</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Légal</h3>
+                <ul class="footer-links">
+                    <li><a href="cgv.html">CGV</a></li>
+                    <li><a href="mentions-legales.html">Mentions légales</a></li>
+                    <li><a href="confidentialite.html">Confidentialité</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Réseaux</h3>
+                <ul class="footer-links">
+                    <li><a href="https://twitter.com/zenithstore" target="_blank">Twitter / X</a></li>
+                    <li><a href="https://instagram.com/zenithstore.gaming" target="_blank">Instagram</a></li>
+                    <li><a href="https://discord.gg/zenithstore" target="_blank">Discord</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 Zenith Store. Tous droits réservés.
+            <span id="adminLink" style="display: none; margin-left: 2rem;">
+                <a href="admin.html" style="color: #ef4444; text-decoration: none; font-size: 12px;">
+                    <i class="fas fa-shield-alt"></i> Panel Admin
+                </a>
+            </span>
+        </div>
+    </footer>
+
+    <script>
+        // Configuration produit
+        const productConfig = {
+            aliexpressId: '1005006183202423',
+            productName: 'FiiO JD1 - Écouteurs IEM',
+            price: 79.90,
+            oldPrice: 149.90
+        };
+
+        // Charger le compteur panier
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
+            const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalItems;
+        }
+
+        // Fonction générique pour ajouter au panier (gère les doublons)
+        function addToCartItem(event, id, name, price, image) {
+            event.stopPropagation();
+            
+            const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
+            
+            // Vérifier si le produit est déjà dans le panier
+            const existingItem = cart.items.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.items.push({
+                    id: id,
+                    name: name,
+                    quantity: 1,
+                    price: price,
+                    image: image
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            // Notification
+            alert('Produit ajouté au panier !');
+        }
+
+        // Fonctions d'ajout par produit (appellent la fonction générique)
+        function addToCart(event) {
+            addToCartItem(event, productConfig.aliexpressId, productConfig.productName, productConfig.price, 'images/ecouteurs/1.png');
+        }
+
+        function addToCartCasque(event) {
+            addToCartItem(event, '1005007187792794', 'BINNUNE Casque Gaming Sans Fil 2.4GHz', 59.99, 'images/casques/casque-1.png');
+        }
+
+        function addToCartSouris(event) {
+            addToCartItem(event, '1005012403688680', 'AJAZZ AJ179 V2 Souris Gaming Tri-Mode', 74.99, 'images/souris/souris-2.png');
+        }
+
+        function addToCartClavier(event) {
+            addToCartItem(event, '1005012399064784', 'AJAZZ AK992 Clavier Mécanique 98 Touches', 99.99, 'images/claviers/clavier-1.png');
+        }
+
+        function addToCartTapis(event) {
+            addToCartItem(event, '1005012261232343', 'Tapis de Souris Gaming XXL Spider', 34.99, 'images/tapis/tapis-1.png');
+        }
+
+        function addToCartEcran(event) {
+            addToCartItem(event, '1005013234055626', 'Écran Gaming 24.5" 200Hz Full HD', 179.99, 'images/ecrans/ecran-1.png');
+        }
+
+        function addToCartAccessoire(event) {
+            addToCartItem(event, '1005012031666768', 'AJAZZ AKP153 Console Macros Programmable', 149.99, 'images/accessoires/accessoire-1.png');
+        }
+
+        // Quick view — redirige vers la page produit
+        function quickView(event) {
+            event.stopPropagation();
+            // Trouver la carte produit parente pour obtenir son lien
+            const card = event.target.closest('.product-card');
+            if (card && card.getAttribute('onclick')) {
+                const match = card.getAttribute('onclick').match(/href='([^']+)'/);
+                if (match) {
+                    window.location.href = match[1];
+                    return;
+                }
+            }
+            window.location.href = 'index.html#products';
+        }
+
+        // Ouvrir page détail produit
+        function openProductDetail() {
+            window.location.href = 'produit.html?id=prod-1';
+        }
+
+        // Gestion des catégories
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Retirer active de tous les boutons
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                // Ajouter active au bouton cliqué
+                this.classList.add('active');
+                
+                // Plus tard, tu pourras filtrer les produits ici
+                const category = this.getAttribute('data-category');
+                console.log('Catégorie sélectionnée:', category);
+            });
+        });
+
+        // Scroll vers les produits
+        function scrollToProducts(event) {
+            event.preventDefault();
+            document.getElementById('products').scrollIntoView({behavior:'smooth'});
+        }
+
+        // Filtrer par catégorie
+        function filterCategory(event, category) {
+            event.preventDefault();
+            
+            // Retirer active de tous les liens
+            document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+            // Ajouter active au lien cliqué
+            event.target.classList.add('active');
+            
+            // Scroll vers les produits
+            document.getElementById('products').scrollIntoView({behavior:'smooth'});
+            
+            // Filtrer les produits
+            const allProducts = document.querySelectorAll('.product-card');
+            let visibleCount = 0;
+            
+            allProducts.forEach(product => {
+                const productCategory = product.getAttribute('data-category');
+                
+                if (category === 'tous' || productCategory === category) {
+                    product.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+            
+            // Mettre à jour le titre
+            const section = document.querySelector('.section-title');
+            const categoryNames = {
+                'tous': 'Tous les produits',
+                'ecouteurs': 'Écouteurs Gaming',
+                'casques': 'Casques Gaming',
+                'souris': 'Souris Gaming',
+                'claviers': 'Claviers Gaming',
+                'tapis': 'Tapis de Souris',
+                'ecrans': 'Écrans Gaming',
+                'accessoires': 'Accessoires Gaming'
+            };
+            
+            section.innerHTML = categoryNames[category] || 'Produits';
+            
+            // Mettre à jour le compteur
+            document.querySelector('.view-all').textContent = `Voir tout (${visibleCount}) →`;
+        }
+
+        // ====== HERO SLIDER ======
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.slider-dot');
+        const totalSlides = slides.length;
+        let sliderInterval;
+
+        // Fonction pour changer de slide
+        function showSlide(index) {
+            // Retirer active de toutes les slides et dots
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // Ajouter active à la slide et dot sélectionnés
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            
+            currentSlide = index;
+        }
+
+        // Fonction pour aller à une slide spécifique (au clic sur un dot)
+        function goToSlide(index) {
+            showSlide(index);
+            // Réinitialiser l'intervalle pour qu'il ne change pas immédiatement après
+            clearInterval(sliderInterval);
+            startSlider();
+        }
+
+        // Fonction pour passer à la slide suivante
+        function nextSlide() {
+            let next = currentSlide + 1;
+            if (next >= totalSlides) {
+                next = 0;
+            }
+            showSlide(next);
+        }
+
+        // Démarrer le slider automatique
+        function startSlider() {
+            sliderInterval = setInterval(nextSlide, 5000); // Change toutes les 5 secondes
+        }
+
+        // ====== GESTION UTILISATEUR ======
+        function checkUserSession() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const userBtn = document.getElementById('userBtn');
+            
+            if (currentUser) {
+                // Utilisateur connecté
+                userBtn.innerHTML = `<i class="fas fa-user-circle"></i> ${currentUser.name || currentUser.email.split('@')[0]}`;
+                
+                // Afficher le lien admin si c'est un admin
+                if (currentUser.role === 'admin') {
+                    document.getElementById('adminLink').style.display = 'inline';
+                }
+            } else {
+                // Pas connecté
+                userBtn.innerHTML = `<i class="fas fa-user"></i> Se connecter`;
+            }
+        }
+
+        function toggleUserMenu() {
+            const menu = document.getElementById('userMenu');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const menuContent = document.getElementById('userMenuContent');
+            
+            if (currentUser) {
+                // Menu pour utilisateur connecté
+                const wishlistCount = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+                const comparisonCount = JSON.parse(localStorage.getItem('comparison') || '[]').length;
+                
+                menuContent.innerHTML = `
+                    <div style="padding: 16px 20px; border-bottom: 1px solid rgba(139, 92, 246, 0.2);">
+                        <div style="font-weight: 700; margin-bottom: 4px;">${currentUser.name || 'Utilisateur'}</div>
+                        <div style="font-size: 12px; color: #888;">${currentUser.email}</div>
+                    </div>
+                    <a href="compte.html" style="display: block; padding: 12px 20px; color: #fff; text-decoration: none; transition: all 0.3s;">
+                        <i class="fas fa-user" style="margin-right: 10px; color: #8b5cf6;"></i>Mon Compte
+                    </a>
+                    <a href="commandes.html" style="display: block; padding: 12px 20px; color: #fff; text-decoration: none; transition: all 0.3s;">
+                        <i class="fas fa-shopping-bag" style="margin-right: 10px; color: #8b5cf6;"></i>Mes Commandes
+                    </a>
+                    <a href="suivi.html" style="display: block; padding: 12px 20px; color: #fff; text-decoration: none; transition: all 0.3s;">
+                        <i class="fas fa-truck" style="margin-right: 10px; color: #10b981;"></i>Suivre mon colis
+                    </a>
+                    <a href="favoris.html" style="display: block; padding: 12px 20px; color: #fff; text-decoration: none; transition: all 0.3s; position: relative;">
+                        <i class="fas fa-heart" style="margin-right: 10px; color: #ef4444;"></i>Mes Favoris
+                        ${wishlistCount > 0 ? `<span style="position: absolute; right: 20px; background: #ef4444; color: #fff; border-radius: 10px; padding: 2px 8px; font-size: 11px; font-weight: 700;">${wishlistCount}</span>` : ''}
+                    </a>
+                    <a href="comparateur.html" style="display: block; padding: 12px 20px; color: #fff; text-decoration: none; transition: all 0.3s; position: relative;">
+                        <i class="fas fa-balance-scale" style="margin-right: 10px; color: #8b5cf6;"></i>Comparateur
+                        ${comparisonCount > 0 ? `<span style="position: absolute; right: 20px; background: #8b5cf6; color: #fff; border-radius: 10px; padding: 2px 8px; font-size: 11px; font-weight: 700;">${comparisonCount}</span>` : ''}
+                    </a>
+                    <a href="#" onclick="logout(); return false;" style="display: block; padding: 12px 20px; color: #ff5555; text-decoration: none; border-top: 1px solid rgba(139, 92, 246, 0.2); transition: all 0.3s;">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i>Deconnexion
+                    </a>
+                `;
+            } else {
+                // Menu pour visiteur
+                const wishlistCount = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+                const comparisonCount = JSON.parse(localStorage.getItem('comparison') || '[]').length;
+                
+                menuContent.innerHTML = `
+                    <a href="login.html" style="display: block; padding: 12px 20px; color: #fff; text-decoration: none; transition: all 0.3s;">
+                        <i class="fas fa-sign-in-alt" style="margin-right: 10px; color: #8b5cf6;"></i>Se connecter
+                    </a>
+                    <a href="register.html" style="display: block; padding: 12px 20px; color: #fff; text-decoration: none; transition: all 0.3s;">
+                        <i class="fas fa-user-plus" style="margin-right: 10px; color: #8b5cf6;"></i>S'inscrire
+                    </a>
+                    <div style="border-top: 1px solid rgba(139, 92, 246, 0.2); margin-top: 8px; padding-top: 8px;">
+                        <a href="favoris.html" style="display: block; padding: 12px 20px; color: #fff; text-decoration: none; transition: all 0.3s; position: relative;">
+                            <i class="fas fa-heart" style="margin-right: 10px; color: #ef4444;"></i>Mes Favoris
+                            ${wishlistCount > 0 ? `<span style="position: absolute; right: 20px; background: #ef4444; color: #fff; border-radius: 10px; padding: 2px 8px; font-size: 11px; font-weight: 700;">${wishlistCount}</span>` : ''}
+                        </a>
+                        <a href="comparateur.html" style="display: block; padding: 12px 20px; color: #fff; text-decoration: none; transition: all 0.3s; position: relative;">
+                            <i class="fas fa-balance-scale" style="margin-right: 10px; color: #8b5cf6;"></i>Comparateur
+                            ${comparisonCount > 0 ? `<span style="position: absolute; right: 20px; background: #8b5cf6; color: #fff; border-radius: 10px; padding: 2px 8px; font-size: 11px; font-weight: 700;">${comparisonCount}</span>` : ''}
+                        </a>
+                        <a href="suivi.html" style="display: block; padding: 12px 20px; color: #fff; text-decoration: none; transition: all 0.3s;">
+                            <i class="fas fa-truck" style="margin-right: 10px; color: #10b981;"></i>Suivre mon colis
+                        </a>
+                    </div>
+                `;
+            }
+            
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            alert('Tu es déconnecté');
+            window.location.reload();
+        }
+
+        // Fermer le menu si on clique ailleurs
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('userMenu');
+            const btn = document.getElementById('userBtn');
+            if (!menu.contains(event.target) && !btn.contains(event.target)) {
+                menu.style.display = 'none';
+            }
+        });
+
+        // Initialiser le slider au chargement de la page
+        checkUserSession();
+        updateCartCount();
+        startSlider();
+        
+        // Charger et afficher les produits dynamiquement avec leurs catégories
+        async function loadAndRenderProducts() {
+            let products = [];
+            try {
+                const res = await fetch('/api/products');
+                const data = await res.json();
+                if (data && data.success && data.products && data.products.length > 0) {
+                    products = data.products;
+                }
+            } catch (e) {
+                // Fallback sur similar-products.js
+                if (typeof allProducts !== 'undefined' && allProducts.length > 0) {
+                    products = allProducts;
+                }
+            }
+
+            if (!products || products.length === 0) return;
+
+            const grid = document.querySelector('.product-grid');
+            if (!grid) return;
+
+            const viewAll = document.querySelector('.view-all');
+            if (viewAll) viewAll.textContent = `Voir tout (${products.length}) →`;
+
+            grid.innerHTML = products.map((prod, index) => {
+                const category = prod.category || 'accessoires';
+                const rating = prod.rating || 5;
+                const stars = '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
+                const badge = prod.discount ? `-${prod.discount}%` : (index === 0 ? 'Nouveau' : '');
+                const tags = prod.tags || ['Gaming', 'Testé'];
+                const aliId = (prod.aliexpress && prod.aliexpress.productId) ? prod.aliexpress.productId : prod.id;
+
+                return `
+                    <div class="product-card" data-category="${category}" onclick="window.location.href='produit.html?id=${prod.id}'" style="cursor: pointer;">
+                        ${badge ? `<span class="product-badge">${badge}</span>` : ''}
+                        <div class="product-image">
+                            <img src="${prod.image}" alt="${prod.name}" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-brand">${prod.brand || 'Zenith'}</div>
+                            <h3 class="product-name">${prod.name}</h3>
+                            
+                            <div class="rating">
+                                <span class="stars">${stars}</span>
+                                <span class="rating-count">(${prod.reviews || 40} avis)</span>
+                            </div>
+
+                            <div class="product-features">
+                                ${tags.slice(0, 3).map(t => `<span class="feature-tag">${t}</span>`).join('')}
+                            </div>
+
+                            <div class="stock">
+                                <span class="stock-dot"></span>
+                                <span class="stock-text">En stock - ${prod.stockCount || 10} unités</span>
+                            </div>
+
+                            <div class="product-price">
+                                <span class="current-price">${prod.price.toFixed(2)}€</span>
+                                ${prod.oldPrice ? `<span class="old-price">${prod.oldPrice.toFixed(2)}€</span>` : ''}
+                                ${prod.discount ? `<span class="discount">-${prod.discount}%</span>` : ''}
+                            </div>
+
+                            <div class="product-actions">
+                                <button class="btn-add" onclick="addToCartItem(event, '${aliId}', '${prod.name.replace(/'/g, "\\'")}', ${prod.price}, '${prod.image}')">
+                                    <i class="fas fa-shopping-cart"></i> Ajouter au panier
+                                </button>
+                                <button class="btn-quick" onclick="quickView(event)">Aperçu</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Ré-initialiser les boutons wishlist et comparaison
+            initProductCardButtons(products);
+        }
+
+        // Ajouter les boutons wishlist sur tous les produits
+        function initProductCardButtons(customProducts) {
+            if (typeof createWishlistButton !== 'function' || typeof createComparisonButton !== 'function') {
+                setTimeout(() => initProductCardButtons(customProducts), 50);
+                return;
+            }
+            const products = customProducts || (typeof allProducts !== 'undefined' ? allProducts : []);
+            const productCards = document.querySelectorAll('.product-card');
+            
+            productCards.forEach((card, index) => {
+                const product = products[index];
+                if (product) {
+                    const imageContainer = card.querySelector('.product-image');
+                    if (imageContainer && !imageContainer.querySelector('.wishlist-btn')) {
+                        // Bouton wishlist
+                        const wishlistBtn = createWishlistButton(
+                            product.id,
+                            product.name,
+                            product.price,
+                            product.image,
+                            `produit.html?id=${product.id}`
+                        );
+                        imageContainer.appendChild(wishlistBtn);
+                        
+                        // Bouton comparaison
+                        const comparisonBtn = createComparisonButton(
+                            product.id,
+                            product.name,
+                            product.price,
+                            product.image,
+                            `produit.html?id=${product.id}`,
+                            { type: product.category || 'Gaming' }
+                        );
+                        imageContainer.appendChild(comparisonBtn);
+                    }
+                }
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadAndRenderProducts);
+        } else {
+            loadAndRenderProducts();
+        }
+    </script>
+
+    <!-- Base de données synchronisée des produits -->
+    <script src="similar-products.js"></script>
+    <!-- Notifications système -->
+    <script src="notifications.js"></script>
+    <script src="wishlist.js"></script>
+    <script src="comparator.js"></script>
+    <script src="theme-switcher.js" async></script>
+    <script src="persistent-cart.js" async></script>
+    <script src="promo-code.js" async></script>
+    <script src="live-chat.js" async></script>
+    <script src="scroll-animations.js" async></script>
+    <script src="navigation-history.js" async></script>
+    <script src="stock-indicator.js" async></script>
+    <script src="product-filters.js" async></script>
+    <script src="newsletter.js" async></script>
+    <script src="loyalty-program.js" async></script>
+    <script src="full-gallery.js" async></script>
+</body>
+</html>

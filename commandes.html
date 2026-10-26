@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Commandes | Zenith Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: rgba(17, 17, 17, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .logo {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo img {
+            filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            color: #8b5cf6;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: #8b5cf6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 40px;
+        }
+
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .order-card {
+            background: #111;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s;
+        }
+
+        .order-card:hover {
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-4px);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .order-info {
+            display: flex;
+            gap: 32px;
+        }
+
+        .order-detail {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .order-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .order-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .order-status {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-delivered {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .status-pending {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .status-processing {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .order-items {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .order-item {
+            display: flex;
+            gap: 20px;
+            background: #0a0a0a;
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .item-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .item-specs {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .item-price {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .item-quantity {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .item-total {
+            font-size: 18px;
+            font-weight: 700;
+            color: #8b5cf6;
+        }
+
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .order-total {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+        }
+
+        .order-total-label {
+            color: #888;
+        }
+
+        .order-total-value {
+            font-size: 28px;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #8b5cf6;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            color: #8b5cf6;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: #8b5cf6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            color: #333;
+            margin-bottom: 24px;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .empty-text {
+            color: #888;
+            margin-bottom: 32px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="images/logo/logo.png" alt="Zenith Store" style="height: 24px;">
+                <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.5px;">ZENITH STORE</span>
+            </a>
+            <div style="display: flex; gap: 16px;">
+                <a href="compte.html" class="back-btn">
+                    <i class="fas fa-user"></i> Mon compte
+                </a>
+                <a href="index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <h1 class="page-title" style="margin-bottom: 8px;">Mes Commandes</h1>
+                <p style="color: #a1a1aa; font-size: 14px;">Consultez vos commandes récentes, téléchargez vos factures et suivez vos colis en direct.</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="orderSearchInput" placeholder="Rechercher par n° de commande..." style="padding: 10px 14px; background: #121217; border: 1px solid #272732; border-radius: 8px; color: #fff; font-size: 13.5px; width: 260px;">
+                <button class="btn btn-secondary" onclick="searchSpecificOrder()" style="padding: 10px 16px; font-size: 13.5px;">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="orderSuccessBanner" style="display: none; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-check-circle" style="color: #10b981; font-size: 22px;"></i>
+                <div>
+                    <strong style="color: #fff; font-size: 15px;">Félicitations ! Votre commande a bien été validée.</strong>
+                    <div style="color: #a1a1aa; font-size: 13px;">Un email de confirmation vous a été envoyé. Votre colis est actuellement en cours de préparation par notre équipe logistique.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="orders-list" id="ordersList">
+            <!-- Empty state -->
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <h2 class="empty-title">Aucune commande trouvée</h2>
+                <p class="empty-text">Vous n'avez pas encore passé de commande ou vérifiez votre numéro.</p>
+                <a href="index.html" class="btn btn-primary">Découvrir nos produits</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = (window.location.protocol === 'file:') ? 'http://localhost:3000' : '';
+
+        // Charger les commandes (utilisateur connecté ou invité)
+        async function loadOrders() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const ordersList = document.getElementById('ordersList');
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryOrderId = urlParams.get('order_id') || urlParams.get('num');
+            const isSuccess = urlParams.get('success');
+
+            if (isSuccess) {
+                const banner = document.getElementById('orderSuccessBanner');
+                if (banner) banner.style.display = 'block';
+            }
+
+            let orders = [];
+
+            // 1. Tenter de récupérer la commande spécifique depuis le serveur sécurisé si demandée
+            if (queryOrderId) {
+                try {
+                    const res = await fetch(`${API_BASE}/api/tracking/${encodeURIComponent(queryOrderId)}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && data.order) {
+                            orders.push(data.order);
+                        }
+                    }
+                } catch(e) {
+                    console.warn('API tracking non joignable, fallback local:', e.message);
+                }
+            }
+
+            // 2. Fusionner avec le stockage local
+            const localOrders = JSON.parse(localStorage.getItem('orders')) || [];
+            const userOrders = currentUser ? (JSON.parse(localStorage.getItem('orders_' + currentUser.id)) || []) : [];
+            const lastOrder = JSON.parse(localStorage.getItem('lastOrder'));
+
+            const merged = [...orders];
+            [...localOrders, ...userOrders, lastOrder].filter(Boolean).forEach(o => {
+                if (!merged.some(m => m.id === o.id)) {
+                    merged.push(o);
+                }
+            });
+
+            // Si filtré par utilisateur connecté, prioriser ses commandes ou afficher ses commandes
+            let displayed = merged;
+            if (currentUser && currentUser.email) {
+                displayed = merged.filter(o => o.shipping_address?.email === currentUser.email || o.shipping_address?.name?.includes(currentUser.name));
+                if (!displayed.length) displayed = merged;
+            }
+
+            // Si un order_id est dans l'URL
+            if (queryOrderId) {
+                const target = merged.find(o => o.id === queryOrderId);
+                if (target) {
+                    displayed = [target, ...displayed.filter(o => o.id !== queryOrderId)];
+                }
+            }
+
+            if (displayed.length === 0) {
+                return;
+            }
+
+            // Afficher les commandes
+            ordersList.innerHTML = displayed.map(order => `
+                <div class="order-card" id="card-${order.id}">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <div class="order-detail">
+                                <div class="order-label">N° de commande</div>
+                                <div class="order-value font-mono">#${order.id}</div>
+                            </div>
+                            <div class="order-detail">
+                                <div class="order-label">Date d'achat</div>
+                                <div class="order-value">${new Date(order.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}</div>
+                            </div>
+                            <div class="order-detail">
+                                <div class="order-label">Délai estimé</div>
+                                <div class="order-value" style="color: #a78bfa;">8 à 12 jours ouvrés</div>
+                            </div>
+                            <div class="order-detail">
+                                <div class="order-label">Total TTC</div>
+                                <div class="order-value font-mono font-bold">${parseFloat(order.total).toFixed(2)}€</div>
+                            </div>
+                        </div>
+                        <div class="order-status status-${order.status}">
+                            ${getStatusLabel(order.status)}
+                        </div>
+                    </div>
+
+                    <div class="order-items">
+                        ${(order.items || []).map(item => `
+                            <div class="order-item">
+                                <div class="item-image">
+                                    <img src="${item.image || 'images/logo/logo.png'}" alt="${item.name}">
+                                </div>
+                                <div class="item-details">
+                                    <div class="item-name">${item.name}</div>
+                                    <div class="item-specs">Quantité : <strong>${item.quantity || 1}</strong> &bull; Prix unitaire : ${parseFloat(item.price).toFixed(2)}€</div>
+                                </div>
+                                <div class="item-price">
+                                    <div class="item-total font-mono">${((item.quantity || 1) * parseFloat(item.price)).toFixed(2)}€</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="order-footer">
+                        <div class="order-total">
+                            <span class="order-total-label">Total réglé :</span>
+                            <span class="order-total-value font-mono">${parseFloat(order.total).toFixed(2)}€</span>
+                        </div>
+                        <div class="order-actions">
+                            <a href="suivi.html?num=${order.id}" class="btn btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-truck-fast"></i> Suivre mon colis
+                            </a>
+                            <button class="btn btn-secondary" onclick="printCustomerInvoice('${order.id}')" style="display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-file-invoice"></i> Télécharger la facture
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'pending': 'En attente',
+                'pending_payment': 'En attente de paiement',
+                'paid': 'Payée - En préparation 📦',
+                'processing': 'En cours de préparation',
+                'shipped': 'Colis Expédié 🚚',
+                'delivered': 'Colis Livré ✅',
+                'cancelled': 'Annulée'
+            };
+            return labels[status] || 'Confirmée';
+        }
+
+        function searchSpecificOrder() {
+            const q = document.getElementById('orderSearchInput').value.trim();
+            if (!q) return;
+            window.location.href = `commandes.html?order_id=${encodeURIComponent(q)}`;
+        }
+
+        async function printCustomerInvoice(orderId) {
+            let order = null;
+            try {
+                const res = await fetch(`${API_BASE}/api/tracking/${encodeURIComponent(orderId)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.order) {
+                        order = data.order;
+                    }
+                }
+            } catch(e){}
+
+            if (!order) {
+                const localOrders = JSON.parse(localStorage.getItem('orders')) || [];
+                order = localOrders.find(o => o.id === orderId) || JSON.parse(localStorage.getItem('lastOrder'));
+            }
+
+            if (!order) {
+                alert('Commande introuvable.');
+                return;
+            }
+
+            const recipient = order.shipping_address?.name || 'Client';
+            const address = order.shipping_address?.address || '';
+            const city = order.shipping_address?.city || '';
+            const postal = order.shipping_address?.postal || '';
+            const country = order.shipping_address?.country || 'France';
+
+            const printWindow = window.open('', '_blank', 'width=850,height=900');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="fr">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Facture #${order.id} - Zenith Store</title>
+                    <style>
+                        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 40px; color: #111; line-height: 1.5; }
+                        .header { display: flex; justify-content: space-between; border-bottom: 2px solid #8b5cf6; padding-bottom: 20px; margin-bottom: 30px; }
+                        .logo-txt { font-size: 24px; font-weight: 800; color: #8b5cf6; }
+                        .invoice-title { font-size: 22px; font-weight: 700; text-align: right; }
+                        .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 30px; }
+                        .meta-box h3 { font-size: 12px; text-transform: uppercase; color: #666; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+                        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+                        th { text-align: left; padding: 10px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; font-size: 12px; text-transform: uppercase; }
+                        td { padding: 12px 10px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+                        .totals { width: 300px; margin-left: auto; margin-bottom: 40px; }
+                        .totals-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+                        .totals-final { border-top: 2px solid #111; font-weight: 800; font-size: 18px; padding-top: 10px; }
+                        .footer { text-align: center; font-size: 12px; color: #777; border-top: 1px solid #eee; padding-top: 20px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div>
+                            <div class="logo-txt">ZENITH STORE</div>
+                            <div style="font-size: 12px; color: #555;">Boutique High-Tech & Gaming Pro<br>support@zenith-store.fr &bull; www.zenith-store.fr</div>
+                        </div>
+                        <div>
+                            <div class="invoice-title">FACTURE CLIENT</div>
+                            <div style="font-size: 13px; color: #666;">N° Commande : #${order.id}<br>Date : ${new Date(order.date).toLocaleDateString('fr-FR')}</div>
+                        </div>
+                    </div>
+
+                    <div class="meta-grid">
+                        <div class="meta-box">
+                            <h3>Vendeur</h3>
+                            <strong>Zenith Store SAS</strong><br>
+                            10 rue de la Paix, 75002 Paris<br>
+                            TVA Intracommunautaire : FR 48 901 234 567
+                        </div>
+                        <div class="meta-box">
+                            <h3>Adresse de Facturation & Livraison</h3>
+                            <strong>${recipient}</strong><br>
+                            ${address}<br>
+                            ${postal} ${city}, ${country}
+                        </div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Article</th>
+                                <th style="text-align: center;">Qté</th>
+                                <th style="text-align: right;">Prix Unitaire</th>
+                                <th style="text-align: right;">Total TTC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${(order.items || []).map(it => `
+                                <tr>
+                                    <td><strong>${it.name}</strong></td>
+                                    <td style="text-align: center;">${it.quantity || 1}</td>
+                                    <td style="text-align: right;">${parseFloat(it.price).toFixed(2)} €</td>
+                                    <td style="text-align: right;">${((it.quantity || 1) * parseFloat(it.price)).toFixed(2)} €</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    <div class="totals">
+                        <div class="totals-line">
+                            <span>Sous-total TTC :</span>
+                            <span>${parseFloat(order.subtotal || order.total).toFixed(2)} €</span>
+                        </div>
+                        <div class="totals-line">
+                            <span>Frais de port :</span>
+                            <span>${order.shipping > 0 ? parseFloat(order.shipping).toFixed(2) + ' €' : 'Gratuit'}</span>
+                        </div>
+                        <div class="totals-line totals-final">
+                            <span>Montant Total Réglé :</span>
+                            <span>${parseFloat(order.total).toFixed(2)} €</span>
+                        </div>
+                    </div>
+
+                    <div class="footer">
+                        Paiement sécurisé Stripe &bull; Facture acquittée &bull; Merci de votre confiance sur Zenith Store.
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => printWindow.print(), 350);
+        }
+
+        // Initialiser
+        loadOrders();
+    </script>
+</body>
+</html>

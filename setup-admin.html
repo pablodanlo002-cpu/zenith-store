@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration Admin | Zenith Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .box {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #8b5cf6;
+        }
+
+        p {
+            color: #888;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.9rem;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: #8b5cf6;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background: #7c3aed;
+        }
+
+        .success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .info {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid #8b5cf6;
+            color: #8b5cf6;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🔐 Configuration Admin</h1>
+        <p>Créez votre compte administrateur pour gérer le site. Cette page ne sera plus accessible après la création.</p>
+
+        <div class="info">
+            ⚠️ <strong>Important :</strong> Gardez ces identifiants en sécurité. Seul le compte admin peut accéder au panel de gestion.
+        </div>
+
+        <form id="setupForm" onsubmit="createAdmin(event)">
+            <div class="form-group">
+                <label>Nom complet</label>
+                <input type="text" id="name" required placeholder="Votre nom">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" required placeholder="admin@zenithstore.com">
+            </div>
+
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="password" required minlength="6" placeholder="Minimum 6 caractères">
+            </div>
+
+            <div class="form-group">
+                <label>Confirmer le mot de passe</label>
+                <input type="password" id="confirmPassword" required minlength="6" placeholder="Retapez le mot de passe">
+            </div>
+
+            <button type="submit" class="btn">Créer le compte admin</button>
+        </form>
+
+        <div class="success" id="successMsg">
+            ✅ Compte admin créé avec succès !<br>
+            Vous allez être redirigé vers la page de connexion...
+        </div>
+    </div>
+
+    <script>
+        // Vérifier si un admin existe déjà
+        window.onload = function() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const adminExists = users.some(u => u.role === 'admin');
+            
+            if (adminExists) {
+                alert('Un compte admin existe déjà. Accès refusé.');
+                window.location.href = 'index.html';
+            }
+        };
+
+        function createAdmin(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Vérifier que les mots de passe correspondent
+            if (password !== confirmPassword) {
+                alert('Les mots de passe ne correspondent pas');
+                return;
+            }
+            
+            // Créer le compte admin
+            const adminUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                password: password,
+                role: 'admin',
+                createdAt: new Date().toISOString()
+            };
+            
+            // Sauvegarder
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            users.push(adminUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Afficher succès
+            document.getElementById('setupForm').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'block';
+            
+            // Rediriger vers login après 2 secondes
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

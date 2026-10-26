@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Zenith Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: rgba(17, 17, 17, 0.98);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 20px 24px;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            color: #8b5cf6;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 24px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 48px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .contact-card {
+            background: rgba(17, 17, 17, 0.95);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.6);
+        }
+
+        .contact-card i {
+            font-size: 48px;
+            color: #8b5cf6;
+            margin-bottom: 20px;
+        }
+
+        .contact-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .contact-card p {
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .contact-card a {
+            color: #8b5cf6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-section {
+            background: rgba(17, 17, 17, 0.95);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+        }
+
+        .form-section h2 {
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #8b5cf6;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: #8b5cf6;
+            border: none;
+            color: #fff;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+        }
+
+        .success-message {
+            display: none;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            color: #10b981;
+            text-align: center;
+        }
+
+        .faq-section {
+            margin-top: 48px;
+        }
+
+        .faq-section h2 {
+            font-size: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .faq-item {
+            background: rgba(17, 17, 17, 0.95);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .faq-item h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #8b5cf6;
+        }
+
+        .faq-item p {
+            color: #888;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="nav-container">
+            <a href="index.html" class="logo">ZENITH STORE</a>
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Contactez-nous</h1>
+        <p class="subtitle">Une question ? On est là pour t'aider</p>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <i class="fas fa-comments"></i>
+                <h3>Chat en Direct</h3>
+                <p>Réponse immédiate</p>
+                <button onclick="openLiveChat()" style="background: #8b5cf6; border: none; color: #fff; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    Démarrer le chat
+                </button>
+            </div>
+
+            <div class="contact-card">
+                <i class="fas fa-envelope"></i>
+                <h3>Email</h3>
+                <p>Réponse sous 24h</p>
+                <a href="mailto:support@zenithstore.com">support@zenithstore.com</a>
+            </div>
+
+            <div class="contact-card">
+                <i class="fas fa-phone"></i>
+                <h3>Téléphone</h3>
+                <p>Lun-Ven 9h-18h</p>
+                <a href="tel:+33123456789">01 23 45 67 89</a>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>Envoyez-nous un message</h2>
+            <form id="contactForm" onsubmit="submitContact(event)">
+                <div class="form-group">
+                    <label>Nom complet *</label>
+                    <input type="text" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Sujet *</label>
+                    <select name="subject" required>
+                        <option value="">Choisissez un sujet</option>
+                        <option value="commande">Question sur une commande</option>
+                        <option value="produit">Question sur un produit</option>
+                        <option value="retour">Retour / Remboursement</option>
+                        <option value="technique">Problème technique</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Message *</label>
+                    <textarea name="message" required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Envoyer
+                </button>
+
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle" style="font-size: 32px; margin-bottom: 12px;"></i>
+                    <h3>Message envoyé !</h3>
+                    <p>On te répond dès que possible.</p>
+                </div>
+            </form>
+        </div>
+
+        <div class="faq-section">
+            <h2>Questions fréquentes</h2>
+            
+            <div class="faq-item">
+                <h4>Quels sont les délais de livraison ?</h4>
+                <p>Livraison gratuite en 2 à 5 jours ouvrés pour toute commande supérieure à 50 euros.</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>Comment retourner un produit ?</h4>
+                <p>Tu as 30 jours pour retourner un produit. Tous les détails sont sur notre page Retours.</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>Quels modes de paiement sont acceptés ?</h4>
+                <p>Nous acceptons CB, PayPal, Apple Pay et Google Pay.</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>Comment suivre ma commande ?</h4>
+                <p>Connecte-toi à ton compte et va dans "Mes Commandes" pour suivre tes colis.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="live-chat.js"></script>
+    <script>
+        function submitContact(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            // Sauvegarder dans localStorage (en production, envoyer a un serveur)
+            const contacts = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+            contacts.push({
+                ...data,
+                timestamp: Date.now(),
+                read: false
+            });
+            localStorage.setItem('contactMessages', JSON.stringify(contacts));
+            
+            // Afficher le message de succes
+            document.getElementById('successMessage').style.display = 'block';
+            form.reset();
+            
+            // Masquer apres 5 secondes
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 5000);
+        }
+
+        function openLiveChat() {
+            if (typeof LiveChat !== 'undefined') {
+                LiveChat.openChat();
+            } else {
+                alert('Le chat sera disponible sous peu !');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide d'Intégration Rapide - Zenith Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 60px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: rgba(17, 17, 17, 0.95);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .demo-btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border: none;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
+        }
+
+        .code-block {
+            background: #000;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            color: #10b981;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .badge-new {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .badge-core {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+        }
+
+        .stats {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: rgba(17, 17, 17, 0.95);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: #8b5cf6;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Zenith Store - Guide d'Intégration</h1>
+        <p class="subtitle">21 fonctionnalités e-commerce prêtes à l'emploi</p>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">21</div>
+                <div class="stat-label">Fonctionnalités</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">10</div>
+                <div class="stat-label">Nouvelles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Implémenté</div>
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <!-- Filtres Avancés -->
+            <div class="feature-card">
+                <div class="status-badge badge-new">NOUVEAU</div>
+                <div class="feature-icon">🔍</div>
+                <div class="feature-title">Filtres Avancés</div>
+                <div class="feature-desc">
+                    Filtrage par prix, catégories, marques, notes et stock. Tri personnalisable avec URL persistante.
+                </div>
+                <button class="demo-btn" onclick="demoFilters()">
+                    <i class="fas fa-filter"></i> Tester les Filtres
+                </button>
+                <div class="code-block">
+                    <code>ProductFilters.createFilterPanel()</code>
+                </div>
+            </div>
+
+            <!-- Recherche Intelligente -->
+            <div class="feature-card">
+                <div class="status-badge badge-new">NOUVEAU</div>
+                <div class="feature-icon">🔎</div>
+                <div class="feature-title">Recherche Intelligente</div>
+                <div class="feature-desc">
+                    Auto-complétion en temps réel, historique de recherche, navigation clavier et scoring intelligent.
+                </div>
+                <button class="demo-btn" onclick="demoSearch()">
+                    <i class="fas fa-search"></i> Tester la Recherche
+                </button>
+                <div class="code-block">
+                    <code>SmartSearch.init()</code>
+                </div>
+            </div>
+
+            <!-- Zoom d'Images -->
+            <div class="feature-card">
+                <div class="status-badge badge-new">NOUVEAU</div>
+                <div class="feature-icon">🔍</div>
+                <div class="feature-title">Zoom d'Images</div>
+                <div class="feature-desc">
+                    Hover zoom, modale plein écran avec zoom progressif et drag-to-pan pour une vue détaillée.
+                </div>
+                <button class="demo-btn" onclick="demoZoom()">
+                    <i class="fas fa-expand"></i> Tester le Zoom
+                </button>
+                <div class="code-block">
+                    <code>ImageZoom.openZoomModal(img)</code>
+                </div>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="feature-card">
+                <div class="status-badge badge-new">NOUVEAU</div>
+                <div class="feature-icon">📧</div>
+                <div class="feature-title">Newsletter</div>
+                <div class="feature-desc">
+                    Formulaire d'inscription avec validation email, gestion des doublons et widget personnalisable.
+                </div>
+                <button class="demo-btn" onclick="demoNewsletter()">
+                    <i class="fas fa-envelope"></i> Tester Newsletter
+                </button>
+                <div class="code-block">
+                    <code>Newsletter.createNewsletterWidget()</code>
+                </div>
+            </div>
+
+            <!-- Programme Fidélité -->
+            <div class="feature-card">
+                <div class="status-badge badge-new">NOUVEAU</div>
+                <div class="feature-icon">🏆</div>
+                <div class="feature-title">Programme de Fidélité</div>
+                <div class="feature-desc">
+                    4 niveaux, points par achat, multiplicateurs, boutique de récompenses et suivi de progression.
+                </div>
+                <button class="demo-btn" onclick="demoLoyalty()">
+                    <i class="fas fa-trophy"></i> Tester Fidélité
+                </button>
+                <div class="code-block">
+                    <code>LoyaltyProgram.addPoints(100)</code>
+                </div>
+            </div>
+
+            <!-- Chat Support -->
+            <div class="feature-card">
+                <div class="status-badge badge-new">NOUVEAU</div>
+                <div class="feature-icon">💬</div>
+                <div class="feature-title">Chat Support</div>
+                <div class="feature-desc">
+                    Bot automatique avec réponses rapides, historique de conversation et boutons d'action.
+                </div>
+                <button class="demo-btn" onclick="demoChat()">
+                    <i class="fas fa-comments"></i> Ouvrir le Chat
+                </button>
+                <div class="code-block">
+                    <code>LiveChat.openChat()</code>
+                </div>
+            </div>
+
+            <!-- Galerie Plein Écran -->
+            <div class="feature-card">
+                <div class="status-badge badge-new">NOUVEAU</div>
+                <div class="feature-icon">🖼️</div>
+                <div class="feature-title">Galerie Plein Écran</div>
+                <div class="feature-desc">
+                    Mode fullscreen, navigation clavier, miniatures, zoom/rotation et téléchargement d'images.
+                </div>
+                <button class="demo-btn" onclick="demoGallery()">
+                    <i class="fas fa-images"></i> Ouvrir Galerie
+                </button>
+                <div class="code-block">
+                    <code>FullGallery.open(images, 0)</code>
+                </div>
+            </div>
+
+            <!-- Notifications Push -->
+            <div class="feature-card">
+                <div class="status-badge badge-new">NOUVEAU</div>
+                <div class="feature-icon">🔔</div>
+                <div class="feature-title">Notifications Push</div>
+                <div class="feature-desc">
+                    Notifications système et in-app, centre de notifications, préférences et badge de compteur.
+                </div>
+                <button class="demo-btn" onclick="demoNotifications()">
+                    <i class="fas fa-bell"></i> Tester Notifications
+                </button>
+                <div class="code-block">
+                    <code>PushNotifications.send({...})</code>
+                </div>
+            </div>
+
+            <!-- Panier Persistant -->
+            <div class="feature-card">
+                <div class="status-badge badge-new">NOUVEAU</div>
+                <div class="feature-icon">💾</div>
+                <div class="feature-title">Panier Persistant</div>
+                <div class="feature-desc">
+                    Sauvegarde auto, sync multi-onglets, métadonnées détaillées et export/import JSON.
+                </div>
+                <button class="demo-btn" onclick="demoCart()">
+                    <i class="fas fa-shopping-cart"></i> Voir le Panier
+                </button>
+                <div class="code-block">
+                    <code>PersistentCart.exportCart()</code>
+                </div>
+            </div>
+
+            <!-- Suggestions Personnalisées -->
+            <div class="feature-card">
+                <div class="status-badge badge-new">NOUVEAU</div>
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">Suggestions Personnalisées</div>
+                <div class="feature-desc">
+                    Recommandations basées sur l'historique, scoring intelligent et préférences utilisateur.
+                </div>
+                <button class="demo-btn" onclick="demoSuggestions()">
+                    <i class="fas fa-magic"></i> Voir Suggestions
+                </button>
+                <div class="code-block">
+                    <code>PersonalizedSuggestions.getSuggestions(6)</code>
+                </div>
+            </div>
+
+            <!-- Wishlist -->
+            <div class="feature-card">
+                <div class="status-badge badge-core">CORE</div>
+                <div class="feature-icon">❤️</div>
+                <div class="feature-title">Liste de Souhaits</div>
+                <div class="feature-desc">
+                    Favoris persistants, compteur, page dédiée et notifications.
+                </div>
+                <button class="demo-btn" onclick="window.location.href='wishlist.html'">
+                    <i class="fas fa-heart"></i> Voir Wishlist
+                </button>
+            </div>
+
+            <!-- Codes Promo -->
+            <div class="feature-card">
+                <div class="status-badge badge-core">CORE</div>
+                <div class="feature-icon">🎁</div>
+                <div class="feature-title">Codes Promo</div>
+                <div class="feature-desc">
+                    Création admin, validation automatique, widget panier et historique d'utilisation.
+                </div>
+                <button class="demo-btn" onclick="window.location.href='admin.html'">
+                    <i class="fas fa-tags"></i> Panel Admin
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de démonstration -->
+    <script src="product-filters.js"></script>
+    <script src="smart-search.js"></script>
+    <script src="image-zoom.js"></script>
+    <script src="newsletter.js"></script>
+    <script src="loyalty-program.js"></script>
+    <script src="live-chat.js"></script>
+    <script src="full-gallery.js"></script>
+    <script src="push-notifications.js"></script>
+    <script src="persistent-cart.js"></script>
+    <script src="personalized-suggestions.js"></script>
+    <script src="notifications.js"></script>
+
+    <script>
+        function demoFilters() {
+            alert('📊 Filtres Avancés\n\nAccédez à index.html pour voir les filtres en action !\n\n- Prix min/max\n- Catégories\n- Marques\n- Notes\n- Stock\n- Tri personnalisé');
+        }
+
+        function demoSearch() {
+            const query = prompt('🔍 Recherche Intelligente\n\nEntrez un terme de recherche:', 'gaming');
+            if (query) {
+                alert(`Recherche de: "${query}"\n\nAccédez à index.html pour voir l'auto-complétion en action !`);
+            }
+        }
+
+        function demoZoom() {
+            ImageZoom.openZoomModal({ src: 'https://via.placeholder.com/800x600/8b5cf6/ffffff?text=Demo+Image' });
+        }
+
+        function demoNewsletter() {
+            const email = prompt('📧 Newsletter\n\nEntrez votre email:', 'test@example.com');
+            if (email) {
+                Newsletter.quickSubscribe();
+            }
+        }
+
+        function demoLoyalty() {
+            LoyaltyProgram.showRewardsModal();
+        }
+
+        function demoChat() {
+            if (typeof LiveChat !== 'undefined') {
+                LiveChat.openChat();
+            }
+        }
+
+        function demoGallery() {
+            const images = [
+                'https://via.placeholder.com/1200x800/8b5cf6/ffffff?text=Image+1',
+                'https://via.placeholder.com/1200x800/7c3aed/ffffff?text=Image+2',
+                'https://via.placeholder.com/1200x800/ec4899/ffffff?text=Image+3'
+            ];
+            FullGallery.open(images, 0);
+        }
+
+        function demoNotifications() {
+            PushNotifications.send({
+                title: '🎉 Notification de test',
+                body: 'Ceci est une démonstration du système de notifications',
+                tag: 'demo'
+            });
+        }
+
+        function demoCart() {
+            const stats = PersistentCart.getCartStatistics();
+            alert(`💾 Panier Persistant\n\nArticles: ${stats.itemCount}\nTotal: ${stats.totalValue.toFixed(2)}€\n\nLe panier est sauvegardé automatiquement !`);
+        }
+
+        function demoSuggestions() {
+            const stats = PersonalizedSuggestions.getStats();
+            alert(`🎯 Suggestions Personnalisées\n\nProduits vus: ${stats.viewedCount}\nRecherches: ${stats.searchCount}\nCatégorie favorite: ${stats.favoriteCategory || 'Aucune'}\n\nAccédez à index.html pour voir les suggestions !`);
+        }
+    </script>
+</body>
+</html>

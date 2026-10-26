@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi de Colis en Temps Réel | ZENITH STORE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 900;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-btn {
+            color: #a78bfa;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: #8b5cf6;
+        }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 50px 24px;
+            width: 100%;
+        }
+
+        .tracker-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .badge-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        .tracker-title {
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+
+        .tracker-subtitle {
+            color: #888;
+            font-size: 16px;
+        }
+
+        /* SEARCH BAR */
+        .search-box {
+            background: #141414;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 14px;
+            padding: 8px;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 14px 20px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #666;
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: #fff;
+            border: none;
+            padding: 0 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        /* RESULTS CARD */
+        .tracking-card {
+            background: #121212;
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            border-radius: 18px;
+            padding: 32px;
+            margin-top: 20px;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tracking-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .order-meta-id {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-pill {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-shipped {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-processing {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        /* TIMELINE */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+            margin: 20px 0 35px 0;
+        }
+
+        .timeline-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            position: relative;
+        }
+
+        .timeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .timeline-step::after {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 50%;
+            width: 100%;
+            height: 3px;
+            background: #222;
+            z-index: -1;
+        }
+
+        .timeline-step:last-child::after {
+            display: none;
+        }
+
+        .timeline-step.completed::after {
+            background: #10b981;
+        }
+
+        .step-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+
+        .timeline-step.active .step-icon {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.2);
+            color: #a78bfa;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+        }
+
+        .timeline-step.completed .step-icon {
+            border-color: #10b981;
+            background: #10b981;
+            color: #000;
+        }
+
+        .step-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* ESTIMATED DELIVERY BOX */
+        .estimate-banner {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(124, 58, 237, 0.05));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .estimate-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .estimate-icon {
+            font-size: 24px;
+            color: #a78bfa;
+        }
+
+        .estimate-label {
+            font-size: 12px;
+            color: #aaa;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .estimate-date {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        /* DETAILS GRID */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .detail-card {
+            background: #171717;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .detail-card h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #a78bfa;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .detail-line:last-child {
+            border-bottom: none;
+        }
+
+        .detail-line span:first-child {
+            color: #888;
+        }
+
+        .detail-line span:last-child {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* TRANSPORTEUR BUTTON */
+        .carrier-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.2);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            transition: all 0.3s;
+            margin-top: 14px;
+        }
+
+        .carrier-link:hover {
+            background: #8b5cf6;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-steps {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .timeline-step::after {
+                display: none;
+            }
+            .timeline-step {
+                flex-direction: row;
+                text-align: left;
+                gap: 16px;
+            }
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-gem" style="color: #8b5cf6;"></i>
+                <span>ZENITH STORE</span>
+            </a>
+            <div style="display: flex; gap: 12px;">
+                <a href="admin.html" class="back-btn">
+                    <i class="fas fa-user-shield"></i> Espace Admin
+                </a>
+                <a href="index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Boutique
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="tracker-header">
+            <div class="badge-live">
+                <span class="badge-dot"></span>
+                Système de Suivi Logistique en Direct
+            </div>
+            <h1 class="tracker-title">Où est ma commande ?</h1>
+            <p class="tracker-subtitle">Entre ton numéro de commande (ex: CMD-...) ou ton numéro de suivi colis</p>
+        </div>
+
+        <!-- SEARCH INPUT -->
+        <div class="search-box">
+            <input type="text" id="trackInput" class="search-input" placeholder="Ex: CMD-1793024116144 ou LP00689945231FR">
+            <button class="search-btn" onclick="trackOrder()">
+                <i class="fas fa-search"></i> Suivre
+            </button>
+        </div>
+
+        <!-- RESULT CONTAINER -->
+        <div id="trackingResult" class="tracking-card">
+            <!-- Injecté dynamiquement par JS -->
+        </div>
+
+        <!-- NOT FOUND -->
+        <div id="notFoundMsg" style="display: none; text-align: center; padding: 40px; background: #141414; border-radius: 14px; border: 1px solid #222;">
+            <i class="fas fa-search" style="font-size: 36px; color: #555; margin-bottom: 14px;"></i>
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Commande introuvable</h3>
+            <p style="color: #888; font-size: 14px;">Vérifie le numéro de commande ou assure-toi qu'elle a bien été validée.</p>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = (window.location.protocol === 'file:') ? 'http://localhost:3000' : '';
+
+        // Auto-chargement si paramètre dans l'URL (ex: suivi.html?num=CMD-...)
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const num = params.get('num') || params.get('order_id');
+            if (num) {
+                document.getElementById('trackInput').value = num;
+                trackOrder();
+            }
+        });
+
+        async function trackOrder() {
+            const inputVal = document.getElementById('trackInput').value.trim();
+            if (!inputVal) {
+                alert('Veuillez entrer un numéro de commande ou de suivi');
+                return;
+            }
+
+            const resultContainer = document.getElementById('trackingResult');
+            const notFound = document.getElementById('notFoundMsg');
+            resultContainer.style.display = 'none';
+            notFound.style.display = 'none';
+
+            let matchedOrder = null;
+
+            // 1. Chercher dans l'API backend sécurisée
+            try {
+                const res = await fetch(`${API_BASE}/api/tracking/${encodeURIComponent(inputVal)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.success && data.order) {
+                        matchedOrder = data.order;
+                    }
+                }
+            } catch (e) {}
+
+            // 2. Chercher dans le localStorage (commandes invités et utilisateurs)
+            if (!matchedOrder) {
+                const guestOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const lastOrder = JSON.parse(localStorage.getItem('lastOrder') || 'null');
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                
+                const allLocal = [...guestOrders];
+                if (lastOrder) allLocal.unshift(lastOrder);
+                
+                for (const u of users) {
+                    const uOrders = JSON.parse(localStorage.getItem('orders_' + u.id) || '[]');
+                    allLocal.push(...uOrders);
+                }
+
+                matchedOrder = allLocal.find(o => 
+                    o && (
+                        (o.id && o.id.toLowerCase() === inputVal.toLowerCase()) ||
+                        (o.tracking && o.tracking.number && o.tracking.number.toLowerCase() === inputVal.toLowerCase())
+                    )
+                );
+            }
+
+            // Si introuvable, créer un modèle prédictif si le format ressemble à un ID commande
+            if (!matchedOrder) {
+                notFound.style.display = 'block';
+                return;
+            }
+
+            renderTracking(matchedOrder);
+        }
+
+        function renderTracking(order) {
+            const container = document.getElementById('trackingResult');
+            const orderDate = new Date(order.date);
+            
+            // Calcul estimation livraison : +8 à +12 jours ouvrés (inclut le délai Stripe + transport AliExpress)
+            const minDelivery = new Date(orderDate);
+            minDelivery.setDate(minDelivery.getDate() + 8);
+            const maxDelivery = new Date(orderDate);
+            maxDelivery.setDate(maxDelivery.getDate() + 12);
+
+            const formatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+            const estimateStr = `${minDelivery.toLocaleDateString('fr-FR', formatOptions)} – ${maxDelivery.toLocaleDateString('fr-FR', formatOptions)}`;
+
+            const isShipped = order.status === 'shipped' || order.status === 'delivered';
+            const trackingNum = order.tracking ? order.tracking.number : 'En cours d\'attribution';
+            const carrierName = order.tracking ? (order.tracking.carrier || 'Colissimo / Cainiao') : 'Transporteur international';
+            const trackingUrl = order.tracking ? order.tracking.trackingUrl : `https://www.17track.net/fr/track?nums=${trackingNum}`;
+
+            container.innerHTML = `
+                <div class="tracking-top">
+                    <div>
+                        <div class="order-meta-id">
+                            <i class="fas fa-box" style="color: #8b5cf6;"></i> Commande #${order.id}
+                        </div>
+                        <div style="font-size: 13px; color: #888; margin-top: 4px;">
+                            Commandé le ${orderDate.toLocaleDateString('fr-FR')} • Client : ${order.shipping_address?.name || order.userName || 'Client vérifié'}
+                        </div>
+                    </div>
+                    <div>
+                        <span class="status-pill ${isShipped ? 'status-shipped' : 'status-processing'}">
+                            ${isShipped ? '🚚 Colis Expédié' : '⚙️ En préparation'}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- BANNIÈRE DATE ESTIMÉE -->
+                <div class="estimate-banner">
+                    <div class="estimate-left">
+                        <i class="fas fa-calendar-check estimate-icon"></i>
+                        <div>
+                            <div class="estimate-label">Date estimée de livraison à domicile :</div>
+                            <div class="estimate-date">${estimateStr}</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 12px; color: #10b981; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-shield-alt"></i> Expédition garantie & assurée
+                    </div>
+                </div>
+
+                <!-- TIMELINE DES ÉTAPES -->
+                <div class="timeline">
+                    <div class="timeline-steps">
+                        <!-- Étape 1 -->
+                        <div class="timeline-step completed">
+                            <div class="step-icon"><i class="fas fa-check"></i></div>
+                            <div class="step-title">1. Paiement Validé</div>
+                            <div class="step-desc">${orderDate.toLocaleDateString('fr-FR')}</div>
+                        </div>
+
+                        <!-- Étape 2 -->
+                        <div class="timeline-step ${isShipped ? 'completed' : 'active'}">
+                            <div class="step-icon"><i class="fas fa-dolly"></i></div>
+                            <div class="step-title">2. Préparation</div>
+                            <div class="step-desc">Contrôle qualité & emballage</div>
+                        </div>
+
+                        <!-- Étape 3 -->
+                        <div class="timeline-step ${isShipped ? 'active' : ''}">
+                            <div class="step-icon"><i class="fas fa-plane"></i></div>
+                            <div class="step-title">3. En Acheminement</div>
+                            <div class="step-desc">${isShipped ? 'Numéro attribué' : 'Sous 2-3 jours'}</div>
+                        </div>
+
+                        <!-- Étape 4 -->
+                        <div class="timeline-step">
+                            <div class="step-icon"><i class="fas fa-home"></i></div>
+                            <div class="step-title">4. Boîte aux lettres</div>
+                            <div class="step-desc">Livraison finale</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GRILLE DES DÉTAILS -->
+                <div class="details-grid">
+                    <div class="detail-card">
+                        <h4><i class="fas fa-truck"></i> Suivi Transporteur</h4>
+                        <div class="detail-line">
+                            <span>Transporteur :</span>
+                            <span>${carrierName}</span>
+                        </div>
+                        <div class="detail-line">
+                            <span>Numéro de suivi :</span>
+                            <span style="font-family: monospace; color: #a78bfa;">${trackingNum}</span>
+                        </div>
+                        <div class="detail-line">
+                            <span>Délai total :</span>
+                            <span>8 à 12 jours ouvrés</span>
+                        </div>
+                        ${order.tracking ? `
+                            <a href="${trackingUrl}" target="_blank" class="carrier-link">
+                                <i class="fas fa-external-link-alt"></i> Ouvrir le portail du transporteur en direct
+                            </a>
+                        ` : `
+                            <div style="font-size: 11px; color: #888; margin-top: 10px;">
+                                ℹ️ Le numéro de suivi transporteur s'active dès la fin de la préparation minutieuse en entrepôt.
+                            </div>
+                        `}
+                    </div>
+
+                    <div class="detail-card">
+                        <h4><i class="fas fa-map-marker-alt"></i> Adresse de livraison</h4>
+                        <div style="font-size: 13px; color: #ddd; line-height: 1.6;">
+                            <strong>${order.shipping_address?.name || 'Client Zenith'}</strong><br>
+                            ${order.shipping_address?.address || 'Adresse renseignée à la commande'}<br>
+                            ${order.shipping_address?.postal || ''} ${order.shipping_address?.city || ''}<br>
+                            ${order.shipping_address?.country || 'France'}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PRODUITS DANS LA COMMANDE -->
+                <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06);">
+                    <div style="font-size: 13px; font-weight: 700; color: #a78bfa; margin-bottom: 12px; text-transform: uppercase;">
+                        Articles commandés
+                    </div>
+                    ${(order.items || []).map(it => `
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                ${it.image ? `<img src="${it.image}" style="width: 40px; height: 40px; object-fit: contain; background: #0a0a0a; border-radius: 6px; border: 1px solid #333;">` : ''}
+                                <div>
+                                    <div style="font-weight: 600; font-size: 14px;">${it.name}</div>
+                                    <div style="font-size: 12px; color: #888;">Qté: ${it.quantity || 1}</div>
+                                </div>
+                            </div>
+                            <div style="font-weight: 700; color: #10b981;">
+                                ${(parseFloat(it.price) * (it.quantity || 1)).toFixed(2)}€
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            container.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

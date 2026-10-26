@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier | Zenith Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: #111111;
+            border-bottom: 1px solid #222;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 14px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cart-page {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .cart-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .cart-items {
+            background: #111111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 100px 1fr auto;
+            gap: 1.5rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-image {
+            width: 100px;
+            height: 100px;
+            background: #0a0a0a;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .cart-item-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item-price-unit {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            background: #222;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .qty-btn:hover {
+            background: #8b5cf6;
+        }
+
+        .cart-item-right {
+            text-align: right;
+        }
+
+        .cart-item-total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #8b5cf6;
+            margin-bottom: 1rem;
+        }
+
+        .btn-remove {
+            background: transparent;
+            border: 1px solid #444;
+            color: #888;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-remove:hover {
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+
+        .cart-summary {
+            background: #111111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            color: #ccc;
+        }
+
+        .summary-total {
+            border-top: 1px solid #222;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            padding: 1rem;
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-checkout:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .empty-cart h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-cart p {
+            color: #888;
+            margin-bottom: 2rem;
+        }
+
+        .btn-continue {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #8b5cf6;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-continue:hover {
+            background: #7c3aed;
+        }
+
+        @media (max-width: 968px) {
+            .cart-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-item {
+                grid-template-columns: 80px 1fr;
+            }
+
+            .cart-item-right {
+                grid-column: 1 / -1;
+                text-align: left;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="images/logo/logo.png" alt="Zenith Store" style="height: 24px;">
+                <span style="font-size: 14px; font-weight: 700; letter-spacing: 0.5px;">ZENITH STORE</span>
+            </a>
+            <button id="userBtn" onclick="window.location.href='compte.html'" style="background: transparent; border: 1px solid rgba(139, 92, 246, 0.4); color: #8b5cf6; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                <i class="fas fa-user" style="margin-right: 8px;"></i><span id="userBtnText">Mon compte</span>
+            </button>
+        </nav>
+    </header>
+
+    <div class="cart-page">
+        <h1>Mon Panier</h1>
+        
+        <div id="cartContent"></div>
+    </div>
+
+    <script>
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || { items: [], promoCode: null };
+            const cartContent = document.getElementById('cartContent');
+            
+            if (cart.items.length === 0) {
+                cartContent.innerHTML = `
+                    <div class="empty-cart">
+                        <h2>Ton panier est vide</h2>
+                        <p>Ajoutez des produits pour continuer</p>
+                        <a href="index.html" class="btn-continue">Voir les produits</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            const subtotal = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal >= 50 ? 0 : 4.99;
+            
+            // Calculer la réduction si un code promo est appliqué
+            let discount = 0;
+            if (cart.promoCode) {
+                discount = cart.promoCode.discount || 0;
+            }
+            
+            const total = subtotal + shipping - discount;
+            
+            const itemsHTML = cart.items.map((item, index) => `
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        <img src="${item.image}" alt="${item.name}">
+                    </div>
+                    <div class="cart-item-info">
+                        <h3>${item.name}</h3>
+                        <div class="cart-item-price-unit">${item.price.toFixed(2)}€ / unité</div>
+                        <div class="cart-item-qty">
+                            <button class="qty-btn" onclick="updateQty(${index}, -1)">−</button>
+                            <span>${item.quantity}</span>
+                            <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="cart-item-right">
+                        <div class="cart-item-total">${(item.price * item.quantity).toFixed(2)}€</div>
+                        <button class="btn-remove" onclick="removeItem(${index})">Supprimer</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            cartContent.innerHTML = `
+                <div class="cart-grid">
+                    <div class="cart-items">
+                        ${itemsHTML}
+                    </div>
+                    <div class="cart-summary">
+                        <h3 class="summary-title">Résumé</h3>
+                        
+                        <div class="summary-row">
+                            <span>Sous-total</span>
+                            <span>${subtotal.toFixed(2)}€</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Livraison</span>
+                            <span>${shipping === 0 ? 'Gratuite' : shipping.toFixed(2) + '€'}</span>
+                        </div>
+                        ${discount > 0 ? `
+                            <div class="summary-row" style="color: #10b981;">
+                                <span>Réduction (${cart.promoCode.code})</span>
+                                <span>-${discount.toFixed(2)}€</span>
+                            </div>
+                        ` : ''}
+                        <div class="summary-row summary-total">
+                            <span>Total</span>
+                            <span>${total.toFixed(2)}€</span>
+                        </div>
+                        
+                        <div style="margin: 14px 0; padding: 10px 14px; background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 8px; font-size: 12px; color: #a78bfa; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-truck-fast"></i>
+                            <span>Livraison suivie : <strong>8 à 12 jours ouvrés</strong></span>
+                        </div>
+                        
+                        <div id="promoWidget" style="margin: 20px 0;"></div>
+                        
+                        <button class="btn-checkout" onclick="checkout()">
+                            <i class="fas fa-lock" style="margin-right: 8px;"></i>
+                            Commander maintenant
+                        </button>
+                        
+                        <div style="text-align: center; margin-top: 16px;">
+                            <a href="index.html" style="color: #8b5cf6; text-decoration: none; font-size: 14px;">
+                                <i class="fas fa-arrow-left"></i> Continuer mes achats
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Injecter le widget de code promo
+            if (typeof PromoCode !== 'undefined' && PromoCode.createWidget) {
+                const promoWidget = PromoCode.createWidget(subtotal);
+                document.getElementById('promoWidget').appendChild(promoWidget);
+            }
+        }
+        
+        function updateQty(index, change) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
+            cart.items[index].quantity += change;
+            
+            if (cart.items[index].quantity < 1) {
+                cart.items.splice(index, 1);
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+        }
+        
+        function removeItem(index) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
+            cart.items.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+        }
+        
+        function checkout() {
+            window.location.href = 'checkout.html';
+        }
+        
+        // Gestion utilisateur
+        function checkUserSession() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const userBtn = document.getElementById('userBtnText');
+            
+            if (currentUser) {
+                userBtn.textContent = currentUser.name || currentUser.email.split('@')[0];
+            } else {
+                userBtn.textContent = 'Se connecter';
+                document.getElementById('userBtn').onclick = () => window.location.href = 'login.html';
+            }
+        }
+        
+        loadCart();
+        checkUserSession();
+    </script>
+
+    <!-- Scripts optimisés -->
+    <script src="promo-code.js"></script>
+    <script src="breadcrumb.js" async></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin Promo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 40px;
+        }
+        .btn {
+            background: #8b5cf6;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .result {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <script src="promo-code.js"></script>
+    <script src="notifications.js"></script>
+
+    <h1>🧪 Test Admin Codes Promo</h1>
+    
+    <button class="btn" onclick="testGetAll()">1. Tester PromoCode.getAll()</button>
+    <button class="btn" onclick="testCreateCode()">2. Créer un code TEST50</button>
+    <button class="btn" onclick="testReload()">3. Recharger les codes</button>
+    <button class="btn" onclick="goToAdmin()">4. Aller sur Admin</button>
+    <button class="btn" onclick="clearStorage()">5. Effacer localStorage</button>
+    
+    <div id="result" class="result"></div>
+
+    <script>
+        function log(message) {
+            const result = document.getElementById('result');
+            result.textContent += message + '\n\n';
+            console.log(message);
+        }
+
+        function testGetAll() {
+            document.getElementById('result').textContent = '';
+            log('=== Test PromoCode.getAll() ===');
+            
+            try {
+                const codes = PromoCode.getAll();
+                log('✅ Fonction appelée avec succès');
+                log('Nombre de codes: ' + Object.keys(codes).length);
+                log('Codes: ' + Object.keys(codes).join(', '));
+                log('\nDétails:');
+                log(JSON.stringify(codes, null, 2));
+            } catch (e) {
+                log('❌ Erreur: ' + e.message);
+            }
+        }
+
+        function testCreateCode() {
+            document.getElementById('result').textContent = '';
+            log('=== Test Création Code TEST50 ===');
+            
+            try {
+                const codes = PromoCode.getAll();
+                
+                codes['TEST50'] = {
+                    code: 'TEST50',
+                    type: 'percentage',
+                    value: 50,
+                    description: 'Test - 50% de réduction',
+                    minAmount: 0,
+                    maxDiscount: null,
+                    expiryDate: '2025-12-31',
+                    usageLimit: null,
+                    active: true,
+                    icon: 'fire',
+                    color: '#ef4444'
+                };
+                
+                localStorage.setItem('promoCodes', JSON.stringify(codes));
+                log('✅ Code TEST50 créé !');
+                log('Sauvegardé dans localStorage');
+                
+                // Recharger
+                PromoCode.reload();
+                const updated = PromoCode.getAll();
+                log('Codes après création: ' + Object.keys(updated).join(', '));
+            } catch (e) {
+                log('❌ Erreur: ' + e.message);
+            }
+        }
+
+        function testReload() {
+            document.getElementById('result').textContent = '';
+            log('=== Test Rechargement ===');
+            
+            try {
+                PromoCode.reload();
+                const codes = PromoCode.getAll();
+                log('✅ Codes rechargés');
+                log('Nombre de codes: ' + Object.keys(codes).length);
+                log('Codes: ' + Object.keys(codes).join(', '));
+            } catch (e) {
+                log('❌ Erreur: ' + e.message);
+            }
+        }
+
+        function goToAdmin() {
+            // Créer un user admin temporaire
+            const adminUser = {
+                id: 'admin-temp',
+                email: 'admin@test.com',
+                name: 'Admin Test',
+                role: 'admin'
+            };
+            localStorage.setItem('currentUser', JSON.stringify(adminUser));
+            
+            log('✅ User admin créé');
+            log('Redirection vers admin.html...');
+            
+            setTimeout(() => {
+                window.location.href = 'admin.html';
+            }, 1000);
+        }
+
+        function clearStorage() {
+            if (confirm('Effacer tous les codes promo ?')) {
+                localStorage.removeItem('promoCodes');
+                localStorage.removeItem('promoUsage');
+                log('✅ localStorage effacé');
+                log('Rechargez la page pour réinitialiser');
+            }
+        }
+
+        // Test initial
+        window.onload = function() {
+            log('=== Initialisation ===');
+            log('PromoCode disponible: ' + (typeof PromoCode !== 'undefined' ? '✅' : '❌'));
+            log('localStorage disponible: ' + (typeof localStorage !== 'undefined' ? '✅' : '❌'));
+            log('\nCliquez sur les boutons pour tester');
+        };
+    </script>
+</body>
+</html>

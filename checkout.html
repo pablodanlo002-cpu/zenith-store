@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Zenith Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+        }
+
+        .header {
+            background: #111;
+            border-bottom: 1px solid #222;
+            padding: 1.5rem 2rem;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+        }
+
+        .box {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .item:last-child {
+            border: none;
+        }
+
+        .item img {
+            width: 60px;
+            height: 60px;
+            background: #0a0a0a;
+            border-radius: 6px;
+            padding: 8px;
+            object-fit: contain;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .item-price {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .totals {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #222;
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+
+        .total-line.final {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: #8b5cf6;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover {
+            background: #7c3aed;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="images/logo/logo.png" alt="" style="height: 30px;">
+                ZENITH STORE
+            </a>
+            <a href="panier.html" style="color: #aaa; text-decoration: none;">Retour</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="grid">
+            <div class="box">
+                <h2>Livraison</h2>
+                <form id="form">
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Prénom</label>
+                            <input type="text" id="firstname" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <input type="text" id="name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Adresse</label>
+                        <input type="text" id="address" required>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Code postal</label>
+                            <input type="text" id="postal" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Ville</label>
+                            <input type="text" id="city" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pays</label>
+                        <input type="text" id="country" value="France" required>
+                    </div>
+
+                    <h2 style="margin-top: 2rem;">Paiement</h2>
+                    
+                    <div class="form-group">
+                        <label>Numéro de carte</label>
+                        <input type="text" placeholder="4242 4242 4242 4242">
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Expiration</label>
+                            <input type="text" placeholder="MM/AA">
+                        </div>
+                        <div class="form-group">
+                            <label>CVV</label>
+                            <input type="text" placeholder="123">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="box">
+                <h2>Commande</h2>
+                
+                <div id="items"></div>
+
+                <!-- CODE PROMO DIRECT CHECKOUT -->
+                <div style="margin: 16px 0; padding-top: 12px; border-top: 1px solid #222;">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="promoInput" placeholder="Code promo (ex: WELCOME10)" style="flex: 1; text-transform: uppercase; font-size: 13px; padding: 10px 12px; background: #000; border: 1px solid #333; border-radius: 6px; color: #fff;">
+                        <button type="button" onclick="applyPromo()" style="background: #272732; border: 1px solid #383848; color: #fff; padding: 0 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px;">Appliquer</button>
+                    </div>
+                    <div id="promoFeedback" style="display: none; font-size: 12px; margin-top: 6px;"></div>
+                </div>
+
+                <div class="totals">
+                    <div class="total-line">
+                        <span>Sous-total</span>
+                        <span id="subtotal">0€</span>
+                    </div>
+                    <div class="total-line" id="discountLine" style="display: none; color: #10b981;">
+                        <span>Réduction (<span id="discountCodeName"></span>)</span>
+                        <span id="discountAmount">-0.00€</span>
+                    </div>
+                    <div class="total-line">
+                        <span>Livraison</span>
+                        <span id="shippingSpan" style="color: #10b981;">Gratuite</span>
+                    </div>
+                    <div class="total-line final">
+                        <span>Total TTC</span>
+                        <span id="total">0€</span>
+                    </div>
+                </div>
+
+                <div style="margin: 16px 0; padding: 12px; background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.25); border-radius: 8px; font-size: 12px; color: #a78bfa; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-truck-fast"></i>
+                    <span><strong>Livraison suivie : 8 à 12 jours ouvrés</strong> (préparation 2-3j + transport 6-9j).</span>
+                </div>
+
+                <button class="btn" onclick="pay()">Payer <span id="btnTotal"></span></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
+        const itemsDiv = document.getElementById('items');
+        let currentDiscount = 0;
+        let appliedPromoCode = cart.promoCode ? cart.promoCode.code : null;
+        
+        function calculateAndRenderTotals() {
+            if (cart.items.length === 0) {
+                itemsDiv.innerHTML = '<p style="color: #666; text-align: center;">Votre panier est vide.</p>';
+                return;
+            }
+
+            let html = '';
+            let subtotal = 0;
+            
+            cart.items.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                
+                html += `
+                    <div class="item">
+                        <img src="${item.image}" alt="">
+                        <div class="item-info">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-price">x${item.quantity} • ${itemTotal.toFixed(2)}€</div>
+                        </div>
+                    </div>
+                `;
+            });
+            itemsDiv.innerHTML = html;
+
+            // Calcul de la remise si code actif
+            if (appliedPromoCode) {
+                const promos = JSON.parse(localStorage.getItem('promoCodes')) || {
+                    'WELCOME10': { type: 'percentage', value: 10, minAmount: 0 },
+                    'GAMING20': { type: 'percentage', value: 20, minAmount: 50 },
+                    'FREE15': { type: 'fixed', value: 15, minAmount: 100 },
+                    'ZENITH50': { type: 'fixed', value: 50, minAmount: 200 }
+                };
+                const p = promos[appliedPromoCode.toUpperCase()];
+                if (p && subtotal >= (p.minAmount || 0)) {
+                    currentDiscount = p.type === 'percentage' ? (subtotal * p.value / 100) : p.value;
+                    document.getElementById('discountLine').style.display = 'flex';
+                    document.getElementById('discountCodeName').textContent = appliedPromoCode.toUpperCase();
+                    document.getElementById('discountAmount').textContent = `-${currentDiscount.toFixed(2)}€`;
+                } else {
+                    currentDiscount = 0;
+                    document.getElementById('discountLine').style.display = 'none';
+                }
+            } else {
+                currentDiscount = 0;
+                document.getElementById('discountLine').style.display = 'none';
+            }
+
+            const discountedSubtotal = Math.max(0, subtotal - currentDiscount);
+            const shipping = discountedSubtotal >= 50 ? 0 : 4.99;
+            const total = discountedSubtotal + shipping;
+
+            document.getElementById('subtotal').textContent = subtotal.toFixed(2) + '€';
+            document.getElementById('total').textContent = total.toFixed(2) + '€';
+            document.getElementById('btnTotal').textContent = total.toFixed(2) + '€';
+            
+            const shippingSpan = document.getElementById('shippingSpan');
+            if (shipping === 0) {
+                shippingSpan.innerHTML = '<span style="color: #10b981;">Gratuite</span>';
+            } else {
+                shippingSpan.textContent = shipping.toFixed(2) + '€';
+            }
+        }
+
+        function applyPromo() {
+            const val = document.getElementById('promoInput').value.trim().toUpperCase();
+            const feedback = document.getElementById('promoFeedback');
+            if (!val) return;
+
+            const promos = JSON.parse(localStorage.getItem('promoCodes')) || {
+                'WELCOME10': { type: 'percentage', value: 10, minAmount: 0 },
+                'GAMING20': { type: 'percentage', value: 20, minAmount: 50 },
+                'FREE15': { type: 'fixed', value: 15, minAmount: 100 },
+                'ZENITH50': { type: 'fixed', value: 50, minAmount: 200 }
+            };
+
+            const p = promos[val];
+            if (p) {
+                appliedPromoCode = val;
+                feedback.style.display = 'block';
+                feedback.style.color = '#10b981';
+                feedback.textContent = `Code ${val} appliqué avec succès !`;
+                calculateAndRenderTotals();
+            } else {
+                feedback.style.display = 'block';
+                feedback.style.color = '#ef4444';
+                feedback.textContent = `Code promo "${val}" invalide ou expiré.`;
+            }
+        }
+
+        calculateAndRenderTotals();
+        
+        async function pay() {
+            const form = document.getElementById('form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const btn = document.querySelector('.btn');
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement sécurisé...';
+            btn.disabled = true;
+
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            const fullName = ((document.getElementById('firstname').value || '') + ' ' + (document.getElementById('name').value || '')).trim() || 'Client Zenith';
+            const email = document.getElementById('email').value.trim() || currentUser.email || 'client@zenith-store.fr';
+            const phone = document.getElementById('phone').value.trim();
+
+            const customer = {
+                name: fullName,
+                address: document.getElementById('address').value.trim(),
+                city: document.getElementById('city').value.trim(),
+                postal: document.getElementById('postal').value.trim(),
+                country: document.getElementById('country').value.trim() || 'France',
+                email: email,
+                phone: phone
+            };
+
+            const API_BASE = (window.location.protocol === 'file:') ? 'http://localhost:3000' : '';
+            try {
+                // Appel au serveur backend pour préparer le paiement & la commande AliExpress
+                const response = await fetch(API_BASE + '/api/create-checkout-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        items: cart.items,
+                        customer: customer,
+                        promoCode: appliedPromoCode,
+                        discount: currentDiscount
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data && data.success) {
+                    const localOrder = {
+                        id: data.orderId || ('CMD-' + Date.now()),
+                        date: new Date().toISOString(),
+                        status: data.stripeEnabled ? 'pending' : 'paid',
+                        items: cart.items,
+                        subtotal: parseFloat(document.getElementById('subtotal').textContent) || 0,
+                        discount: currentDiscount,
+                        promoCode: appliedPromoCode,
+                        total: parseFloat(document.getElementById('total').textContent) || 0,
+                        shipping_address: customer
+                    };
+
+                    // Sauvegarder dans l'historique local pour accès immédiat
+                    const guestOrders = JSON.parse(localStorage.getItem('orders')) || [];
+                    guestOrders.unshift(localOrder);
+                    localStorage.setItem('orders', JSON.stringify(guestOrders));
+                    localStorage.setItem('lastOrder', JSON.stringify(localOrder));
+
+                    if (currentUser && currentUser.id) {
+                        const userOrders = JSON.parse(localStorage.getItem('orders_' + currentUser.id)) || [];
+                        userOrders.unshift(localOrder);
+                        localStorage.setItem('orders_' + currentUser.id, JSON.stringify(userOrders));
+                    }
+
+                    // Vider le panier
+                    localStorage.setItem('cart', JSON.stringify({ items: [] }));
+
+                    // Redirection Stripe ou Confirmation
+                    if (data.checkoutUrl) {
+                        window.location.href = data.checkoutUrl;
+                    } else {
+                        alert(`✅ Paiement validé avec succès !\n\nCommande #${localOrder.id} confirmée.\n📦 Préparation soignée en cours (2-3 jours)\n🚚 Livraison estimée sous 8 à 12 jours ouvrés.`);
+                        window.location.href = `commandes.html?order_id=${localOrder.id}&success=true`;
+                    }
+                    return;
+                }
+            } catch (err) {
+                console.warn('Mode local utilisé:', err.message);
+            }
+
+            // Fallback si le serveur local est inaccessible
+            const fallbackId = 'CMD-' + Date.now();
+            const fallbackOrder = {
+                id: fallbackId,
+                date: new Date().toISOString(),
+                status: 'paid',
+                items: cart.items,
+                total: parseFloat(document.getElementById('total').textContent) || 0,
+                shipping_address: customer
+            };
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.unshift(fallbackOrder);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            localStorage.setItem('lastOrder', JSON.stringify(fallbackOrder));
+            localStorage.setItem('cart', JSON.stringify({ items: [] }));
+
+            alert(`✅ Commande #${fallbackId} validée avec succès !`);
+            window.location.href = `commandes.html?order_id=${fallbackId}&success=true`;
+        }
+    </script>
+</body>
+</html>

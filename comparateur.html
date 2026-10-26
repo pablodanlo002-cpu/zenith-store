@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparateur de Produits | Zenith Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+        }
+
+        .header {
+            background: #111;
+            border-bottom: 1px solid #1a1a1a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .logo img {
+            height: 24px;
+        }
+
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        h1 i {
+            color: #8b5cf6;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 3rem;
+        }
+
+        .comparison-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn-clear {
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-clear:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .comparison-table {
+            background: #111;
+            border: 1px solid #1a1a1a;
+            border-radius: 16px;
+            overflow-x: auto;
+        }
+
+        .table-scroll {
+            min-width: 800px;
+        }
+
+        .product-row {
+            display: grid;
+            grid-template-columns: 200px repeat(3, 1fr);
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .product-row:last-child {
+            border-bottom: none;
+        }
+
+        .row-label {
+            padding: 1.5rem;
+            font-weight: 600;
+            background: #0a0a0a;
+            display: flex;
+            align-items: center;
+            border-right: 1px solid #1a1a1a;
+        }
+
+        .product-cell {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-right: 1px solid #1a1a1a;
+        }
+
+        .product-cell:last-child {
+            border-right: none;
+        }
+
+        .product-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem 1.5rem;
+        }
+
+        .product-image {
+            width: 120px;
+            height: 120px;
+            background: #0a0a0a;
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #8b5cf6;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: #8b5cf6;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #7c3aed;
+        }
+
+        .btn-remove {
+            background: transparent;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .btn-remove:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .spec-value {
+            color: #fff;
+        }
+
+        .spec-highlight {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 6rem 2rem;
+        }
+
+        .empty i {
+            font-size: 80px;
+            color: #1a1a1a;
+            margin-bottom: 2rem;
+        }
+
+        .empty h2 {
+            font-size: 24px;
+            margin-bottom: 1rem;
+        }
+
+        .empty p {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .empty .btn {
+            display: inline-flex;
+            padding: 1rem 2rem;
+            background: #8b5cf6;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .empty .btn:hover {
+            background: #7c3aed;
+        }
+
+        .empty-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 3rem 1rem;
+            color: #666;
+        }
+
+        .empty-cell i {
+            font-size: 48px;
+            color: #1a1a1a;
+        }
+    </style>
+</head>
+<body>
+    <script src="notifications.js"></script>
+    <script src="comparator.js"></script>
+    <script src="breadcrumb.js"></script>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="images/logo/logo.png" alt="Zenith Store">
+                <span>ZENITH STORE</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="main">
+        <h1><i class="fas fa-balance-scale"></i> Comparateur de Produits</h1>
+        <p class="subtitle">Comparez jusqu'à 3 produits côte à côte</p>
+
+        <div id="comparisonContainer"></div>
+    </div>
+
+    <script>
+        function loadComparison() {
+            const comparison = getComparison();
+            const container = document.getElementById('comparisonContainer');
+            
+            if (comparison.length === 0) {
+                container.innerHTML = `
+                    <div class="empty">
+                        <i class="fas fa-balance-scale"></i>
+                        <h2>Aucun produit à comparer</h2>
+                        <p>Ajoutez des produits au comparateur pour les voir ici</p>
+                        <a href="index.html" class="btn">
+                            <i class="fas fa-shopping-bag"></i>
+                            Découvrir nos produits
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Remplir avec des cellules vides si moins de 3 produits
+            const filledComparison = [...comparison];
+            while (filledComparison.length < 3) {
+                filledComparison.push(null);
+            }
+            
+            // Header avec actions
+            const headerHTML = `
+                <div class="comparison-header">
+                    <div>
+                        <strong>${comparison.length}</strong> produit${comparison.length > 1 ? 's' : ''} dans le comparateur
+                    </div>
+                    <button class="btn-clear" onclick="clearComparisonAndReload()">
+                        <i class="fas fa-trash-alt"></i> Tout retirer
+                    </button>
+                </div>
+            `;
+            
+            // Table de comparaison
+            const tableHTML = `
+                <div class="comparison-table">
+                    <div class="table-scroll">
+                        <!-- Headers avec produits -->
+                        <div class="product-row">
+                            <div class="row-label"></div>
+                            ${filledComparison.map(product => {
+                                if (!product) {
+                                    return `
+                                        <div class="product-cell">
+                                            <div class="empty-cell">
+                                                <i class="fas fa-plus-circle"></i>
+                                                <span>Emplacement libre</span>
+                                            </div>
+                                        </div>
+                                    `;
+                                }
+                                return `
+                                    <div class="product-cell">
+                                        <div class="product-header">
+                                            <div class="product-image">
+                                                <img src="${product.image}" alt="${product.name}">
+                                            </div>
+                                            <div class="product-name">${product.name}</div>
+                                            <div class="product-price">${product.price.toFixed(2)}€</div>
+                                            <div class="product-actions">
+                                                <a href="${product.url}" class="btn-small btn-primary">Voir</a>
+                                                <button class="btn-small btn-remove" onclick="removeAndReload('${product.id}')">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        
+                        <!-- Prix -->
+                        <div class="product-row">
+                            <div class="row-label">Prix</div>
+                            ${filledComparison.map(product => `
+                                <div class="product-cell">
+                                    ${product ? `<span class="spec-value">${product.price.toFixed(2)}€</span>` : '<span style="color: #666;">-</span>'}
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <!-- Type -->
+                        <div class="product-row">
+                            <div class="row-label">Type</div>
+                            ${filledComparison.map(product => `
+                                <div class="product-cell">
+                                    ${product && product.specs.type ? `<span class="spec-value">${product.specs.type}</span>` : '<span style="color: #666;">-</span>'}
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <!-- Connectivité -->
+                        <div class="product-row">
+                            <div class="row-label">Connectivité</div>
+                            ${filledComparison.map(product => `
+                                <div class="product-cell">
+                                    ${product && product.specs.connectivity ? `<span class="spec-highlight">${product.specs.connectivity}</span>` : '<span style="color: #666;">-</span>'}
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <!-- RGB -->
+                        <div class="product-row">
+                            <div class="row-label">RGB</div>
+                            ${filledComparison.map(product => `
+                                <div class="product-cell">
+                                    ${product && product.specs.rgb !== undefined ? 
+                                        (product.specs.rgb ? '<i class="fas fa-check" style="color: #10b981; font-size: 20px;"></i>' : '<i class="fas fa-times" style="color: #ef4444; font-size: 20px;"></i>') 
+                                        : '<span style="color: #666;">-</span>'}
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <!-- DPI/Résolution -->
+                        <div class="product-row">
+                            <div class="row-label">DPI / Résolution</div>
+                            ${filledComparison.map(product => `
+                                <div class="product-cell">
+                                    ${product && product.specs.dpi ? `<span class="spec-value">${product.specs.dpi}</span>` : '<span style="color: #666;">-</span>'}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = headerHTML + tableHTML;
+        }
+        
+        function removeAndReload(productId) {
+            removeFromComparison(productId);
+            loadComparison();
+        }
+        
+        function clearComparisonAndReload() {
+            clearComparison();
+            loadComparison();
+        }
+        
+        // Charger au démarrage
+        loadComparison();
+    </script>
+
+    <!-- Scripts optimisés -->
+    <script src="breadcrumb.js" async></script>
+    <script src="comparator.js" async></script>
+</body>
+</html>

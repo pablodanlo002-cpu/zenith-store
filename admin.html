@@ -1,0 +1,3246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenith Store | Panel d'Administration E-Commerce</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-base: #09090b;
+            --bg-surface: #121216;
+            --bg-surface-elevated: #18181f;
+            --bg-hover: #22222b;
+            --border-subtle: #272732;
+            --border-strong: #383848;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --accent-subtle: rgba(139, 92, 246, 0.12);
+            --success: #10b981;
+            --success-subtle: rgba(16, 185, 129, 0.12);
+            --warning: #f59e0b;
+            --warning-subtle: rgba(245, 158, 11, 0.12);
+            --danger: #ef4444;
+            --danger-subtle: rgba(239, 68, 68, 0.12);
+            --sidebar-width: 260px;
+            --header-height: 64px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* LAYOUT PRINCIPAL */
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR PRO */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            height: var(--header-height);
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: -0.01em;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        .store-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: var(--success-subtle);
+            color: var(--success);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 6px currentColor;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1.25rem 0.85rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            padding: 0 0.75rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .nav-item-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0.75rem;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            font-size: 13.5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: left;
+        }
+
+        .nav-item-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .nav-item-btn.active {
+            background: var(--accent-subtle);
+            color: #c4b5fd;
+            border-color: rgba(139, 92, 246, 0.25);
+            font-weight: 600;
+        }
+
+        .nav-btn-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn-left i {
+            width: 18px;
+            font-size: 14px;
+            text-align: center;
+            opacity: 0.85;
+        }
+
+        .badge-counter {
+            background: var(--danger);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 999px;
+            letter-spacing: 0;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.15);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: #272732;
+            color: #c4b5fd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            border: 1px solid var(--border-strong);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .btn-icon-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 6px 8px;
+            border-radius: 6px;
+            transition: 0.15s;
+        }
+
+        .btn-icon-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        /* CONTENU PRINCIPAL */
+        .main-wrapper {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* TOPBAR PRO */
+        .topbar {
+            height: var(--header-height);
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            backdrop-filter: blur(12px);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .page-heading {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-secondary {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.15s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            border-color: var(--border-strong);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            border: 1px solid transparent;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.15s;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: var(--danger-subtle);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        /* MAIN CONTENT VIEWS */
+        .content-container {
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* KPI METRICS STRIP */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            position: relative;
+            transition: border-color 0.15s;
+        }
+
+        .kpi-card:hover {
+            border-color: var(--border-strong);
+        }
+
+        .kpi-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .kpi-title {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .kpi-icon-pill {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 0.4rem;
+        }
+
+        .kpi-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .kpi-trend-pos {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        /* ACTION BANNER */
+        .ops-alert {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.12) 0%, rgba(139, 92, 246, 0.04) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ops-alert-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ops-alert-icon {
+            color: var(--accent);
+            font-size: 20px;
+        }
+
+        .ops-alert-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .ops-alert-subtitle {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+        }
+
+        /* CARDS & TABLES */
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-subtitle {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .card-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* TABLE PRO */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13.5px;
+        }
+
+        .data-table th {
+            padding: 0.85rem 1.25rem;
+            background: rgba(0,0,0,0.2);
+            color: var(--text-muted);
+            font-size: 11.5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-subtle);
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(255, 255, 255, 0.015);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .font-bold {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* BADGES */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-pending {
+            background: var(--warning-subtle);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .badge-paid {
+            background: rgba(59, 130, 246, 0.12);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.25);
+        }
+
+        .badge-ready {
+            background: rgba(168, 85, 247, 0.12);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.25);
+        }
+
+        .badge-shipped {
+            background: var(--success-subtle);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .badge-delivered {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+
+        /* FORM CONTROLS */
+        .search-box {
+            position: relative;
+            min-width: 260px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: inherit;
+            transition: border-color 0.15s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-select {
+            padding: 0.5rem 0.85rem;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* PRODUCT ROW DISPLAY */
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .product-thumb {
+            width: 44px;
+            height: 44px;
+            border-radius: 6px;
+            background: #18181f;
+            border: 1px solid var(--border-subtle);
+            object-fit: contain;
+            padding: 2px;
+            flex-shrink: 0;
+        }
+
+        .product-name-txt {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+            max-width: 320px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-cat-txt {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            text-transform: capitalize;
+        }
+
+        /* STOCK CONTROLLER */
+        .stock-control {
+            display: inline-flex;
+            align-items: center;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .stock-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: 0.15s;
+        }
+
+        .stock-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .stock-val-input {
+            width: 42px;
+            background: transparent;
+            border: none;
+            text-align: center;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stock-val-input:focus {
+            outline: none;
+        }
+
+        /* MODAL */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-backdrop.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            border-radius: 14px;
+            max-width: 720px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .modal-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            background: rgba(0,0,0,0.15);
+        }
+
+        /* INVOICE PRINTING FORMAT */
+        @media print {
+            body {
+                background: #fff !important;
+                color: #000 !important;
+            }
+            .sidebar, .topbar, .ops-alert, .kpi-grid, .modal-footer, .card-actions, .btn-secondary, .btn-primary {
+                display: none !important;
+            }
+            .main-wrapper {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .modal-backdrop {
+                position: static !important;
+                display: block !important;
+                background: none !important;
+            }
+            .modal-box {
+                box-shadow: none !important;
+                border: none !important;
+                max-width: 100% !important;
+                max-height: 100% !important;
+            }
+            .printable-invoice {
+                display: block !important;
+                color: #000 !important;
+                background: #fff !important;
+            }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-wrapper {
+                margin-left: 0;
+            }
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ADMIN LOGIN GATE */
+        #adminLoginGate {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(9, 9, 11, 0.96);
+            backdrop-filter: blur(12px);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .login-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            padding: 2.25rem 2rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(139, 92, 246, 0.15);
+            text-align: center;
+            animation: fadeInGate 0.25s ease-out;
+        }
+        @keyframes fadeInGate {
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .login-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 1.25rem;
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 24px;
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+        }
+        .login-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.35rem;
+        }
+        .login-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 1.75rem;
+        }
+        .login-form-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+        .login-form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .login-input-wrapper {
+            position: relative;
+        }
+        .login-input-wrapper i.fa-lock {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .login-input {
+            width: 100%;
+            padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-strong);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .login-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+        .login-toggle-pw {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            font-size: 14px;
+        }
+        .login-toggle-pw:hover {
+            color: var(--text-primary);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 0.85rem;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
+        }
+        .login-btn:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        .login-error {
+            background: var(--danger-subtle);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            font-size: 12.5px;
+            padding: 0.6rem 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            text-align: left;
+        }
+        .login-footer-info {
+            margin-top: 1.5rem;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-layout">
+
+    <!-- 1. SIDEBAR PRO -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <a href="index.html" class="brand-logo">
+                <div class="brand-icon"><i class="fas fa-layer-group"></i></div>
+                <span>ZENITH ADMIN</span>
+            </a>
+            <div class="store-status-badge">
+                <span class="status-dot"></span>
+                <span>En Ligne</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div>
+                <div class="nav-section-title">Opérations</div>
+                <ul class="nav-list">
+                    <li>
+                        <button class="nav-item-btn active" onclick="switchTab('dashboard')">
+                            <span class="nav-btn-left">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Vue d'ensemble</span>
+                            </span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item-btn" onclick="switchTab('orders')">
+                            <span class="nav-btn-left">
+                                <i class="fas fa-box-open"></i>
+                                <span>Commandes</span>
+                            </span>
+                            <span class="badge-counter" id="sidebarOrdersBadge">0</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item-btn" onclick="switchTab('products')">
+                            <span class="nav-btn-left">
+                                <i class="fas fa-tags"></i>
+                                <span>Produits & Stocks</span>
+                            </span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="nav-section-title">Dropshipping & Fournisseur</div>
+                <ul class="nav-list">
+                    <li>
+                        <button class="nav-item-btn" onclick="switchTab('aliexpress')">
+                            <span class="nav-btn-left">
+                                <i class="fas fa-cloud-arrow-down"></i>
+                                <span>Import AliExpress</span>
+                            </span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item-btn" onclick="switchTab('tracking-hub')">
+                            <span class="nav-btn-left">
+                                <i class="fas fa-shipping-fast"></i>
+                                <span>Expéditions & Suivi</span>
+                            </span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="nav-section-title">Marketing & Ventes</div>
+                <ul class="nav-list">
+                    <li>
+                        <button class="nav-item-btn" onclick="switchTab('promos')">
+                            <span class="nav-btn-left">
+                                <i class="fas fa-ticket-alt"></i>
+                                <span>Codes Promo</span>
+                            </span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item-btn" onclick="switchTab('customers')">
+                            <span class="nav-btn-left">
+                                <i class="fas fa-users"></i>
+                                <span>Clients (CRM)</span>
+                            </span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="nav-section-title">Système</div>
+                <ul class="nav-list">
+                    <li>
+                        <button class="nav-item-btn" onclick="switchTab('settings')">
+                            <span class="nav-btn-left">
+                                <i class="fas fa-sliders-h"></i>
+                                <span>Paramètres Boutique</span>
+                            </span>
+                        </button>
+                    </li>
+                    <li>
+                        <a href="index.html" class="nav-item-btn" style="text-decoration: none;">
+                            <span class="nav-btn-left">
+                                <i class="fas fa-external-link-alt"></i>
+                                <span>Voir ma boutique</span>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar"><i class="fas fa-user-shield"></i></div>
+                <div class="user-info">
+                    <span class="user-name">Administrateur</span>
+                    <span class="user-role" style="color: var(--success); display: flex; align-items: center; gap: 4px;">
+                        <span class="status-dot"></span> Session Active
+                    </span>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+                <a href="index.html" title="Aller à la boutique" class="btn-icon-link">
+                    <i class="fas fa-store"></i>
+                </a>
+                <button onclick="adminLogout()" title="Se déconnecter" class="btn-icon-link" style="color: var(--danger); background: transparent; border: none; cursor: pointer; padding: 6px 8px; border-radius: 6px; font-size: 14px;">
+                    <i class="fas fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 2. WRAPPER PRINCIPAL -->
+    <main class="main-wrapper">
+        
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h1 class="page-heading" id="currentViewTitle">Tableau de Bord Financier</h1>
+            </div>
+
+            <div class="topbar-right">
+                <button class="btn-secondary" onclick="loadAllData(true)">
+                    <i class="fas fa-sync-alt" id="refreshIcon"></i>
+                    <span>Actualiser</span>
+                </button>
+                <button class="btn-primary" onclick="switchTab('aliexpress')">
+                    <i class="fas fa-plus"></i>
+                    <span>Importer un produit</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- CONTAINER DES VUES -->
+        <div class="content-container">
+
+            <!-- VUE 1 : DASHBOARD -->
+            <section id="view-dashboard" class="view-section active">
+                
+                <!-- KPI CARDS -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-top">
+                            <span class="kpi-title">Chiffre d'Affaires Brut</span>
+                            <div class="kpi-icon-pill" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="kpiGrossRevenue">0.00 €</div>
+                        <div class="kpi-meta">
+                            <span class="kpi-trend-pos"><i class="fas fa-arrow-up"></i> +14.2%</span>
+                            <span>ce mois-ci</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-top">
+                            <span class="kpi-title">Coût Achat Fournisseur</span>
+                            <div class="kpi-icon-pill" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                                <i class="fas fa-parachute-box"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="kpiSupplierCost">0.00 €</div>
+                        <div class="kpi-meta">
+                            <span>Coût total AliExpress</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-top">
+                            <span class="kpi-title">Bénéfice Net Réel</span>
+                            <div class="kpi-icon-pill" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" style="color: #10b981;" id="kpiNetProfit">0.00 €</div>
+                        <div class="kpi-meta">
+                            <span class="kpi-trend-pos" id="kpiMarginPercent">Marge: 0%</span>
+                            <span>après coût produit</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-top">
+                            <span class="kpi-title">Commandes à Traiter</span>
+                            <div class="kpi-icon-pill" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="kpiPendingOrders">0</div>
+                        <div class="kpi-meta">
+                            <span id="kpiPendingSubtext" style="color: var(--warning);">En attente de commande AliExpress</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ALERTE OPÉRATIONNELLE -->
+                <div class="ops-alert" id="opsAlertBanner">
+                    <div class="ops-alert-left">
+                        <i class="fas fa-shield-halved ops-alert-icon"></i>
+                        <div>
+                            <div class="ops-alert-title">Gestion de Trésorerie & Délais de Livraison</div>
+                            <div class="ops-alert-subtitle">Les délais affichés aux clients sont de <strong>8 à 12 jours ouvrés</strong>. Cela vous garantit que l'argent payé par le client sur Stripe a le temps d'arriver sur votre compte bancaire avant de commander sur AliExpress.</div>
+                        </div>
+                    </div>
+                    <button class="btn-secondary" onclick="switchTab('orders')">Gérer les commandes</button>
+                </div>
+
+                <!-- DERNIÈRES COMMANDES TABLE -->
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title"><i class="fas fa-receipt"></i> Commandes Récentes</h2>
+                            <p class="card-subtitle">Flux en temps réel des ventes sur votre boutique</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-secondary" onclick="switchTab('orders')">Voir toutes les commandes ↗</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>N° Commande</th>
+                                    <th>Date</th>
+                                    <th>Client</th>
+                                    <th>Total Client</th>
+                                    <th>Coût Fournisseur</th>
+                                    <th>Marge Nette</th>
+                                    <th>Statut</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentOrdersTbody">
+                                <tr><td colspan="8" style="text-align: center; padding: 2rem;">Chargement des données...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- VUE 2 : COMMANDES (ORDERS MANAGEMENT) -->
+            <section id="view-orders" class="view-section">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title"><i class="fas fa-boxes"></i> Gestion Complète des Commandes</h2>
+                            <p class="card-subtitle">Traitez vos commandes, expédiez vos colis et imprimez vos factures</p>
+                        </div>
+                        <div class="card-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" class="search-input" id="orderSearchInput" placeholder="Rechercher n° commande, client, email..." oninput="filterOrdersTable()">
+                            </div>
+                            <select class="form-select" id="orderStatusFilter" onchange="filterOrdersTable()">
+                                <option value="all">Tous les statuts</option>
+                                <option value="ready_for_supplier">À commander AliExpress</option>
+                                <option value="shipped">Expédiées</option>
+                                <option value="delivered">Livrées</option>
+                                <option value="cancelled">Annulées / Remboursées</option>
+                            </select>
+                            <button class="btn-secondary" onclick="exportOrdersCSV()" title="Télécharger l'historique des ventes">
+                                <i class="fas fa-file-csv"></i> Exporter CSV
+                            </button>
+                            <button class="btn-primary" onclick="openManualOrderModal()">
+                                <i class="fas fa-plus"></i> Commande Manuelle
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>N° Commande</th>
+                                    <th>Date</th>
+                                    <th>Client & Destination</th>
+                                    <th>Articles</th>
+                                    <th>Paiement</th>
+                                    <th>Statut Traitement</th>
+                                    <th>Liaison AliExpress</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allOrdersTbody">
+                                <tr><td colspan="8" style="text-align: center; padding: 2rem;">Chargement des commandes...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VUE 3 : PRODUITS & GESTION STOCKS EN DIRECT -->
+            <section id="view-products" class="view-section">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title"><i class="fas fa-boxes-stacked"></i> Catalogue & Stocks en Direct</h2>
+                            <p class="card-subtitle">Modifiez le stock et les prix sans quitter l'interface</p>
+                        </div>
+                        <div class="card-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" class="search-input" id="productSearchInput" placeholder="Filtrer par nom de produit..." oninput="filterProductsTable()">
+                            </div>
+                            <button class="btn-primary" onclick="switchTab('aliexpress')">
+                                <i class="fas fa-plus"></i> Importer AliExpress
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Catégorie</th>
+                                    <th>Prix Vente</th>
+                                    <th>Prix AliExpress</th>
+                                    <th>Marge Brute</th>
+                                    <th>Stock Disponible</th>
+                                    <th>État</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTbody">
+                                <tr><td colspan="8" style="text-align: center; padding: 2rem;">Chargement des produits...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VUE 4 : IMPORTATEUR ALIEXPRESS EXPRESS -->
+            <section id="view-aliexpress" class="view-section">
+                <div class="card" style="max-width: 900px; margin: 0 auto 2rem auto;">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title"><i class="fas fa-bolt"></i> Auto-Importateur Produit AliExpress</h2>
+                            <p class="card-subtitle">Collez l'ID ou le lien d'un produit AliExpress pour l'intégrer automatiquement au catalogue</p>
+                        </div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; gap: 10px; margin-bottom: 1.5rem;">
+                            <input type="text" id="aliImportInput" class="search-input" style="flex: 1; padding: 0.75rem 1rem;" placeholder="Ex: 1005012626624444 ou https://fr.aliexpress.com/item/1005012626624444.html">
+                            <button class="btn-primary" id="btnPreviewAli" onclick="previewAliExpressProduct()" style="padding: 0.75rem 1.5rem;">
+                                <i class="fas fa-search"></i> Analyser le Produit
+                            </button>
+                        </div>
+
+                        <!-- PREVIEW CONTAINER -->
+                        <div id="aliPreviewCard" style="display: none; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 1.5rem;">
+                            <div style="display: grid; grid-template-columns: 220px 1fr; gap: 1.5rem;">
+                                <div>
+                                    <img id="aliPreviewImg" src="" alt="Aperçu" style="width: 100%; height: 200px; object-fit: contain; background: #000; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                                    <div id="aliPreviewGallery" style="display: flex; gap: 6px; margin-top: 8px; overflow-x: auto;"></div>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                    <div>
+                                        <label style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Nom du produit pour votre boutique :</label>
+                                        <input type="text" id="aliPreviewTitle" class="search-input" style="width: 100%; margin-top: 4px;">
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                        <div>
+                                            <label style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Catégorie :</label>
+                                            <select id="aliPreviewCategory" class="form-select" style="width: 100%; margin-top: 4px;">
+                                                <option value="accessoires">Accessoires</option>
+                                                <option value="casques">Casques</option>
+                                                <option value="claviers">Claviers</option>
+                                                <option value="souris">Souris</option>
+                                                <option value="ecrans">Écrans</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Prix d'Achat Fournisseur (€) :</label>
+                                            <input type="number" step="0.01" id="aliPreviewCost" class="search-input" style="width: 100%; margin-top: 4px;" placeholder="Ex: 24.99" oninput="updateMarginPreview()">
+                                        </div>
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                        <div>
+                                            <label style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Votre Prix de Vente (€) :</label>
+                                            <input type="number" step="0.01" id="aliPreviewPrice" class="search-input" style="width: 100%; margin-top: 4px;" placeholder="Ex: 79.99" oninput="onSellPriceChange()">
+                                        </div>
+                                        <div>
+                                            <label style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Ancien Prix Barré (€) :</label>
+                                            <input type="number" step="0.01" id="aliPreviewOldPrice" class="search-input" style="width: 100%; margin-top: 4px;" placeholder="Ex: 129.99" oninput="onOldPriceChange()">
+                                        </div>
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                        <div>
+                                            <label style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Badge de Réduction (- %) :</label>
+                                            <input type="number" id="aliPreviewDiscount" class="search-input" style="width: 100%; margin-top: 4px;" placeholder="Ex: 38" oninput="onDiscountChange()">
+                                        </div>
+                                        <div style="display: flex; flex-direction: column; justify-content: flex-end;">
+                                            <div id="aliMarginPreview" style="font-size: 12.5px; font-weight: 600; color: var(--success); padding: 8px 12px; background: var(--success-subtle); border-radius: 8px; line-height: 1.4;">
+                                                Marge estimée : +0.00 €
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn-primary" onclick="publishAliExpressProduct()" style="margin-top: 10px; width: 100%; justify-content: center;">
+                                        <i class="fas fa-check-circle"></i> Publier dans ma Boutique
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- VUE 5 : EXPÉDITIONS & SUIVI HUB -->
+            <section id="view-tracking-hub" class="view-section">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title"><i class="fas fa-plane-departure"></i> Centre d'Expédition & Numéros de Suivi</h2>
+                            <p class="card-subtitle">Associez les numéros de suivi colis de vos fournisseurs AliExpress aux commandes de vos clients</p>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>N° Commande</th>
+                                    <th>Client</th>
+                                    <th>Fournisseur AliExpress</th>
+                                    <th>Numéro de Suivi Enregistré</th>
+                                    <th>Transporteur</th>
+                                    <th>Lien Portail Client</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="trackingHubTbody">
+                                <tr><td colspan="7" style="text-align: center; padding: 2rem;">Chargement du centre d'expédition...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VUE 6 : CODES PROMO -->
+            <section id="view-promos" class="view-section">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title"><i class="fas fa-tag"></i> Codes Promo & Bons de Réduction</h2>
+                            <p class="card-subtitle">Activez ou créez des remises pour vos campagnes marketing</p>
+                        </div>
+                        <button class="btn-primary" onclick="openCreatePromoModal()">
+                            <i class="fas fa-plus"></i> Nouveau Code Promo
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Type & Réduction</th>
+                                    <th>Description</th>
+                                    <th>Panier Minimum</th>
+                                    <th>Validité</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="promosTbody">
+                                <tr><td colspan="7" style="text-align: center; padding: 2rem;">Chargement des codes promo...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VUE 7 : CRM CLIENTS -->
+            <section id="view-customers" class="view-section">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title"><i class="fas fa-user-friends"></i> Base de Données Clients</h2>
+                            <p class="card-subtitle">Liste consolidée des acheteurs de la boutique</p>
+                        </div>
+                        <button class="btn-secondary" onclick="exportCustomersCSV()">
+                            <i class="fas fa-file-csv"></i> Exporter en CSV
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nom du Client</th>
+                                    <th>Email</th>
+                                    <th>Ville & Pays</th>
+                                    <th>Commandes Passées</th>
+                                    <th>Total Dépensé</th>
+                                    <th>Dernière Commande</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customersTbody">
+                                <tr><td colspan="6" style="text-align: center; padding: 2rem;">Chargement de la base clients...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VUE 8 : PARAMÈTRES BOUTIQUE -->
+            <section id="view-settings" class="view-section">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title"><i class="fas fa-store"></i> Identité de la Boutique</h2>
+                        </div>
+                        <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                            <div>
+                                <label style="font-size: 12px; color: var(--text-muted);">Nom commercial :</label>
+                                <input type="text" class="search-input" value="Zenith Store France" readonly>
+                            </div>
+                            <div>
+                                <label style="font-size: 12px; color: var(--text-muted);">Email du Support Client :</label>
+                                <input type="text" class="search-input" value="support@zenith-store.fr" readonly>
+                            </div>
+                            <div>
+                                <label style="font-size: 12px; color: var(--text-muted);">Délai de livraison standard affiché :</label>
+                                <input type="text" class="search-input" value="8 à 12 jours ouvrés (Sécurité virement Stripe)" readonly>
+                            </div>
+                            <div>
+                                <label style="font-size: 12px; color: var(--text-muted);">Devise :</label>
+                                <input type="text" class="search-input" value="Euro (€ - EUR)" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title"><i class="fas fa-plug"></i> Passerelles & API Externes</h2>
+                        </div>
+                        <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                            <div style="padding: 1rem; background: var(--bg-surface-elevated); border-radius: 8px; border: 1px solid var(--border-subtle);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <strong>Stripe Payments</strong>
+                                    <span class="status-badge badge-shipped">Connecté</span>
+                                </div>
+                                <div style="font-size: 12px; color: var(--text-muted);">Gère les paiements CB sécurisés et le délai de versement vers votre compte bancaire.</div>
+                            </div>
+
+                            <div style="padding: 1rem; background: var(--bg-surface-elevated); border-radius: 8px; border: 1px solid var(--border-subtle);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <strong>AliExpress Dropshipping API</strong>
+                                    <span class="status-badge badge-pending">En cours d'examen (KYC)</span>
+                                </div>
+                                <div style="font-size: 12px; color: var(--text-muted);">Compte Développeur Marco Rubino (Dossier CA87158JJ) en cours de validation par AliExpress pour automatiser les commandes en 0 clic.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="grid-column: 1 / -1; border-color: rgba(239, 68, 68, 0.3);">
+                        <div class="card-header" style="background: var(--danger-subtle);">
+                            <h2 class="card-title" style="color: var(--danger);"><i class="fas fa-trash-can"></i> Maintenance & Remise à Zéro</h2>
+                        </div>
+                        <div style="padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                            <div>
+                                <strong style="display: block; font-size: 14px; margin-bottom: 4px;">Purger les commandes & clients de test</strong>
+                                <p style="font-size: 12.5px; color: var(--text-muted); margin: 0;">Remet le chiffre d'affaires, les commandes, les expéditions et la base CRM à zéro (0). Votre catalogue de produits et vos identifiants admin restent intacts.</p>
+                            </div>
+                            <button class="btn-primary" style="background: var(--danger); border: none; white-space: nowrap;" onclick="resetStoreData()">
+                                <i class="fas fa-rotate-left"></i> Remettre à Zéro (0)
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+</div>
+
+<!-- MODAL DÉTAIL COMMANDE & EXPÉDITION (DROPSHIPPING COCKPIT) -->
+<div class="modal-backdrop" id="orderModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div>
+                <h3 class="modal-title" id="modalOrderTitle">Détail Commande #CMD-000</h3>
+                <span id="modalOrderDate" style="font-size: 12px; color: var(--text-muted);"></span>
+            </div>
+            <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+        </div>
+
+        <div class="modal-body" id="modalOrderBody">
+            <!-- Dynamiquement peuplé par openOrderDetails() -->
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="printInvoiceFromModal()">
+                <i class="fas fa-print"></i> Imprimer Facture / Bordereau
+            </button>
+            <button class="btn-primary" onclick="closeOrderModal()">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CRÉATION COMMANDE MANUELLE -->
+<div class="modal-backdrop" id="manualOrderModal">
+    <div class="modal-box" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3 class="modal-title"><i class="fas fa-plus-circle" style="color: var(--accent);"></i> Créer une Commande Manuelle</h3>
+            <button class="modal-close" onclick="closeManualOrderModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="font-weight: 600; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">1. Coordonnées de l'acheteur</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="text" id="manualName" class="search-input" placeholder="Nom complet client *" required>
+                <input type="email" id="manualEmail" class="search-input" placeholder="Email client *" required>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="text" id="manualPhone" class="search-input" placeholder="Téléphone (ex: 06...)">
+                <input type="text" id="manualAddress" class="search-input" placeholder="Adresse complète *" required>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                <input type="text" id="manualPostal" class="search-input" placeholder="Code postal *" required>
+                <input type="text" id="manualCity" class="search-input" placeholder="Ville *" required>
+                <input type="text" id="manualCountry" class="search-input" value="France">
+            </div>
+
+            <div style="font-weight: 600; font-size: 13px; color: var(--text-primary); margin-top: 10px; margin-bottom: 4px;">2. Article commandé</div>
+            <div style="display: grid; grid-template-columns: 1fr 90px; gap: 10px;">
+                <select id="manualProductSelect" class="form-select" style="width: 100%;"></select>
+                <input type="number" id="manualQuantity" class="search-input" value="1" min="1" placeholder="Qté">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px;">
+                <div>
+                    <label style="font-size: 11px; color: var(--text-muted);">Mode de paiement :</label>
+                    <select id="manualPaymentMethod" class="form-select" style="width: 100%; margin-top: 4px;">
+                        <option value="Virement bancaire">Virement bancaire</option>
+                        <option value="Stripe / CB">Stripe / CB</option>
+                        <option value="PayPal">PayPal</option>
+                        <option value="Espèces / Autre">Espèces / Autre</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 11px; color: var(--text-muted);">Statut initial :</label>
+                    <select id="manualStatus" class="form-select" style="width: 100%; margin-top: 4px;">
+                        <option value="paid">Payée (À commander)</option>
+                        <option value="shipped">Expédiée</option>
+                        <option value="pending">En attente de paiement</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeManualOrderModal()">Annuler</button>
+            <button class="btn-primary" onclick="saveManualOrder()">
+                <i class="fas fa-check"></i> Enregistrer la commande
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL NOUVEAU CODE PROMO -->
+<div class="modal-backdrop" id="createPromoModal">
+    <div class="modal-box" style="max-width: 480px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Créer un Nouveau Code Promo</h3>
+            <button class="modal-close" onclick="closeCreatePromoModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div>
+                <label style="font-size: 12px; color: var(--text-muted);">Code Promo (Majuscules) :</label>
+                <input type="text" id="newPromoCode" class="search-input" placeholder="Ex: ZENITH15" style="text-transform: uppercase;">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                    <label style="font-size: 12px; color: var(--text-muted);">Type de remise :</label>
+                    <select id="newPromoType" class="form-select" style="width: 100%;">
+                        <option value="percentage">Pourcentage (%)</option>
+                        <option value="fixed">Montant fixe (€)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 12px; color: var(--text-muted);">Valeur :</label>
+                    <input type="number" id="newPromoValue" class="search-input" placeholder="Ex: 15" min="1">
+                </div>
+            </div>
+            <div>
+                <label style="font-size: 12px; color: var(--text-muted);">Montant panier minimum (€) :</label>
+                <input type="number" id="newPromoMin" class="search-input" placeholder="0" value="0">
+            </div>
+            <div>
+                <label style="font-size: 12px; color: var(--text-muted);">Date d'expiration :</label>
+                <input type="date" id="newPromoExpiry" class="search-input" value="2027-12-31">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeCreatePromoModal()">Annuler</button>
+            <button class="btn-primary" onclick="saveNewPromoCode()">Créer le code</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CRÉATION COMMANDE MANUELLE -->
+<div class="modal-backdrop" id="manualOrderModal">
+    <div class="modal-box" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3 class="modal-title"><i class="fas fa-plus-circle" style="color: var(--accent);"></i> Créer une Commande Manuelle</h3>
+            <button class="modal-close" onclick="closeManualOrderModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="font-weight: 600; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">1. Coordonnées de l'acheteur</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="text" id="manualName" class="search-input" placeholder="Nom complet client *" required>
+                <input type="email" id="manualEmail" class="search-input" placeholder="Email client *" required>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="text" id="manualPhone" class="search-input" placeholder="Téléphone (ex: 06...)">
+                <input type="text" id="manualAddress" class="search-input" placeholder="Adresse complète *" required>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                <input type="text" id="manualPostal" class="search-input" placeholder="Code postal *" required>
+                <input type="text" id="manualCity" class="search-input" placeholder="Ville *" required>
+                <input type="text" id="manualCountry" class="search-input" value="France">
+            </div>
+
+            <div style="font-weight: 600; font-size: 13px; color: var(--text-primary); margin-top: 10px; margin-bottom: 4px;">2. Article commandé</div>
+            <div style="display: grid; grid-template-columns: 1fr 90px; gap: 10px;">
+                <select id="manualProductSelect" class="form-select" style="width: 100%;"></select>
+                <input type="number" id="manualQuantity" class="search-input" value="1" min="1" placeholder="Qté">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px;">
+                <div>
+                    <label style="font-size: 11px; color: var(--text-muted);">Mode de paiement :</label>
+                    <select id="manualPaymentMethod" class="form-select" style="width: 100%; margin-top: 4px;">
+                        <option value="Virement bancaire">Virement bancaire</option>
+                        <option value="Stripe / CB">Stripe / CB</option>
+                        <option value="PayPal">PayPal</option>
+                        <option value="Espèces / Autre">Espèces / Autre</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 11px; color: var(--text-muted);">Statut initial :</label>
+                    <select id="manualStatus" class="form-select" style="width: 100%; margin-top: 4px;">
+                        <option value="paid">Payée (À commander)</option>
+                        <option value="shipped">Expédiée</option>
+                        <option value="pending">En attente de paiement</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeManualOrderModal()">Annuler</button>
+            <button class="btn-primary" onclick="saveManualOrder()">
+                <i class="fas fa-check"></i> Enregistrer la commande
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT LOGIQUE DASHBOARD -->
+<script>
+    const API_BASE = (window.location.protocol === 'file:') ? 'http://localhost:3000' : '';
+    let globalOrders = [];
+    let globalProducts = [];
+    let globalPromos = {};
+    let currentModalOrder = null;
+
+    // ==========================================
+    // SÉCURITÉ & AUTHENTIFICATION ADMIN
+    // ==========================================
+    function getAdminAuthHeaders() {
+        const token = sessionStorage.getItem('adminToken') || '';
+        return token ? { 'Authorization': 'Bearer ' + token } : {};
+    }
+
+    async function adminFetch(url, options = {}) {
+        options.headers = {
+            ...(options.headers || {}),
+            ...getAdminAuthHeaders()
+        };
+        const res = await fetch(url, options);
+        if (res.status === 401 || res.status === 403) {
+            sessionStorage.removeItem('adminToken');
+            showAdminLoginGate();
+        }
+        return res;
+    }
+
+    async function checkAdminAuth() {
+        const token = sessionStorage.getItem('adminToken');
+        if (!token) {
+            showAdminLoginGate();
+            return false;
+        }
+
+        try {
+            const res = await fetch(API_BASE + '/api/admin/verify', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.authenticated) {
+                    hideAdminLoginGate();
+                    return true;
+                }
+            }
+        } catch (e) {
+            console.warn('Erreur vérification auth admin:', e.message);
+        }
+
+        sessionStorage.removeItem('adminToken');
+        showAdminLoginGate();
+        return false;
+    }
+
+    function showAdminLoginGate() {
+        const gate = document.getElementById('adminLoginGate');
+        if (gate) {
+            gate.style.display = 'flex';
+            setTimeout(() => {
+                const input = document.getElementById('adminPasswordInput');
+                if (input) input.focus();
+            }, 100);
+        }
+    }
+
+    function hideAdminLoginGate() {
+        const gate = document.getElementById('adminLoginGate');
+        if (gate) gate.style.display = 'none';
+    }
+
+    async function handleAdminLogin(e) {
+        if (e) e.preventDefault();
+        const input = document.getElementById('adminPasswordInput');
+        const errDiv = document.getElementById('adminLoginError');
+        const errText = document.getElementById('adminLoginErrorText');
+        const btn = document.getElementById('adminLoginBtn');
+        const pwd = input.value.trim();
+
+        if (!pwd) return;
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Vérification...</span>';
+        if (errDiv) errDiv.style.display = 'none';
+
+        try {
+            const res = await fetch(API_BASE + '/api/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: pwd })
+            });
+
+            const data = await res.json();
+            if (res.ok && data.success && data.token) {
+                sessionStorage.setItem('adminToken', data.token);
+                hideAdminLoginGate();
+                input.value = '';
+                loadAllData();
+            } else {
+                if (errDiv) {
+                    errText.textContent = data.error || 'Mot de passe administrateur incorrect.';
+                    errDiv.style.display = 'flex';
+                }
+                input.value = '';
+                input.focus();
+            }
+        } catch (err) {
+            if (errDiv) {
+                errText.textContent = 'Erreur serveur : impossible de contacter le backend.';
+                errDiv.style.display = 'flex';
+            }
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-key"></i> <span>Déverrouiller le Panel</span>';
+        }
+    }
+
+    function adminLogout() {
+        sessionStorage.removeItem('adminToken');
+        window.location.reload();
+    }
+
+    function toggleAdminPasswordVisibility() {
+        const input = document.getElementById('adminPasswordInput');
+        const icon = document.getElementById('togglePwIcon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.className = 'fas fa-eye-slash';
+        } else {
+            input.type = 'password';
+            icon.className = 'fas fa-eye';
+        }
+    }
+
+    // Navigation entre les onglets
+    function switchTab(tabId) {
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-item-btn').forEach(el => el.classList.remove('active'));
+
+        const target = document.getElementById('view-' + tabId);
+        if (target) target.classList.add('active');
+
+        // Mettre à jour le bouton actif de la sidebar
+        const btns = document.querySelectorAll('.nav-item-btn');
+        btns.forEach(btn => {
+            if (btn.getAttribute('onclick')?.includes(tabId)) {
+                btn.classList.add('active');
+            }
+        });
+
+        // Titre dans la Topbar
+        const titles = {
+            'dashboard': 'Tableau de Bord Financier',
+            'orders': 'Gestion des Commandes & Expéditions',
+            'products': 'Catalogue & Gestion des Stocks',
+            'aliexpress': 'Importateur AliExpress',
+            'tracking-hub': 'Centre de Suivi des Colis',
+            'promos': 'Codes Promotionnels & Réductions',
+            'customers': 'Gestion Clients (CRM)',
+            'settings': 'Paramètres de la Boutique'
+        };
+        document.getElementById('currentViewTitle').textContent = titles[tabId] || 'Administration';
+    }
+
+    // Chargement global des données
+    async function loadAllData(spin = false) {
+        if (spin) {
+            const icon = document.getElementById('refreshIcon');
+            icon.classList.add('fa-spin');
+            setTimeout(() => icon.classList.remove('fa-spin'), 600);
+        }
+
+        try {
+            // 1. Charger les produits
+            const prodRes = await fetch(API_BASE + '/api/products');
+            if (prodRes.ok) {
+                const prodData = await prodRes.json();
+                globalProducts = prodData.products || [];
+            }
+        } catch (e) {
+            console.warn('Erreur chargement produits:', e.message);
+        }
+
+        try {
+            // 2. Charger les commandes
+            const ordRes = await adminFetch(API_BASE + '/api/orders');
+            if (ordRes.ok) {
+                const ordData = await ordRes.json();
+                globalOrders = ordData.orders || [];
+            }
+        } catch (e) {
+            console.warn('Erreur chargement commandes:', e.message);
+        }
+
+        // Rendu des différentes vues
+        renderKPIs();
+        renderOrders();
+        renderProducts();
+        renderTrackingHub();
+        renderPromos();
+        renderCustomers();
+    }
+
+    // 1. Rendu des Métriques Financières (KPIs)
+    function renderKPIs() {
+        let grossRevenue = 0;
+        let supplierCost = 0;
+        let pendingFulfillmentCount = 0;
+
+        globalOrders.forEach(order => {
+            const total = parseFloat(order.total) || 0;
+            grossRevenue += total;
+
+            // Calcul du coût d'achat fournisseur AliExpress
+            let orderSupplierCost = 0;
+            if (order.items && order.items.length) {
+                order.items.forEach(item => {
+                    const matchedProd = globalProducts.find(p => p.id === item.id || (p.aliexpress && p.aliexpress.productId === item.aliexpressId));
+                    const unitCost = matchedProd ? (matchedProd.supplierPrice || (matchedProd.aliexpress ? matchedProd.aliexpress.supplierPrice : 0)) : (item.price * 0.5);
+                    orderSupplierCost += (unitCost * (item.quantity || 1));
+                });
+            }
+            supplierCost += orderSupplierCost;
+
+            if (order.status !== 'shipped' && order.status !== 'delivered' && order.status !== 'cancelled') {
+                pendingFulfillmentCount++;
+            }
+        });
+
+        const netProfit = grossRevenue - supplierCost;
+        const marginPct = grossRevenue > 0 ? ((netProfit / grossRevenue) * 100).toFixed(1) : 0;
+
+        document.getElementById('kpiGrossRevenue').textContent = grossRevenue.toFixed(2) + ' €';
+        document.getElementById('kpiSupplierCost').textContent = supplierCost.toFixed(2) + ' €';
+        document.getElementById('kpiNetProfit').textContent = (netProfit >= 0 ? '+' : '') + netProfit.toFixed(2) + ' €';
+        document.getElementById('kpiMarginPercent').textContent = `Marge Nette : ${marginPct}%`;
+        document.getElementById('kpiPendingOrders').textContent = pendingFulfillmentCount;
+        document.getElementById('sidebarOrdersBadge').textContent = pendingFulfillmentCount;
+
+        // Commandes Récentes sur le dashboard
+        const tbody = document.getElementById('recentOrdersTbody');
+        if (!globalOrders.length) {
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-muted);">Aucune commande enregistrée pour l'instant.</td></tr>`;
+            return;
+        }
+
+        const recents = globalOrders.slice(0, 5);
+        tbody.innerHTML = recents.map(o => {
+            const cost = computeOrderSupplierCost(o);
+            const profit = (parseFloat(o.total) || 0) - cost;
+            return `
+                <tr>
+                    <td class="font-mono font-bold" style="color: var(--accent);">#${o.id}</td>
+                    <td>${formatDate(o.date)}</td>
+                    <td>
+                        <div class="font-bold">${escapeHtml(o.shipping_address ? o.shipping_address.name : 'Client')}</div>
+                        <div style="font-size: 11.5px; color: var(--text-muted);">${escapeHtml(o.shipping_address ? o.shipping_address.city : '')}</div>
+                    </td>
+                    <td class="font-mono font-bold">${parseFloat(o.total).toFixed(2)} €</td>
+                    <td class="font-mono" style="color: var(--warning);">${cost.toFixed(2)} €</td>
+                    <td class="font-mono font-bold" style="color: var(--success);">${profit >= 0 ? '+' : ''}${profit.toFixed(2)} €</td>
+                    <td>${renderStatusBadge(o.status)}</td>
+                    <td>
+                        <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="openOrderDetails('${o.id}')">
+                            <i class="fas fa-eye"></i> Gérer
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // 2. Rendu de la vue Commandes
+    function renderOrders(filterText = '', statusFilter = 'all') {
+        const tbody = document.getElementById('allOrdersTbody');
+        let list = [...globalOrders];
+
+        if (statusFilter !== 'all') {
+            if (statusFilter === 'ready_for_supplier') {
+                list = list.filter(o => o.status !== 'shipped' && o.status !== 'delivered' && o.status !== 'cancelled' && o.status !== 'refunded');
+            } else if (statusFilter === 'cancelled') {
+                list = list.filter(o => o.status === 'cancelled' || o.status === 'refunded');
+            } else {
+                list = list.filter(o => o.status === statusFilter);
+            }
+        }
+
+        if (filterText) {
+            const q = filterText.toLowerCase();
+            list = list.filter(o => 
+                o.id.toLowerCase().includes(q) ||
+                (o.shipping_address && o.shipping_address.name && o.shipping_address.name.toLowerCase().includes(q)) ||
+                (o.shipping_address && o.shipping_address.email && o.shipping_address.email.toLowerCase().includes(q))
+            );
+        }
+
+        if (!list.length) {
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-muted);">Aucune commande ne correspond aux filtres.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = list.map(o => {
+            const aliLink = o.aliexpress_fulfillment?.directOrderLink || 'https://fr.aliexpress.com';
+            const itemsCount = o.items ? o.items.reduce((acc, it) => acc + (it.quantity || 1), 0) : 0;
+            const firstItemImg = o.items?.[0]?.image || 'images/logo/logo.png';
+            
+            return `
+                <tr>
+                    <td>
+                        <a href="javascript:void(0)" onclick="openOrderDetails('${o.id}')" class="font-mono font-bold" style="color: var(--accent); text-decoration: none;">#${o.id}</a>
+                    </td>
+                    <td style="font-size: 12.5px;">${formatDate(o.date)}</td>
+                    <td>
+                        <div class="font-bold">${escapeHtml(o.shipping_address?.name || 'Inconnu')}</div>
+                        <div style="font-size: 11.5px; color: var(--text-muted);">${escapeHtml(o.shipping_address?.postal || '')} ${escapeHtml(o.shipping_address?.city || '')}, ${escapeHtml(o.shipping_address?.country || 'France')}</div>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <img src="${firstItemImg}" style="width: 28px; height: 28px; border-radius: 4px; object-fit: contain; background: #000;">
+                            <span style="font-size: 12.5px;">${itemsCount} article(s)</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="font-mono font-bold">${parseFloat(o.total).toFixed(2)} €</span>
+                        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">${o.paymentMethod || 'CB'}</div>
+                    </td>
+                    <td>${renderStatusBadge(o.status)}</td>
+                    <td>
+                        <a href="${aliLink}" target="_blank" class="btn-secondary" style="padding: 4px 8px; font-size: 11.5px; color: #f59e0b; border-color: rgba(245, 158, 11, 0.3);">
+                            <i class="fas fa-external-link-alt"></i> Fiche Fournisseur
+                        </a>
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <button class="btn-primary" style="padding: 5px 10px; font-size: 12px;" onclick="openOrderDetails('${o.id}')">
+                            <i class="fas fa-dolly"></i> Traiter
+                        </button>
+                        <button class="btn-secondary" style="padding: 5px 8px; font-size: 12px;" onclick="quickPrintInvoice('${o.id}')" title="Facture client">
+                            <i class="fas fa-print"></i>
+                        </button>
+                        <button class="btn-danger" onclick="deleteOrder('${o.id}')" title="Supprimer la commande">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function filterOrdersTable() {
+        const text = document.getElementById('orderSearchInput').value;
+        const status = document.getElementById('orderStatusFilter').value;
+        renderOrders(text, status);
+    }
+
+    // 3. Rendu des Produits & Gestion directe des Stocks
+    function renderProducts(filterText = '') {
+        const tbody = document.getElementById('productsTbody');
+        let list = [...globalProducts];
+
+        if (filterText) {
+            const q = filterText.toLowerCase();
+            list = list.filter(p => p.name.toLowerCase().includes(q) || (p.category && p.category.toLowerCase().includes(q)));
+        }
+
+        if (!list.length) {
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-muted);">Aucun produit trouvé.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = list.map(p => {
+            const sellPrice = parseFloat(p.price) || 0;
+            const costPrice = parseFloat(p.supplierPrice || (p.aliexpress ? p.aliexpress.supplierPrice : 0)) || 0;
+            const margin = sellPrice - costPrice;
+            const marginPct = sellPrice > 0 ? ((margin / sellPrice) * 100).toFixed(0) : 0;
+            const stockCount = typeof p.stockCount === 'number' ? p.stockCount : 10;
+            const aliUrl = p.aliexpress?.url || (p.aliexpress?.productId ? `https://fr.aliexpress.com/item/${p.aliexpress.productId}.html` : null);
+
+            let stockBadge = '<span class="status-badge badge-shipped">En Stock</span>';
+            if (stockCount === 0) stockBadge = '<span class="status-badge badge-pending" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.3);">Rupture</span>';
+            else if (stockCount <= 3) stockBadge = '<span class="status-badge badge-pending">Stock Faible</span>';
+
+            return `
+                <tr>
+                    <td>
+                        <div class="product-cell">
+                            <img src="${p.image}" class="product-thumb" alt="${escapeHtml(p.name)}">
+                            <div>
+                                <div class="product-name-txt" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</div>
+                                <div style="font-size: 11px; color: var(--text-muted); font-family: monospace;">ID: ${p.id}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="product-cat-txt">${escapeHtml(p.category || 'Général')}</span></td>
+                    <td class="font-mono font-bold">
+                        <div>${sellPrice.toFixed(2)} €</div>
+                        ${p.oldPrice ? `<div style="font-size: 11px; color: var(--text-muted); font-weight: normal;"><s style="color: #71717a;">${parseFloat(p.oldPrice).toFixed(2)} €</s> <span style="color: #ef4444; font-weight: 700; margin-left: 2px;">-${p.discount || 0}%</span></div>` : ''}
+                    </td>
+                    <td class="font-mono" style="color: var(--warning);">${costPrice > 0 ? costPrice.toFixed(2) + ' €' : '-'}</td>
+                    <td class="font-mono font-bold" style="color: var(--success);">${margin > 0 ? '+' + margin.toFixed(2) + ' € (' + marginPct + '%)' : '-'}</td>
+                    <td>
+                        <div class="stock-control">
+                            <button class="stock-btn" onclick="adjustProductStock('${p.id}', -1)"><i class="fas fa-minus"></i></button>
+                            <input type="number" class="stock-val-input" id="stock-input-${p.id}" value="${stockCount}" onchange="saveStockChange('${p.id}', this.value)">
+                            <button class="stock-btn" onclick="adjustProductStock('${p.id}', 1)"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </td>
+                    <td>${stockBadge}</td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px; color: #a78bfa;" onclick="editProductPricing('${p.id}')" title="Modifier prix de vente et coût fournisseur">
+                            <i class="fas fa-edit"></i> Prix
+                        </button>
+                        <a href="produit.html?id=${p.id}" target="_blank" class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" title="Voir la fiche boutique">
+                            <i class="fas fa-external-link-alt"></i> Boutique
+                        </a>
+                        ${aliUrl ? `
+                            <a href="${aliUrl}" target="_blank" class="btn-secondary" style="padding: 4px 8px; font-size: 12px; color: #f59e0b;" title="Voir le fournisseur AliExpress">
+                                <i class="fas fa-truck"></i> Fournisseur
+                            </a>
+                        ` : ''}
+                        <button class="btn-danger" onclick="deleteProduct('${p.id}')" title="Supprimer du catalogue">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function filterProductsTable() {
+        const text = document.getElementById('productSearchInput').value;
+        renderProducts(text);
+    }
+
+    async function adjustProductStock(productId, delta) {
+        const input = document.getElementById(`stock-input-${productId}`);
+        if (!input) return;
+        let val = parseInt(input.value, 10) || 0;
+        val = Math.max(0, val + delta);
+        input.value = val;
+        await saveStockChange(productId, val);
+    }
+
+    async function saveStockChange(productId, newStock) {
+        newStock = parseInt(newStock, 10);
+        if (isNaN(newStock) || newStock < 0) newStock = 0;
+
+        try {
+            const res = await adminFetch(API_BASE + `/api/products/${productId}/stock`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ stockCount: newStock })
+            });
+
+            if (res.ok) {
+                // Mettre à jour l'état local
+                const p = globalProducts.find(x => x.id === productId);
+                if (p) {
+                    p.stockCount = newStock;
+                    p.stock = newStock > 0;
+                }
+                renderProducts(document.getElementById('productSearchInput').value);
+            }
+        } catch (e) {
+            console.error('Erreur mise à jour stock:', e);
+        }
+    }
+
+    async function editProductPricing(productId) {
+        const p = globalProducts.find(x => x.id === productId);
+        if (!p) return;
+        const currentCost = p.supplierPrice || p.aliexpress?.supplierPrice || 0;
+        const currentOldPrice = p.oldPrice || (Math.round(p.price * 1.35) - 0.01);
+        const currentDiscount = p.discount || Math.round(((currentOldPrice - p.price) / currentOldPrice) * 100);
+
+        const newSell = prompt(`Prix de Vente (€) pour "${p.name}" :`, p.price);
+        if (newSell === null) return;
+        const newCost = prompt(`Prix d'Achat Fournisseur AliExpress (€) :`, currentCost);
+        if (newCost === null) return;
+        const newOld = prompt(`Ancien Prix Barré (€) affiché sur la boutique :`, currentOldPrice);
+        if (newOld === null) return;
+        const newDisc = prompt(`Badge de Réduction (- %) affiché sur le produit :`, currentDiscount);
+        if (newDisc === null) return;
+
+        const sellVal = parseFloat(newSell);
+        const costVal = parseFloat(newCost);
+        const oldVal = parseFloat(newOld);
+        const discVal = parseInt(newDisc, 10);
+
+        if (isNaN(sellVal) || sellVal <= 0) {
+            alert('Prix de vente invalide.');
+            return;
+        }
+
+        try {
+            const res = await adminFetch(API_BASE + `/api/products/${productId}/stock`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    price: sellVal, 
+                    supplierPrice: costVal,
+                    oldPrice: isNaN(oldVal) ? undefined : oldVal,
+                    discount: isNaN(discVal) ? undefined : discVal
+                })
+            });
+            if (res.ok) {
+                p.price = sellVal;
+                p.supplierPrice = costVal;
+                if (!isNaN(oldVal)) p.oldPrice = oldVal;
+                if (!isNaN(discVal)) p.discount = discVal;
+                if (p.aliexpress) p.aliexpress.supplierPrice = costVal;
+                renderProducts(document.getElementById('productSearchInput').value);
+                renderKPIs();
+                alert(`✅ Prix mis à jour : ${sellVal.toFixed(2)}€ (au lieu de ${oldVal.toFixed(2)}€ -${discVal}%) !`);
+            }
+        } catch(e) {
+            alert('Erreur lors de la mise à jour des prix.');
+        }
+    }
+
+    async function deleteProduct(productId) {
+        if (!confirm('Êtes-vous certain de vouloir retirer ce produit de votre boutique ?')) return;
+
+        try {
+            const res = await adminFetch(API_BASE + `/api/products/${productId}`, { method: 'DELETE' });
+            if (res.ok) {
+                globalProducts = globalProducts.filter(p => p.id !== productId);
+                renderProducts();
+            }
+        } catch (e) {
+            alert('Erreur lors de la suppression du produit');
+        }
+    }
+
+    // 4. Modal Détail Commande & Actions Dropshipping
+    function openOrderDetails(orderId) {
+        const order = globalOrders.find(o => o.id === orderId);
+        if (!order) return;
+        currentModalOrder = order;
+
+        document.getElementById('modalOrderTitle').textContent = `Traitement Commande #${order.id}`;
+        document.getElementById('modalOrderDate').textContent = `Passée le ${formatDate(order.date)}`;
+
+        const recipient = order.shipping_address?.name || 'Client Inconnu';
+        const address = order.shipping_address?.address || '';
+        const city = order.shipping_address?.city || '';
+        const postal = order.shipping_address?.postal || '';
+        const country = order.shipping_address?.country || 'France';
+        const phone = order.shipping_address?.phone || 'Non renseigné';
+        const email = order.shipping_address?.email || 'Non renseigné';
+
+        const aliAddressText = `${recipient}\n${address}\n${postal} ${city}\n${country}\nTél: ${phone}`;
+
+        let itemsHtml = (order.items || []).map(it => {
+            const aliId = it.aliexpressId || '1005012626624444';
+            const aliBuyUrl = `https://fr.aliexpress.com/item/${aliId}.html`;
+
+            return `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: var(--bg-surface-elevated); border-radius: 8px; border: 1px solid var(--border-subtle); margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img src="${it.image || 'images/logo/logo.png'}" style="width: 44px; height: 44px; object-fit: contain; background: #000; border-radius: 6px;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 13.5px; color: #fff;">${escapeHtml(it.name)}</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Quantité : <strong>${it.quantity || 1}</strong> &bull; Prix vente : ${parseFloat(it.price).toFixed(2)} €</div>
+                            <div style="font-size: 11px; color: var(--accent); font-family: monospace;">AliExpress ID : ${aliId}</div>
+                        </div>
+                    </div>
+                    <a href="${aliBuyUrl}" target="_blank" class="btn-primary" style="padding: 6px 12px; font-size: 12.5px; background: #f59e0b; color: #000; font-weight: 700;">
+                        <i class="fas fa-shopping-cart"></i> Commander sur AliExpress ↗
+                    </a>
+                </div>
+            `;
+        }).join('');
+
+        const modalBody = document.getElementById('modalOrderBody');
+        modalBody.innerHTML = `
+            <!-- COORDONNÉES CLIENT & ADRESSE DE LIVRAISON -->
+            <div style="background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 10px; padding: 1.25rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                    <div style="font-weight: 700; color: #fff; font-size: 14px;">
+                        <i class="fas fa-map-marker-alt" style="color: var(--accent);"></i> Adresse de Livraison Client
+                    </div>
+                    <button class="btn-secondary" style="font-size: 11.5px; padding: 4px 8px;" onclick="copyToClipboard('${escapeJsString(aliAddressText)}')">
+                        <i class="fas fa-copy"></i> Copier l'adresse pour AliExpress
+                    </button>
+                </div>
+                <div style="font-size: 13.5px; line-height: 1.6; color: var(--text-primary);">
+                    <div><strong>${escapeHtml(recipient)}</strong> (${escapeHtml(email)})</div>
+                    <div>${escapeHtml(address)}</div>
+                    <div>${escapeHtml(postal)} ${escapeHtml(city)}, ${escapeHtml(country)}</div>
+                    <div style="color: var(--text-muted); font-size: 12px; margin-top: 4px;">Numéro de téléphone client : ${escapeHtml(phone)}</div>
+                </div>
+            </div>
+
+            <!-- ARTICLES FOURNISSEUR -->
+            <div>
+                <div style="font-weight: 700; color: #fff; font-size: 14px; margin-bottom: 10px;">
+                    <i class="fas fa-box" style="color: var(--warning);"></i> Articles à commander chez le fournisseur
+                </div>
+                ${itemsHtml}
+            </div>
+
+            <!-- GESTION DU SUIVI COLIS (EXPÉDITION) -->
+            <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 1.25rem;">
+                <div style="font-weight: 700; color: #fff; font-size: 14px; margin-bottom: 8px;">
+                    <i class="fas fa-truck-loading" style="color: var(--success);"></i> Validation de l'Expédition & Suivi Colis
+                </div>
+                <div style="font-size: 12.5px; color: var(--text-secondary); margin-bottom: 12px;">
+                    Une fois la commande passée sur AliExpress, renseignez ici le numéro de suivi fournisseur (ex: Cainiao, LP...) pour mettre à jour automatiquement le suivi du client.
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 140px auto; gap: 10px;">
+                    <input type="text" id="modalTrackingNumber" class="search-input" placeholder="Ex: LP00689945231FR ou CN00987..." value="${order.tracking?.number || ''}">
+                    <select id="modalCarrier" class="form-select">
+                        <option value="Colissimo">Colissimo</option>
+                        <option value="Cainiao">Cainiao</option>
+                        <option value="La Poste">La Poste</option>
+                        <option value="Chronopost">Chronopost</option>
+                    </select>
+                    <button class="btn-primary" onclick="saveOrderTracking('${order.id}')">
+                        <i class="fas fa-paper-plane"></i> Expédier
+                    </button>
+                </div>
+                ${order.tracking?.number ? `
+                    <div style="margin-top: 10px; font-size: 12px; color: var(--success);">
+                        <i class="fas fa-check-circle"></i> Colis expédié : <strong>${order.tracking.number}</strong> &bull; <a href="suivi.html?num=${order.id}" target="_blank" style="color: #c4b5fd;">Voir la page de suivi client ↗</a>
+                    </div>
+                ` : ''}
+            </div>
+
+            <!-- STATUT ACTUEL -->
+            <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--border-subtle);">
+                <span style="font-size: 13px; color: var(--text-muted);">Statut de la commande :</span>
+                <select class="form-select" onchange="changeOrderStatus('${order.id}', this.value)" style="min-width: 180px;">
+                    <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>En attente de paiement</option>
+                    <option value="paid" ${order.status === 'paid' ? 'selected' : ''}>Payée (À commander)</option>
+                    <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Expédiée</option>
+                    <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Livrée</option>
+                    <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Annulée (Restitue le stock)</option>
+                    <option value="refunded" ${order.status === 'refunded' ? 'selected' : ''}>Remboursée (Restitue le stock)</option>
+                </select>
+            </div>
+        `;
+
+        document.getElementById('orderModal').classList.add('active');
+    }
+
+    function closeOrderModal() {
+        document.getElementById('orderModal').classList.remove('active');
+    }
+
+    async function changeOrderStatus(orderId, newStatus) {
+        try {
+            const res = await adminFetch(API_BASE + `/api/orders/${orderId}/status`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            if (res.ok) {
+                const o = globalOrders.find(x => x.id === orderId);
+                if (o) o.status = newStatus;
+                renderKPIs();
+                renderOrders();
+            }
+        } catch (e) {
+            console.error('Erreur statut:', e);
+        }
+    }
+
+    async function saveOrderTracking(orderId) {
+        const trackingNum = document.getElementById('modalTrackingNumber').value.trim();
+        const carrier = document.getElementById('modalCarrier').value;
+
+        if (!trackingNum) {
+            alert('Veuillez renseigner un numéro de suivi valide.');
+            return;
+        }
+
+        try {
+            const res = await adminFetch(API_BASE + `/api/orders/${orderId}/tracking`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ trackingNumber: trackingNum, carrier: carrier })
+            });
+
+            if (res.ok) {
+                alert('✅ Numéro de suivi enregistré ! La commande passe en statut Expédiée.');
+                await loadAllData();
+                closeOrderModal();
+            } else {
+                alert('Erreur lors de la sauvegarde du suivi.');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Erreur serveur.');
+        }
+    }
+
+    async function deleteOrder(orderId) {
+        if (!confirm(`Supprimer définitivement la commande #${orderId} ?`)) return;
+
+        try {
+            const res = await adminFetch(API_BASE + `/api/orders/${orderId}`, { method: 'DELETE' });
+            if (res.ok) {
+                globalOrders = globalOrders.filter(o => o.id !== orderId);
+                renderKPIs();
+                renderOrders();
+                renderTrackingHub();
+                renderCustomers();
+            }
+        } catch (e) {
+            alert('Erreur lors de la suppression');
+        }
+    }
+
+    // 5. Facturation & Bordereau d'Expédition
+    function quickPrintInvoice(orderId) {
+        const order = globalOrders.find(o => o.id === orderId);
+        if (order) {
+            currentModalOrder = order;
+            printInvoiceFromModal();
+        }
+    }
+
+    function printInvoiceFromModal() {
+        if (!currentModalOrder) return;
+        const o = currentModalOrder;
+        const recipient = o.shipping_address?.name || 'Client';
+        const address = o.shipping_address?.address || '';
+        const city = o.shipping_address?.city || '';
+        const postal = o.shipping_address?.postal || '';
+        const country = o.shipping_address?.country || 'France';
+
+        const printWindow = window.open('', '_blank', 'width=850,height=900');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html lang="fr">
+            <head>
+                <meta charset="UTF-8">
+                <title>Facture #${o.id} - Zenith Store</title>
+                <style>
+                    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 40px; color: #111; line-height: 1.5; }
+                    .header { display: flex; justify-content: space-between; border-bottom: 2px solid #8b5cf6; padding-bottom: 20px; margin-bottom: 30px; }
+                    .logo-txt { font-size: 24px; font-weight: 800; color: #8b5cf6; }
+                    .invoice-title { font-size: 22px; font-weight: 700; text-align: right; }
+                    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 30px; }
+                    .meta-box h3 { font-size: 12px; text-transform: uppercase; color: #666; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+                    table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+                    th { text-align: left; padding: 10px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; font-size: 12px; text-transform: uppercase; }
+                    td { padding: 12px 10px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+                    .totals { width: 300px; margin-left: auto; margin-bottom: 40px; }
+                    .totals-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+                    .totals-final { border-top: 2px solid #111; font-weight: 800; font-size: 18px; padding-top: 10px; }
+                    .footer { text-align: center; font-size: 12px; color: #777; border-top: 1px solid #eee; padding-top: 20px; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <div>
+                        <div class="logo-txt">ZENITH STORE</div>
+                        <div style="font-size: 12px; color: #555;">Boutique High-Tech & Gaming Pro<br>support@zenith-store.fr &bull; www.zenith-store.fr</div>
+                    </div>
+                    <div>
+                        <div class="invoice-title">FACTURE OFFICIELLE</div>
+                        <div style="font-size: 13px; color: #666;">N° Commande : #${o.id}<br>Date : ${new Date(o.date).toLocaleDateString('fr-FR')}</div>
+                    </div>
+                </div>
+
+                <div class="meta-grid">
+                    <div class="meta-box">
+                        <h3>Émetteur</h3>
+                        <strong>Zenith Store SAS</strong><br>
+                        10 rue de la Paix, 75002 Paris<br>
+                        TVA : FR 48 901 234 567
+                    </div>
+                    <div class="meta-box">
+                        <h3>Destinataire / Livré à</h3>
+                        <strong>${recipient}</strong><br>
+                        ${address}<br>
+                        ${postal} ${city}, ${country}
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Désignation de l'article</th>
+                            <th style="text-align: center;">Quantité</th>
+                            <th style="text-align: right;">Prix Unitaire TTC</th>
+                            <th style="text-align: right;">Total TTC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${(o.items || []).map(it => `
+                            <tr>
+                                <td><strong>${it.name}</strong></td>
+                                <td style="text-align: center;">${it.quantity || 1}</td>
+                                <td style="text-align: right;">${parseFloat(it.price).toFixed(2)} €</td>
+                                <td style="text-align: right;">${((it.quantity || 1) * parseFloat(it.price)).toFixed(2)} €</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+
+                <div class="totals">
+                    <div class="totals-line">
+                        <span>Sous-total TTC :</span>
+                        <span>${parseFloat(o.subtotal || o.total).toFixed(2)} €</span>
+                    </div>
+                    <div class="totals-line">
+                        <span>Frais de livraison :</span>
+                        <span>${o.shipping > 0 ? parseFloat(o.shipping).toFixed(2) + ' €' : 'Offerte'}</span>
+                    </div>
+                    <div class="totals-line totals-final">
+                        <span>Total Payé :</span>
+                        <span>${parseFloat(o.total).toFixed(2)} €</span>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    Facture acquittée &bull; Paiement sécurisé Stripe &bull; Merci pour votre achat sur Zenith Store !
+                </div>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.focus();
+        setTimeout(() => printWindow.print(), 350);
+    }
+
+    // 6. Rendu Centre d'Expédition
+    function renderTrackingHub() {
+        const tbody = document.getElementById('trackingHubTbody');
+        if (!globalOrders.length) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">Aucune expédition en cours.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = globalOrders.map(o => {
+            const hasTracking = !!o.tracking?.number;
+            const supplierLink = o.aliexpress_fulfillment?.directOrderLink || 'https://fr.aliexpress.com';
+            
+            return `
+                <tr>
+                    <td class="font-mono font-bold" style="color: var(--accent);">#${o.id}</td>
+                    <td>${escapeHtml(o.shipping_address?.name || 'Client')}</td>
+                    <td>
+                        <a href="${supplierLink}" target="_blank" class="btn-secondary" style="padding: 4px 8px; font-size: 11.5px; color: #f59e0b;">
+                            <i class="fas fa-external-link-alt"></i> Article Fournisseur
+                        </a>
+                    </td>
+                    <td>
+                        ${hasTracking ? `<strong class="font-mono" style="color: var(--success);">${o.tracking.number}</strong>` : `<span style="color: var(--warning); font-size: 12px;"><i class="fas fa-clock"></i> En attente expédition</span>`}
+                    </td>
+                    <td>${o.tracking?.carrier || 'Standard Cainiao / Colissimo'}</td>
+                    <td>
+                        <a href="suivi.html?num=${o.id}" target="_blank" class="btn-secondary" style="padding: 4px 8px; font-size: 12px; color: #c4b5fd;">
+                            <i class="fas fa-eye"></i> Ouvrir le suivi ↗
+                        </a>
+                    </td>
+                    <td>
+                        <button class="btn-primary" style="padding: 4px 8px; font-size: 12px;" onclick="openOrderDetails('${o.id}')">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // 7. Importateur AliExpress
+    let currentPreviewData = null;
+
+    async function previewAliExpressProduct() {
+        const input = document.getElementById('aliImportInput').value.trim();
+        if (!input) {
+            alert('Veuillez entrer une URL ou un identifiant produit AliExpress.');
+            return;
+        }
+
+        const btn = document.getElementById('btnPreviewAli');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyse en cours...';
+
+        try {
+            const res = await adminFetch(API_BASE + '/api/aliexpress/preview', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ urlOrId: input })
+            });
+
+            const data = await res.json();
+            if (data.success && data.preview) {
+                currentPreviewData = data.preview;
+                const cost = data.preview.supplierPrice || data.preview.price || 20;
+                const suggestedPrice = Math.round((cost * 2.0) * 100) / 100;
+                const suggestedOldPrice = Math.round((suggestedPrice * 1.4) * 100) / 100;
+                const suggestedDiscount = Math.round(((suggestedOldPrice - suggestedPrice) / suggestedOldPrice) * 100);
+
+                document.getElementById('aliPreviewCard').style.display = 'block';
+                document.getElementById('aliPreviewImg').src = data.preview.image || '';
+                document.getElementById('aliPreviewTitle').value = data.preview.name || data.preview.title || '';
+                document.getElementById('aliPreviewCost').value = cost.toFixed(2);
+                document.getElementById('aliPreviewPrice').value = suggestedPrice.toFixed(2);
+                document.getElementById('aliPreviewOldPrice').value = suggestedOldPrice.toFixed(2);
+                document.getElementById('aliPreviewDiscount').value = suggestedDiscount;
+
+                const gallery = document.getElementById('aliPreviewGallery');
+                if (data.preview.images && data.preview.images.length) {
+                    gallery.innerHTML = data.preview.images.slice(0, 5).map(img => `
+                        <img src="${img}" style="width: 36px; height: 36px; object-fit: contain; background: #000; border-radius: 4px; border: 1px solid var(--border-subtle); cursor: pointer;" onclick="document.getElementById('aliPreviewImg').src='${img}'">
+                    `).join('');
+                } else {
+                    gallery.innerHTML = '';
+                }
+
+                updateMarginPreview();
+            } else {
+                alert('Impossible de récupérer ce produit : ' + (data.error || 'Vérifiez le lien ou l\'identifiant.'));
+            }
+        } catch (e) {
+            alert('Erreur serveur lors de la prévisualisation.');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-search"></i> Analyser le Produit';
+        }
+    }
+
+    function onSellPriceChange() {
+        const sell = parseFloat(document.getElementById('aliPreviewPrice').value) || 0;
+        const old = parseFloat(document.getElementById('aliPreviewOldPrice').value) || 0;
+        if (sell > 0 && old > sell) {
+            document.getElementById('aliPreviewDiscount').value = Math.round(((old - sell) / old) * 100);
+        } else if (sell > 0 && (!old || old <= sell)) {
+            const autoOld = Math.round((sell * 1.35) * 100) / 100;
+            document.getElementById('aliPreviewOldPrice').value = autoOld.toFixed(2);
+            document.getElementById('aliPreviewDiscount').value = Math.round(((autoOld - sell) / autoOld) * 100);
+        }
+        updateMarginPreview();
+    }
+
+    function onOldPriceChange() {
+        const sell = parseFloat(document.getElementById('aliPreviewPrice').value) || 0;
+        const old = parseFloat(document.getElementById('aliPreviewOldPrice').value) || 0;
+        if (sell > 0 && old > sell) {
+            document.getElementById('aliPreviewDiscount').value = Math.round(((old - sell) / old) * 100);
+        }
+        updateMarginPreview();
+    }
+
+    function onDiscountChange() {
+        const sell = parseFloat(document.getElementById('aliPreviewPrice').value) || 0;
+        const discount = parseInt(document.getElementById('aliPreviewDiscount').value, 10) || 0;
+        if (sell > 0 && discount > 0 && discount < 95) {
+            const calculatedOld = Math.round((sell / (1 - discount / 100)) * 100) / 100;
+            document.getElementById('aliPreviewOldPrice').value = calculatedOld.toFixed(2);
+        }
+        updateMarginPreview();
+    }
+
+    function updateMarginPreview() {
+        const costInput = parseFloat(document.getElementById('aliPreviewCost').value);
+        const cost = !isNaN(costInput) ? costInput : (currentPreviewData ? (currentPreviewData.price || 0) : 0);
+        const sell = parseFloat(document.getElementById('aliPreviewPrice').value) || 0;
+        const old = parseFloat(document.getElementById('aliPreviewOldPrice').value) || 0;
+        const discount = parseInt(document.getElementById('aliPreviewDiscount').value, 10) || 0;
+        const margin = sell - cost;
+        const marginPct = sell > 0 ? ((margin / sell) * 100).toFixed(0) : 0;
+
+        const box = document.getElementById('aliMarginPreview');
+        if (margin > 0) {
+            box.style.color = 'var(--success)';
+            box.style.background = 'var(--success-subtle)';
+            box.innerHTML = `
+                <div>Marge Nette : <strong>+${margin.toFixed(2)} € (${marginPct}%)</strong></div>
+                ${old > sell ? `<div style="font-size: 11px; opacity: 0.9; margin-top: 3px;">Affiché en boutique : <s>${old.toFixed(2)} €</s> &bull; <strong style="color: #ef4444;">-${discount}%</strong></div>` : ''}
+            `;
+        } else {
+            box.style.color = 'var(--danger)';
+            box.style.background = 'var(--danger-subtle)';
+            box.textContent = `Marge négative ou nulle : ${margin.toFixed(2)} €`;
+        }
+    }
+
+    async function publishAliExpressProduct() {
+        if (!currentPreviewData) return;
+        const input = document.getElementById('aliImportInput').value.trim();
+        const customTitle = document.getElementById('aliPreviewTitle').value.trim();
+        const category = document.getElementById('aliPreviewCategory').value;
+        const customPrice = parseFloat(document.getElementById('aliPreviewPrice').value);
+        const supplierPrice = parseFloat(document.getElementById('aliPreviewCost').value) || currentPreviewData.price;
+        const oldPrice = parseFloat(document.getElementById('aliPreviewOldPrice').value) || undefined;
+        const discount = parseInt(document.getElementById('aliPreviewDiscount').value, 10) || undefined;
+
+        if (!customPrice || customPrice <= 0) {
+            alert('Veuillez définir un prix de vente valide.');
+            return;
+        }
+
+        try {
+            const res = await adminFetch(API_BASE + '/api/aliexpress/import', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    urlOrId: input,
+                    customName: customTitle,
+                    category: category,
+                    customPrice: customPrice,
+                    supplierPrice: supplierPrice,
+                    oldPrice: oldPrice,
+                    discount: discount
+                })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                alert('🎉 Produit importé avec succès dans votre boutique !');
+                document.getElementById('aliPreviewCard').style.display = 'none';
+                document.getElementById('aliImportInput').value = '';
+                await loadAllData();
+                switchTab('products');
+            } else {
+                alert('Erreur lors de l\'import : ' + (data.error || 'Vérifiez la connexion'));
+            }
+        } catch (e) {
+            alert('Erreur serveur lors de la publication.');
+        }
+    }
+
+    // 8. Rendu des Codes Promo
+    function renderPromos() {
+        const saved = localStorage.getItem('promoCodes');
+        if (saved) {
+            try { globalPromos = JSON.parse(saved); } catch(e){}
+        } else {
+            globalPromos = {
+                'WELCOME10': { code: 'WELCOME10', type: 'percentage', value: 10, description: 'Bienvenue - 10% de réduction', minAmount: 0, expiryDate: '2027-12-31', active: true },
+                'GAMING20': { code: 'GAMING20', type: 'percentage', value: 20, description: 'Spécial Gaming - 20% dès 50€', minAmount: 50, expiryDate: '2027-12-31', active: true },
+                'FREE15': { code: 'FREE15', type: 'fixed', value: 15, description: '15€ offerts dès 100€ d\'achat', minAmount: 100, expiryDate: '2027-12-31', active: true },
+                'ZENITH50': { code: 'ZENITH50', type: 'fixed', value: 50, description: 'Méga réduction 50€ dès 200€', minAmount: 200, expiryDate: '2027-12-31', active: true }
+            };
+            localStorage.setItem('promoCodes', JSON.stringify(globalPromos));
+        }
+
+        const tbody = document.getElementById('promosTbody');
+        const keys = Object.keys(globalPromos);
+        if (!keys.length) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">Aucun code promo actif.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = keys.map(k => {
+            const p = globalPromos[k];
+            const discountTxt = p.type === 'percentage' ? `-${p.value}%` : `-${p.value} €`;
+            return `
+                <tr>
+                    <td class="font-mono font-bold" style="color: var(--accent);">${p.code}</td>
+                    <td><strong>${discountTxt}</strong></td>
+                    <td style="color: var(--text-secondary);">${escapeHtml(p.description || '')}</td>
+                    <td>${p.minAmount > 0 ? p.minAmount + ' €' : 'Aucun'}</td>
+                    <td style="font-size: 12.5px;">${p.expiryDate || '2027-12-31'}</td>
+                    <td>
+                        <span class="status-badge ${p.active ? 'badge-shipped' : 'badge-pending'}">${p.active ? 'Actif' : 'Désactivé'}</span>
+                    </td>
+                    <td>
+                        <button class="btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="togglePromoActive('${p.code}')">
+                            ${p.active ? 'Désactiver' : 'Activer'}
+                        </button>
+                        <button class="btn-danger" style="padding: 4px 8px; font-size: 12px;" onclick="deletePromoCode('${p.code}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function openCreatePromoModal() {
+        document.getElementById('createPromoModal').classList.add('active');
+    }
+    function closeCreatePromoModal() {
+        document.getElementById('createPromoModal').classList.remove('active');
+    }
+
+    function saveNewPromoCode() {
+        const code = document.getElementById('newPromoCode').value.trim().toUpperCase();
+        const type = document.getElementById('newPromoType').value;
+        const val = parseFloat(document.getElementById('newPromoValue').value);
+        const min = parseFloat(document.getElementById('newPromoMin').value) || 0;
+        const expiry = document.getElementById('newPromoExpiry').value || '2027-12-31';
+
+        if (!code || isNaN(val) || val <= 0) {
+            alert('Veuillez spécifier un code et une valeur valide.');
+            return;
+        }
+
+        globalPromos[code] = {
+            code: code,
+            type: type,
+            value: val,
+            description: type === 'percentage' ? `Réduction de ${val}%` : `Réduction de ${val}€`,
+            minAmount: min,
+            expiryDate: expiry,
+            active: true
+        };
+
+        localStorage.setItem('promoCodes', JSON.stringify(globalPromos));
+        closeCreatePromoModal();
+        renderPromos();
+    }
+
+    function togglePromoActive(code) {
+        if (globalPromos[code]) {
+            globalPromos[code].active = !globalPromos[code].active;
+            localStorage.setItem('promoCodes', JSON.stringify(globalPromos));
+            renderPromos();
+        }
+    }
+
+    function deletePromoCode(code) {
+        if (confirm(`Supprimer le code ${code} ?`)) {
+            delete globalPromos[code];
+            localStorage.setItem('promoCodes', JSON.stringify(globalPromos));
+            renderPromos();
+        }
+    }
+
+    // 9. Rendu de la Base Clients (CRM)
+    function renderCustomers() {
+        const tbody = document.getElementById('customersTbody');
+        const customerMap = {};
+
+        globalOrders.forEach(o => {
+            const email = o.shipping_address?.email || ('client-' + o.id + '@zenith.fr');
+            const name = o.shipping_address?.name || 'Client';
+            const city = o.shipping_address?.city || '';
+            const country = o.shipping_address?.country || 'France';
+            const total = parseFloat(o.total) || 0;
+
+            if (!customerMap[email]) {
+                customerMap[email] = {
+                    name: name,
+                    email: email,
+                    location: `${city}, ${country}`.replace(/^, /, ''),
+                    ordersCount: 0,
+                    totalSpent: 0,
+                    lastDate: o.date
+                };
+            }
+
+            customerMap[email].ordersCount++;
+            customerMap[email].totalSpent += total;
+            if (new Date(o.date) > new Date(customerMap[email].lastDate)) {
+                customerMap[email].lastDate = o.date;
+            }
+        });
+
+        const list = Object.values(customerMap);
+        if (!list.length) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">Aucun client enregistré pour le moment.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = list.map(c => `
+            <tr>
+                <td class="font-bold">${escapeHtml(c.name)}</td>
+                <td style="color: var(--accent);">${escapeHtml(c.email)}</td>
+                <td>${escapeHtml(c.location || 'France')}</td>
+                <td><span class="badge-counter" style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); color: #fff;">${c.ordersCount}</span></td>
+                <td class="font-mono font-bold">${c.totalSpent.toFixed(2)} €</td>
+                <td style="font-size: 12.5px;">${formatDate(c.lastDate)}</td>
+            </tr>
+        `).join('');
+    }
+
+    function exportCustomersCSV() {
+        let csv = 'Nom,Email,Localisation,Nombre_Commandes,Total_Depense,Derniere_Commande\n';
+        const tbody = document.getElementById('customersTbody');
+        const rows = tbody.querySelectorAll('tr');
+        rows.forEach(r => {
+            const cells = Array.from(r.querySelectorAll('td')).map(td => `"${td.innerText.replace(/"/g, '""')}"`);
+            if (cells.length === 6) csv += cells.join(',') + '\n';
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `clients_zenith_${new Date().toISOString().slice(0,10)}.csv`;
+        link.click();
+    }
+
+    // Utilitaires de calcul & affichage
+    function computeOrderSupplierCost(order) {
+        let cost = 0;
+        if (order.items) {
+            order.items.forEach(it => {
+                const prod = globalProducts.find(p => p.id === it.id || (p.aliexpress && p.aliexpress.productId === it.aliexpressId));
+                const unit = prod ? (prod.supplierPrice || prod.aliexpress?.supplierPrice || 0) : (it.price * 0.5);
+                cost += unit * (it.quantity || 1);
+            });
+        }
+        return cost;
+    }
+
+    function renderStatusBadge(status) {
+        switch (status) {
+            case 'shipped':
+                return '<span class="status-badge badge-shipped"><i class="fas fa-truck"></i> Expédiée</span>';
+            case 'delivered':
+                return '<span class="status-badge badge-delivered"><i class="fas fa-check-double"></i> Livrée</span>';
+            case 'paid':
+                return '<span class="status-badge badge-ready"><i class="fas fa-boxes-packing"></i> À Commander</span>';
+            case 'pending_payment':
+            case 'pending':
+                return '<span class="status-badge badge-pending"><i class="fas fa-clock"></i> En attente</span>';
+            case 'cancelled':
+                return '<span class="status-badge" style="background: rgba(113, 113, 122, 0.2); color: #a1a1aa; border: 1px solid rgba(113, 113, 122, 0.4);"><i class="fas fa-ban"></i> Annulée</span>';
+            case 'refunded':
+                return '<span class="status-badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4);"><i class="fas fa-undo"></i> Remboursée</span>';
+            default:
+                return `<span class="status-badge badge-paid">${status}</span>`;
+        }
+    }
+
+    function exportOrdersCSV() {
+        let csv = 'ID_Commande,Date,Nom_Client,Email,Telephone,Adresse,Code_Postal,Ville,Pays,Articles,Total_TTC,Cout_Fournisseur,Marge_Nette,Statut,Num_Suivi,Transporteur,Lien_AliExpress\n';
+        globalOrders.forEach(o => {
+            const cost = computeOrderSupplierCost(o);
+            const total = parseFloat(o.total) || 0;
+            const profit = total - cost;
+            const itemsStr = (o.items || []).map(i => `${i.quantity || 1}x ${i.name.replace(/"/g, '')}`).join(' | ');
+            const addr = o.shipping_address || {};
+            const tracking = o.tracking || {};
+            const aliLink = o.aliexpress_fulfillment?.directOrderLink || '';
+
+            const row = [
+                `"${o.id}"`,
+                `"${o.date}"`,
+                `"${(addr.name || '').replace(/"/g, '')}"`,
+                `"${(addr.email || '').replace(/"/g, '')}"`,
+                `"${(addr.phone || '').replace(/"/g, '')}"`,
+                `"${(addr.address || '').replace(/"/g, '')}"`,
+                `"${(addr.postal || '').replace(/"/g, '')}"`,
+                `"${(addr.city || '').replace(/"/g, '')}"`,
+                `"${(addr.country || 'France').replace(/"/g, '')}"`,
+                `"${itemsStr}"`,
+                total.toFixed(2),
+                cost.toFixed(2),
+                profit.toFixed(2),
+                `"${o.status}"`,
+                `"${tracking.number || ''}"`,
+                `"${tracking.carrier || ''}"`,
+                `"${aliLink}"`
+            ];
+            csv += row.join(',') + '\n';
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `commandes_zenith_${new Date().toISOString().slice(0,10)}.csv`;
+        link.click();
+    }
+
+    function openManualOrderModal() {
+        const select = document.getElementById('manualProductSelect');
+        if (select) {
+            select.innerHTML = globalProducts.map(p => `
+                <option value="${p.id}">${escapeHtml(p.name)} (${parseFloat(p.price).toFixed(2)} €)</option>
+            `).join('');
+        }
+        document.getElementById('manualOrderModal').classList.add('active');
+    }
+
+    function closeManualOrderModal() {
+        document.getElementById('manualOrderModal').classList.remove('active');
+    }
+
+    async function saveManualOrder() {
+        const name = document.getElementById('manualName').value.trim();
+        const email = document.getElementById('manualEmail').value.trim();
+        const phone = document.getElementById('manualPhone').value.trim();
+        const address = document.getElementById('manualAddress').value.trim();
+        const postal = document.getElementById('manualPostal').value.trim();
+        const city = document.getElementById('manualCity').value.trim();
+        const country = document.getElementById('manualCountry').value.trim() || 'France';
+        const productId = document.getElementById('manualProductSelect').value;
+        const qty = parseInt(document.getElementById('manualQuantity').value, 10) || 1;
+        const paymentMethod = document.getElementById('manualPaymentMethod').value;
+        const status = document.getElementById('manualStatus').value;
+
+        if (!name || !email || !address || !postal || !city) {
+            alert('Veuillez remplir tous les champs obligatoires (*).');
+            return;
+        }
+
+        const prod = globalProducts.find(p => p.id === productId);
+        if (!prod) return;
+
+        const customer = { name, email, phone, address, postal, city, country };
+        const items = [{
+            id: prod.id,
+            name: prod.name,
+            price: prod.price,
+            quantity: qty,
+            image: prod.image,
+            aliexpressId: prod.aliexpress?.productId || ''
+        }];
+
+        try {
+            const res = await adminFetch(API_BASE + '/api/orders/manual', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customer, items, paymentMethod, status })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                alert(`✅ Commande manuelle #${data.order.id} créée avec succès !`);
+                closeManualOrderModal();
+                await loadAllData();
+            } else {
+                alert('Erreur: ' + (data.error || 'Impossible de créer la commande.'));
+            }
+        } catch (e) {
+            alert('Erreur serveur lors de la création de la commande.');
+        }
+    }
+
+    function formatDate(isoStr) {
+        if (!isoStr) return '-';
+        try {
+            const d = new Date(isoStr);
+            return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        } catch(e) {
+            return isoStr;
+        }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function escapeJsString(str) {
+        if (!str) return '';
+        return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('📋 Adresse de livraison copiée dans le presse-papier !');
+        }).catch(() => {
+            prompt('Copiez l\'adresse :', text);
+        });
+    }
+
+    async function resetStoreData() {
+        if (!confirm('⚠️ Êtes-vous certain de vouloir remettre toutes les commandes et clients à zéro (0) ? Cette action est irréversible.')) return;
+
+        try {
+            const res = await adminFetch(API_BASE + '/api/admin/reset-data', {
+                method: 'POST'
+            });
+            const data = await res.json();
+            if (data.success) {
+                // Nettoyer également le cache de test du navigateur (en préservant la session admin)
+                localStorage.removeItem('orders');
+                localStorage.removeItem('users');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('lastOrder');
+                localStorage.removeItem('cart');
+                
+                alert('✅ Le site a été remis à zéro avec succès ! Chiffre d\'affaires et clients réinitialisés.');
+                await loadAllData();
+                switchTab('dashboard');
+            } else {
+                alert('Erreur: ' + (data.error || 'Impossible de réinitialiser.'));
+            }
+        } catch (e) {
+            alert('Erreur lors de la réinitialisation.');
+        }
+    }
+
+    // Démarrage initial sécurisé
+    document.addEventListener('DOMContentLoaded', async () => {
+        const isAuthed = await checkAdminAuth();
+        if (isAuthed) {
+            loadAllData();
+        }
+    });
+</script>
+
+<!-- MODAL DE CONNEXION ADMIN (GÉANTE SÉCURISÉE) -->
+<div id="adminLoginGate" style="display: none;">
+    <div class="login-card">
+        <div class="login-icon">
+            <i class="fas fa-shield-halved"></i>
+        </div>
+        <h2 class="login-title">Administration Zenith Store</h2>
+        <p class="login-subtitle">Accès sécurisé. Veuillez saisir le mot de passe d'administration.</p>
+
+        <div id="adminLoginError" class="login-error">
+            <i class="fas fa-circle-exclamation"></i>
+            <span id="adminLoginErrorText">Mot de passe incorrect</span>
+        </div>
+
+        <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+            <div class="login-form-group">
+                <label class="login-form-label" for="adminPasswordInput">Mot de Passe Administrateur</label>
+                <div class="login-input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="adminPasswordInput" class="login-input" placeholder="Entrez le mot de passe..." autocomplete="current-password" required>
+                    <button type="button" class="login-toggle-pw" onclick="toggleAdminPasswordVisibility()" title="Afficher/masquer">
+                        <i class="fas fa-eye" id="togglePwIcon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="login-btn" id="adminLoginBtn">
+                <i class="fas fa-key"></i>
+                <span>Déverrouiller le Panel</span>
+            </button>
+        </form>
+
+        <div class="login-footer-info">
+            <i class="fas fa-lock"></i>
+            <span>Session chiffrée HMAC-SHA256 &bull; Déconnexion auto</span>
+        </div>
+        <div style="margin-top: 15px;">
+            <a href="index.html" style="color: var(--text-muted); font-size: 12px; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">
+                <i class="fas fa-arrow-left"></i> Retour à la boutique
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

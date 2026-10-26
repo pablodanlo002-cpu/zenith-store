@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Produits Similaires</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 20px;
+        }
+        .test-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+        }
+        h1, h2 {
+            color: #8b5cf6;
+            margin-bottom: 20px;
+        }
+        .product-test {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .product-item {
+            background: #111;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+        .product-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: contain;
+            background: #0a0a0a;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .product-item.img-error img {
+            border: 2px solid red;
+        }
+        .product-item.img-success img {
+            border: 2px solid green;
+        }
+        .product-item h3 {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .product-item p {
+            font-size: 12px;
+            color: #999;
+            margin: 5px 0;
+        }
+        .btn-test {
+            background: #8b5cf6;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .btn-test:hover {
+            background: #7c3aed;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .status.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #10b981;
+        }
+        .status.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <script src="similar-products.js"></script>
+    
+    <div class="test-section">
+        <h1>🧪 Test des Produits & Images</h1>
+        <p>Cette page teste le chargement des images et les données des produits.</p>
+        
+        <div id="imageStatus" class="status" style="display: none;"></div>
+        
+        <h3>Tester les pages produits :</h3>
+        <div style="margin: 20px 0;">
+            <button class="btn-test" onclick="window.location.href='produit.html?id=prod-1'">Produit 1 - Écouteurs</button>
+            <button class="btn-test" onclick="window.location.href='produit.html?id=prod-2'">Produit 2 - Casque</button>
+            <button class="btn-test" onclick="window.location.href='produit.html?id=prod-3'">Produit 3 - Souris</button>
+            <button class="btn-test" onclick="window.location.href='produit.html?id=prod-4'">Produit 4 - Clavier</button>
+            <button class="btn-test" onclick="window.location.href='produit.html?id=prod-5'">Produit 5 - Tapis</button>
+            <button class="btn-test" onclick="window.location.href='produit.html?id=prod-6'">Produit 6 - Écran</button>
+            <button class="btn-test" onclick="window.location.href='produit.html?id=prod-7'">Produit 7 - Accessoire</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📦 Tous les produits disponibles</h2>
+        <p id="productCount">Chargement...</p>
+        <div class="product-test" id="allProductsTest"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 Produits similaires pour prod-1</h2>
+        <div class="product-test" id="similarProductsTest"></div>
+    </div>
+
+    <script>
+        let imagesLoaded = 0;
+        let imagesFailed = 0;
+        
+        // Test 1: Afficher tous les produits
+        const allProductsContainer = document.getElementById('allProductsTest');
+        document.getElementById('productCount').textContent = `Total: ${allProducts.length} produits`;
+        
+        allProducts.forEach(product => {
+            const div = document.createElement('div');
+            div.className = 'product-item';
+            div.innerHTML = `
+                <img src="${product.image}" alt="${product.name}" data-product-id="${product.id}">
+                <h3>${product.name}</h3>
+                <p><strong>ID:</strong> ${product.id}</p>
+                <p><strong>Brand:</strong> ${product.brand}</p>
+                <p><strong>Catégorie:</strong> ${product.category}</p>
+                <p><strong>Prix:</strong> ${product.price}€ <span style="color: #737373; text-decoration: line-through;">${product.oldPrice}€</span></p>
+                <p><strong>Stock:</strong> ${product.stockCount} unités</p>
+                <p style="font-size: 10px; color: #666;"><strong>Image:</strong> ${product.image}</p>
+            `;
+            
+            const img = div.querySelector('img');
+            img.onload = function() {
+                imagesLoaded++;
+                div.classList.add('img-success');
+                updateImageStatus();
+            };
+            img.onerror = function() {
+                imagesFailed++;
+                div.classList.add('img-error');
+                updateImageStatus();
+            };
+            
+            allProductsContainer.appendChild(div);
+        });
+
+        // Test 2: Afficher les produits similaires
+        const similarProducts = getSimilarProducts('prod-1', 4);
+        const similarContainer = document.getElementById('similarProductsTest');
+        
+        if (similarProducts.length === 0) {
+            similarContainer.innerHTML = '<p style="color: #ef4444;">❌ Aucun produit similaire trouvé!</p>';
+        } else {
+            similarProducts.forEach(product => {
+                const div = document.createElement('div');
+                div.className = 'product-item';
+                div.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p><strong>ID:</strong> ${product.id}</p>
+                    <p><strong>Catégorie:</strong> ${product.category}</p>
+                    <p><strong>Prix:</strong> ${product.price}€</p>
+                `;
+                similarContainer.appendChild(div);
+            });
+        }
+
+        function updateImageStatus() {
+            const statusDiv = document.getElementById('imageStatus');
+            statusDiv.style.display = 'block';
+            const total = allProducts.length;
+            const tested = imagesLoaded + imagesFailed;
+            
+            if (tested === total) {
+                if (imagesFailed === 0) {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = `✅ <strong>Toutes les images sont chargées !</strong> ${imagesLoaded}/${total}`;
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.innerHTML = `⚠️ <strong>Certaines images ne se chargent pas :</strong> ${imagesFailed} erreur(s) sur ${total}`;
+                }
+            } else {
+                statusDiv.className = 'status';
+                statusDiv.style.background = 'rgba(139, 92, 246, 0.1)';
+                statusDiv.style.borderColor = '#8b5cf6';
+                statusDiv.style.color = '#a78bfa';
+                statusDiv.innerHTML = `⏳ Chargement des images... ${tested}/${total}`;
+            }
+        }
+
+        console.log('✅ Tous les produits:', allProducts);
+        console.log('✅ Produits similaires pour prod-1:', similarProducts);
+    </script>
+</body>
+</html>
