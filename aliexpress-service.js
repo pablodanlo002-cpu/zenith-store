@@ -294,6 +294,10 @@ class AliExpressService {
             const twitterTitle = html.match(/<meta name="twitter:title" content="([^"]+)"/i);
             const titleTag = html.match(/<title>([^<]+)<\/title>/i);
 
+            console.log(`[AliExpress Debug] og:title:`, ogTitle ? ogTitle[1] : 'non trouvé');
+            console.log(`[AliExpress Debug] twitter:title:`, twitterTitle ? twitterTitle[1] : 'non trouvé');
+            console.log(`[AliExpress Debug] <title>:`, titleTag ? titleTag[1] : 'non trouvé');
+
             if (ogTitle && ogTitle[1] && !ogTitle[1].toLowerCase().startsWith('aliexpress')) {
                 title = ogTitle[1].replace(/ - AliExpress.*$/i, '').trim();
             } else if (twitterTitle && twitterTitle[1]) {
@@ -308,9 +312,12 @@ class AliExpressService {
                     try {
                         const ld = JSON.parse(ldMatch[1]);
                         if (ld.name) title = ld.name;
+                        console.log(`[AliExpress Debug] LD+JSON titre:`, ld.name);
                     } catch(e) {}
                 }
             }
+
+            console.log(`[AliExpress Debug] Titre final extrait:`, title);
 
             // Vérification anti-404 et anti-erreur
             const isInvalidTitle = !title || 
@@ -360,7 +367,9 @@ class AliExpressService {
 
             if (galleryImages.length > 0) {
                 mainImage = galleryImages[0];
+                console.log(`[AliExpress Debug] Images trouvées:`, galleryImages.length, 'première:', mainImage.substring(0, 80));
             } else {
+                console.log(`[AliExpress Debug] Aucune image trouvée, utilisation image par défaut`);
                 const detectedCat = this.detectCategory(title);
                 const defaultCatImages = {
                     'ecrans': 'https://ae-pic-a1.aliexpress-media.com/kf/S8e6719d4d45f4b3fb2d71ad1dd1bd3b6r.jpg',
