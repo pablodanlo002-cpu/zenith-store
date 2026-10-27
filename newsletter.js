@@ -241,8 +241,9 @@ const Newsletter = {
 };
 
 // Ajouter les styles d'animation
-const style = document.createElement('style');
-style.textContent = `
+(function() {
+    const style = document.createElement('style');
+    style.textContent = `
     @keyframes slideIn {
         from {
             opacity: 0;
@@ -255,3 +256,4 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+})(); // Fin du bloc IIFE

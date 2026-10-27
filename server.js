@@ -17,8 +17,18 @@ const PORT = process.env.PORT || 3000;
 // ==========================================
 // CONFIGURATION SÉCURITÉ & AUTHENTIFICATION
 // ==========================================
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'ZenithStore2026!';
-const SESSION_SECRET = process.env.SESSION_SECRET || 'zenith_salt_super_secret_983742';
+
+// IMPORTANT SÉCURITÉ : Le mot de passe admin DOIT être défini dans les variables d'environnement
+// Ne JAMAIS mettre de mot de passe par défaut en production !
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
+
+// Vérifier que le mot de passe admin est configuré
+if (!ADMIN_PASSWORD) {
+    console.error('❌ ERREUR CRITIQUE : ADMIN_PASSWORD non défini dans les variables d\'environnement !');
+    console.error('⚠️  Le panel admin ne sera pas accessible tant que ADMIN_PASSWORD n\'est pas configuré.');
+    console.error('📝 Configurez ADMIN_PASSWORD dans votre fichier .env ou sur votre hébergeur.');
+}
 
 function generateAdminToken() {
     return crypto.createHmac('sha256', SESSION_SECRET).update(`admin:${ADMIN_PASSWORD}`).digest('hex');

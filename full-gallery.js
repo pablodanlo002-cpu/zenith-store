@@ -376,8 +376,9 @@ const FullGallery = {
 };
 
 // Ajouter les animations CSS
-const style = document.createElement('style');
-style.textContent = `
+(function() {
+    const style = document.createElement('style');
+    style.textContent = `
     @keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
@@ -388,3 +389,4 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+})(); // Fin du bloc IIFE

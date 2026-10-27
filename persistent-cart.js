@@ -58,6 +58,10 @@ const PersistentCart = {
     // Sauvegarder le panier dans le cloud (localStorage)
     saveCartToCloud(cart) {
         try {
+            // Éviter la boucle infinie avec un flag
+            if (this._isSaving) return;
+            this._isSaving = true;
+            
             const cartData = typeof cart === 'string' ? cart : JSON.stringify(cart);
             
             localStorage.setItem('persistentCart', cartData);
@@ -69,8 +73,11 @@ const PersistentCart = {
             this.lastSync = Date.now();
             
             console.log('💾 Panier sauvegardé');
+            
+            this._isSaving = false;
         } catch (error) {
             console.error('❌ Erreur de sauvegarde du panier:', error);
+            this._isSaving = false;
         }
     },
 
@@ -163,10 +170,13 @@ const PersistentCart = {
         // Intercepter les modifications directes
         const originalSetItem = localStorage.setItem.bind(localStorage);
         localStorage.setItem = (key, value) => {
-            if (key === 'cart') {
+            // Appeler d'abord la méthode originale
+            originalSetItem(key, value);
+            
+            // Puis sauvegarder uniquement si c'est 'cart' et qu'on n'est pas déjà en train de sauvegarder
+            if (key === 'cart' && !this._isSaving) {
                 this.saveCartToCloud(value);
             }
-            originalSetItem(key, value);
         };
     },
 

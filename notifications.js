@@ -96,8 +96,9 @@ function showConfirm(title, message, onConfirm, onCancel) {
 }
 
 // Injecter les styles CSS
-const style = document.createElement('style');
-style.textContent = `
+(function() {
+    const style = document.createElement('style');
+    style.textContent = `
     /* NOTIFICATIONS */
     .zenith-notification {
         position: fixed;
@@ -333,3 +334,4 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+})(); // Fin du bloc IIFE
