@@ -314,6 +314,60 @@
             background: rgba(0, 0, 0, 0.2);
         }
 
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .quick-reply-btn {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #8b5cf6;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .quick-reply-btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: #8b5cf6;
+            transform: translateY(-1px);
+        }
+
+        .quick-reply-btn:active {
+            transform: translateY(0);
+        }
+
+        .quick-replies-toggle {
+            background: transparent;
+            border: 1px solid #2a2a2a;
+            color: #888;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .quick-replies-toggle:hover {
+            border-color: #8b5cf6;
+            color: #8b5cf6;
+        }
+
         .chat-input-container {
             display: flex;
             gap: 12px;
@@ -454,6 +508,38 @@
                 </div>
             </div>
             <div class="chat-input-area" id="inputArea" style="display: none;">
+                <!-- Réponses rapides -->
+                <div class="quick-replies" id="quickReplies">
+                    <button class="quick-reply-btn" onclick="insertQuickReply('Bonjour ! 👋 Comment puis-je vous aider ?')">
+                        <i class="fas fa-hand-wave"></i> Bonjour
+                    </button>
+                    <button class="quick-reply-btn" onclick="insertQuickReply('Merci pour votre message ! Je vérifie ça tout de suite. ⏱️')">
+                        <i class="fas fa-clock"></i> Je vérifie
+                    </button>
+                    <button class="quick-reply-btn" onclick="insertQuickReply('Votre commande a bien été prise en compte ! 📦 Vous recevrez un email de confirmation.')">
+                        <i class="fas fa-box"></i> Commande OK
+                    </button>
+                    <button class="quick-reply-btn" onclick="insertQuickReply('Livraison gratuite dès 50€ d\'achat ! 🚚 Délai : 2-5 jours ouvrés.')">
+                        <i class="fas fa-truck"></i> Livraison
+                    </button>
+                    <button class="quick-reply-btn" onclick="insertQuickReply('Garantie 2 ans sur tous nos produits gaming ! ✅')">
+                        <i class="fas fa-shield-check"></i> Garantie
+                    </button>
+                    <button class="quick-reply-btn" onclick="insertQuickReply('Retours gratuits sous 30 jours. Aucune question posée ! 🔄')">
+                        <i class="fas fa-undo"></i> Retours
+                    </button>
+                    <button class="quick-reply-btn" onclick="insertQuickReply('Ce produit est en stock ! ✅ Expédié sous 24h.')">
+                        <i class="fas fa-check-circle"></i> En stock
+                    </button>
+                    <button class="quick-reply-btn" onclick="insertQuickReply('Utilisez le code GAMING20 pour 20% de réduction ! 🎁')">
+                        <i class="fas fa-gift"></i> Code promo
+                    </button>
+                    <button class="quick-replies-toggle" onclick="toggleQuickReplies()">
+                        <i class="fas fa-chevron-up" id="quickRepliesIcon"></i>
+                        <span>Masquer</span>
+                    </button>
+                </div>
+
                 <div class="chat-input-container">
                     <textarea 
                         id="messageInput" 
@@ -725,6 +811,38 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        // Insérer une réponse rapide dans le textarea
+        function insertQuickReply(text) {
+            const input = document.getElementById('messageInput');
+            if (!input) return;
+            
+            // Si le textarea est vide, insérer le texte directement
+            // Sinon, l'ajouter à la fin avec un espace
+            if (input.value.trim() === '') {
+                input.value = text;
+            } else {
+                input.value += ' ' + text;
+            }
+            
+            // Focus sur le textarea et scroll vers la fin
+            input.focus();
+            input.scrollTop = input.scrollHeight;
+        }
+
+        // Basculer l'affichage des réponses rapides
+        function toggleQuickReplies() {
+            const quickReplies = document.getElementById('quickReplies');
+            const icon = document.getElementById('quickRepliesIcon');
+            
+            if (quickReplies.style.display === 'none') {
+                quickReplies.style.display = 'flex';
+                icon.className = 'fas fa-chevron-up';
+            } else {
+                quickReplies.style.display = 'none';
+                icon.className = 'fas fa-chevron-down';
+            }
         }
 
         // Initialisation
