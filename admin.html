@@ -1068,6 +1068,15 @@
                             </span>
                         </button>
                     </li>
+                    <li>
+                        <a href="admin-chat.html" class="nav-item-btn" style="text-decoration: none;">
+                            <span class="nav-btn-left">
+                                <i class="fas fa-comments"></i>
+                                <span>Messages Support</span>
+                            </span>
+                            <span class="badge-counter" id="sidebarChatBadge" style="display: none;">0</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
 
@@ -3239,11 +3248,45 @@
         }
     }
 
+    // Fonction pour charger le compteur de messages support
+    async function updateSupportChatBadge() {
+        try {
+            // Lire les conversations depuis localStorage (système utilisé par le chat)
+            const conversations = JSON.parse(localStorage.getItem('adminChatConversations')) || {};
+            let unreadCount = 0;
+            
+            // Compter les messages non lus de clients (pas d'admin)
+            for (const sessionId in conversations) {
+                const conv = conversations[sessionId];
+                if (conv.active && conv.messages) {
+                    unreadCount += conv.messages.filter(m => !m.isAdmin && !m.read).length;
+                }
+            }
+            
+            const badge = document.getElementById('sidebarChatBadge');
+            if (badge) {
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount;
+                    badge.style.display = 'inline-flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        } catch (err) {
+            console.error('Erreur chargement badge support:', err);
+        }
+    }
+
     // Démarrage initial sécurisé
     document.addEventListener('DOMContentLoaded', async () => {
         const isAuthed = await checkAdminAuth();
         if (isAuthed) {
             await loadAllData();
+            
+            // Charger le compteur de messages support
+            updateSupportChatBadge();
+            // Rafraîchir toutes les 10 secondes
+            setInterval(updateSupportChatBadge, 10000);
 
             // Détection d'un import déclenché via le bouton 1-Clic AliExpress
             const urlParams = new URLSearchParams(window.location.search);

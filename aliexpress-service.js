@@ -269,7 +269,7 @@ class AliExpressService {
                     const response = await axios.get(url, {
                         headers: browserHeaders,
                         httpsAgent: httpsAgent,
-                        timeout: 15000,
+                        timeout: 30000, // 30 secondes au lieu de 15 (pour hébergeurs lents)
                         maxRedirects: 5
                     });
                     if (response.data && typeof response.data === 'string' && response.data.length > 5000) {

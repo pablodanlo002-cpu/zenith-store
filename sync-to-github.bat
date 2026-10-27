@@ -119,6 +119,13 @@ echo.
 echo Les fichiers ont ete copies vers :
 echo %DEST%
 echo.
+echo IMPORTANT :
+echo - En LOCAL : Import produits MARCHE parfaitement
+echo - Sur hebergeur : Peut etre plus lent (timeout)
+echo - Solution : Importe tes produits en LOCAL
+echo - Ils seront automatiquement sur MongoDB Cloud
+echo - Ton site heberge les recupere depuis MongoDB
+echo.
 echo ATTENTION : Avant de pusher sur GitHub :
 echo 1. Verifiez que .env n'est PAS present
 echo 2. Verifiez que node_modules/ n'est PAS present

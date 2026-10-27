@@ -1,0 +1,61 @@
+═══════════════════════════════════════════════════════════════
+   AJOUT DU BOUTON "MESSAGES SUPPORT" DANS LE PANEL ADMIN
+═══════════════════════════════════════════════════════════════
+
+✅ PROBLÈME RÉSOLU :
+Le bouton pour accéder au chat support client (admin-chat.html) n'était 
+pas présent dans la navigation du panel admin (admin.html).
+
+═══════════════════════════════════════════════════════════════
+
+📝 MODIFICATIONS APPORTÉES :
+
+1. ✅ Bouton "Messages Support" ajouté dans la sidebar
+   - Position : Section "Opérations" (après "Produits & Stocks")
+   - Icône : <i class="fas fa-comments"></i>
+   - Lien direct vers : admin-chat.html
+   - Badge de notification : affiche le nombre de messages non lus
+
+2. ✅ Fonction updateSupportChatBadge() créée
+   - Lit les conversations depuis localStorage
+   - Compte les messages non lus des clients
+   - Met à jour le badge rouge avec le nombre
+   - S'exécute toutes les 10 secondes automatiquement
+
+3. ✅ Intégration au démarrage de la page
+   - Se lance automatiquement après l'authentification admin
+   - Rafraîchissement automatique toutes les 10 secondes
+   - Compatible avec le système localStorage existant
+
+═══════════════════════════════════════════════════════════════
+
+🎯 RÉSULTAT :
+
+Dans la sidebar du panel admin (admin.html), vous verrez maintenant :
+
+┌─────────────────────────────────────┐
+│ OPÉRATIONS                          │
+│ ├── Vue d'ensemble                  │
+│ ├── Commandes                 [3]   │
+│ ├── Produits & Stocks               │
+│ └── 💬 Messages Support       [2]   │ ← NOUVEAU !
+└─────────────────────────────────────┘
+
+Le badge [2] affiche le nombre de messages clients non lus.
+Cliquer dessus ouvre directement admin-chat.html pour répondre.
+
+═══════════════════════════════════════════════════════════════
+
+📌 COMMENT ÇA MARCHE :
+
+1. Un client envoie un message depuis le chat en bas à droite du site
+2. Le message est stocké dans localStorage sous "adminChatConversations"
+3. Le badge dans admin.html compte automatiquement les non-lus
+4. L'admin clique sur "Messages Support" pour répondre
+5. Dans admin-chat.html, il voit toutes les conversations actives
+
+═══════════════════════════════════════════════════════════════
+
+✅ FICHIER MODIFIÉ : admin.html (sidebar + fonction JavaScript)
+
+═══════════════════════════════════════════════════════════════
