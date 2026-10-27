@@ -232,6 +232,53 @@ async function clearOrders() {
     }
 }
 
+// ---------------- CONVERSATIONS CHAT ----------------
+
+async function getConversations(activeOnly = true) {
+    if (isMongoConnected && db) {
+        try {
+            const col = db.collection('conversations');
+            const filter = activeOnly ? { active: true } : {};
+            return await col.find(filter).sort({ lastMessageTime: -1 }).limit(50).toArray();
+        } catch (e) {
+            console.error('Erreur MongoDB getConversations:', e.message);
+            return [];
+        }
+    }
+    return [];
+}
+
+async function getConversation(sessionId) {
+    if (isMongoConnected && db) {
+        try {
+            const col = db.collection('conversations');
+            return await col.findOne({ sessionId });
+        } catch (e) {
+            console.error('Erreur MongoDB getConversation:', e.message);
+            return null;
+        }
+    }
+    return null;
+}
+
+async function saveConversation(conversation) {
+    if (isMongoConnected && db) {
+        try {
+            const col = db.collection('conversations');
+            await col.replaceOne(
+                { sessionId: conversation.sessionId },
+                conversation,
+                { upsert: true }
+            );
+            return true;
+        } catch (e) {
+            console.error('Erreur MongoDB saveConversation:', e.message);
+            return false;
+        }
+    }
+    return false;
+}
+
 module.exports = {
     initDB,
     isMongoConnected: () => isMongoConnected,
@@ -244,5 +291,8 @@ module.exports = {
     setOrders,
     saveOrder,
     deleteOrder,
-    clearOrders
+    clearOrders,
+    getConversations,
+    getConversation,
+    saveConversation
 };

@@ -769,6 +769,252 @@ app.post('/api/admin/reset-data', requireAdminAuth, (req, res) => {
 });
 
 // ==========================================
+// 5. API CHAT SUPPORT (MONGODB SYNCHRONISÉ)
+// ==========================================
+
+// Créer ou récupérer une conversation (client envoie message)
+app.post('/api/chat/send', async (req, res) => {
+    try {
+        const { sessionId, message, userInfo } = req.body;
+        
+        if (!sessionId || !message) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'SessionId et message requis' 
+            });
+        }
+
+        // Chercher conversation existante
+        let conversation = await db.getConversation(sessionId);
+        
+        if (!conversation) {
+            // Nouvelle conversation
+            conversation = {
+                sessionId,
+                active: true,
+                userInfo: userInfo || {},
+                messages: [],
+                startTime: new Date().toISOString(),
+                lastMessageTime: new Date().toISOString(),
+                closedAt: null
+            };
+        }
+
+        // Ajouter le message
+        conversation.messages.push({
+            text: sanitizeText(message),
+            isAdmin: false,
+            timestamp: new Date().toISOString(),
+            read: false
+        });
+        
+        conversation.lastMessageTime = new Date().toISOString();
+        await db.saveConversation(conversation);
+
+        console.log(`💬 [Chat] Nouveau message client (Session: ${sessionId})`);
+        
+        res.json({ 
+            success: true, 
+            message: 'Message envoyé'
+        });
+    } catch (error) {
+        console.error('❌ Erreur envoi message chat:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Erreur serveur' 
+        });
+    }
+});
+
+// Récupérer les messages d'une conversation (client poll)
+app.get('/api/chat/conversation/:sessionId', async (req, res) => {
+    try {
+        const { sessionId } = req.params;
+        const conversation = await db.getConversation(sessionId);
+        
+        if (!conversation) {
+            return res.json({ 
+                success: true, 
+                conversation: null 
+            });
+        }
+
+        res.json({ 
+            success: true, 
+            conversation: {
+                sessionId: conversation.sessionId,
+                messages: conversation.messages || [],
+                active: conversation.active,
+                startTime: conversation.startTime,
+                lastMessageTime: conversation.lastMessageTime
+            }
+        });
+    } catch (error) {
+        console.error('❌ Erreur récupération conversation:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Erreur serveur' 
+        });
+    }
+});
+
+// Récupérer toutes les conversations actives (admin)
+app.get('/api/chat/conversations', requireAdminAuth, async (req, res) => {
+    try {
+        const conversations = await db.getConversations(true);
+
+        // Compter messages non lus
+        const conversationsWithCount = conversations.map(conv => {
+            const unreadCount = (conv.messages || []).filter(m => !m.isAdmin && !m.read).length;
+            return {
+                sessionId: conv.sessionId,
+                messages: conv.messages || [],
+                active: conv.active,
+                startTime: conv.startTime,
+                lastMessageTime: conv.lastMessageTime,
+                userInfo: conv.userInfo || {},
+                unreadCount
+            };
+        });
+
+        res.json({ 
+            success: true, 
+            count: conversations.length,
+            conversations: conversationsWithCount
+        });
+    } catch (error) {
+        console.error('❌ Erreur récupération conversations:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Erreur serveur' 
+        });
+    }
+});
+
+// Admin répond à une conversation
+app.post('/api/chat/reply', requireAdminAuth, async (req, res) => {
+    try {
+        const { sessionId, message } = req.body;
+        
+        if (!sessionId || !message) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'SessionId et message requis' 
+            });
+        }
+
+        const conversation = await db.getConversation(sessionId);
+        
+        if (!conversation) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Conversation introuvable' 
+            });
+        }
+
+        // Marquer tous les messages client comme lus
+        if (conversation.messages) {
+            conversation.messages.forEach(m => {
+                if (!m.isAdmin) m.read = true;
+            });
+        }
+
+        // Ajouter réponse admin
+        conversation.messages.push({
+            text: sanitizeText(message),
+            isAdmin: true,
+            timestamp: new Date().toISOString(),
+            read: true
+        });
+        
+        conversation.lastMessageTime = new Date().toISOString();
+        await db.saveConversation(conversation);
+
+        console.log(`💬 [Chat] Admin a répondu (Session: ${sessionId})`);
+        
+        res.json({ 
+            success: true, 
+            message: 'Réponse envoyée'
+        });
+    } catch (error) {
+        console.error('❌ Erreur réponse admin:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Erreur serveur' 
+        });
+    }
+});
+
+// Fermer une conversation
+app.post('/api/chat/close/:sessionId', requireAdminAuth, async (req, res) => {
+    try {
+        const { sessionId } = req.params;
+        
+        const conversation = await db.getConversation(sessionId);
+        
+        if (!conversation) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Conversation introuvable' 
+            });
+        }
+
+        conversation.active = false;
+        conversation.closedAt = new Date().toISOString();
+        await db.saveConversation(conversation);
+
+        console.log(`💬 [Chat] Conversation fermée (Session: ${sessionId})`);
+        
+        res.json({ 
+            success: true, 
+            message: 'Conversation fermée'
+        });
+    } catch (error) {
+        console.error('❌ Erreur fermeture conversation:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Erreur serveur' 
+        });
+    }
+});
+
+// Marquer des messages comme lus
+app.post('/api/chat/mark-read/:sessionId', requireAdminAuth, async (req, res) => {
+    try {
+        const { sessionId } = req.params;
+        
+        const conversation = await db.getConversation(sessionId);
+        
+        if (!conversation) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Conversation introuvable' 
+            });
+        }
+
+        // Marquer tous les messages client comme lus
+        if (conversation.messages) {
+            conversation.messages.forEach(m => {
+                if (!m.isAdmin) m.read = true;
+            });
+        }
+        
+        await db.saveConversation(conversation);
+        
+        res.json({ 
+            success: true, 
+            message: 'Messages marqués comme lus'
+        });
+    } catch (error) {
+        console.error('❌ Erreur marquage messages lus:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Erreur serveur' 
+        });
+    }
+});
+
+// ==========================================
 // DÉMARRAGE DU SERVEUR
 // ==========================================
 app.listen(PORT, () => {

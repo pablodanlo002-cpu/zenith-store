@@ -1,11 +1,14 @@
 // ========================================
-// CHAT SUPPORT EN DIRECT - FONCTIONNALITÉ 31
+// CHAT SUPPORT EN DIRECT - MONGODB SYNCHRONISÉ
 // ========================================
 
 const LiveChat = {
     isOpen: false,
     messages: [],
-    isClosing: false, // Flag pour éviter les appels multiples
+    isClosing: false,
+    sessionId: null,
+    API_BASE: window.location.origin,
+
     botResponses: {
         'bonjour': 'Bonjour ! 👋 Comment puis-je vous aider aujourd\'hui ?',
         'hello': 'Hello! 👋 How can I help you today?',
@@ -21,48 +24,86 @@ const LiveChat = {
     // Initialiser le chat
     init() {
         this.createChatButton();
+        this.getOrCreateSession();
         this.loadChatHistory();
         this.startPolling();
+    },
+
+    // Obtenir ou créer un ID de session
+    getOrCreateSession() {
+        this.sessionId = localStorage.getItem('chatSessionId');
+        if (!this.sessionId) {
+            this.sessionId = 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('chatSessionId', this.sessionId);
+        }
     },
 
     // Polling pour les nouvelles réponses admin
     startPolling() {
         setInterval(() => {
-            if (this.isOpen) {
+            if (this.isOpen && !this.isClosing) {
                 this.checkForNewMessages();
             }
-        }, 10000); // Vérifier toutes les 10 secondes (optimisé)
+        }, 10000); // Vérifier toutes les 10 secondes
     },
 
     // Vérifier les nouveaux messages de l'admin
-    checkForNewMessages() {
-        // Si déjà en train de fermer, ne rien faire
-        if (this.isClosing) return;
+    async checkForNewMessages() {
+        if (this.isClosing || !this.sessionId) return;
 
-        const activeSessionId = localStorage.getItem('activeChatSession');
-        if (!activeSessionId) return;
+        try {
+            const response = await fetch(`${this.API_BASE}/api/chat/conversation/${this.sessionId}`);
+            const data = await response.json();
 
-        const conversations = JSON.parse(localStorage.getItem('adminChatConversations')) || {};
-        const conversation = conversations[activeSessionId];
-        
-        // Vérifier si la conversation a été clôturée par l'admin
-        if (!conversation || conversation.active === false) {
-            this.isClosing = true; // Marquer comme en fermeture
-            this.showClosedMessage();
-            return;
+            if (data.success && data.conversation) {
+                const conversation = data.conversation;
+
+                // Vérifier si la conversation a été clôturée
+                if (!conversation.active) {
+                    this.isClosing = true;
+                    this.showClosedMessage();
+                    return;
+                }
+
+                // Vérifier s'il y a de nouveaux messages
+                if (conversation.messages.length > this.messages.length) {
+                    this.messages = conversation.messages;
+                    this.refreshMessages();
+                }
+            }
+        } catch (error) {
+            console.error('Erreur polling chat:', error);
         }
+    },
 
+    // Rafraîchir l'affichage des messages
+    refreshMessages() {
         const messagesContainer = document.getElementById('chatMessages');
         if (!messagesContainer) return;
 
-        // Comparer avec le nombre actuel de messages affichés
-        const currentMessageCount = messagesContainer.children.length - 1; // -1 pour le message de bienvenue
-        const serverMessageCount = conversation.messages.length;
+        messagesContainer.innerHTML = this.getWelcomeMessage();
+        
+        this.messages.forEach(msg => {
+            this.displayMessage(msg.text, msg.isAdmin);
+        });
 
-        if (serverMessageCount > currentMessageCount) {
-            // Il y a de nouveaux messages, recharger l'affichage
-            messagesContainer.innerHTML = this.getWelcomeMessage();
-            this.loadPreviousMessages();
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    },
+
+    // Charger l'historique des messages
+    async loadChatHistory() {
+        if (!this.sessionId) return;
+
+        try {
+            const response = await fetch(`${this.API_BASE}/api/chat/conversation/${this.sessionId}`);
+            const data = await response.json();
+
+            if (data.success && data.conversation) {
+                this.messages = data.conversation.messages || [];
+                this.refreshMessages();
+            }
+        } catch (error) {
+            console.error('Erreur chargement historique:', error);
         }
     },
 
@@ -71,10 +112,8 @@ const LiveChat = {
         const messagesContainer = document.getElementById('chatMessages');
         if (!messagesContainer) return;
 
-        // Vérifier si le message n'est pas déjà affiché
         if (document.getElementById('closingMessage')) return;
 
-        // Afficher le message de fermeture imminente
         const closingDiv = document.createElement('div');
         closingDiv.id = 'closingMessage';
         closingDiv.style.cssText = `
@@ -84,6 +123,7 @@ const LiveChat = {
             padding: 16px;
             text-align: center;
             animation: fadeIn 0.3s ease;
+            margin-top: 12px;
         `;
         closingDiv.innerHTML = `
             <div style="font-size: 32px; margin-bottom: 12px;">⚠️</div>
@@ -91,15 +131,15 @@ const LiveChat = {
                 Conversation clôturée par l'équipe
             </p>
             <p style="font-size: 14px; color: #ef4444; font-weight: 600;">
-                Votre ticket se ferme dans <span id="closeCountdown">5</span> secondes...
+                Ce chat se ferme dans <span id="closeCountdown">5</span> secondes...
             </p>
         `;
         messagesContainer.appendChild(closingDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-        // Désactiver l'input immédiatement
+        // Désactiver l'input
         const chatInput = document.getElementById('chatInput');
-        const sendButton = document.querySelector('#liveChatWindow button[onclick*="sendMessage"]');
+        const sendButton = document.querySelector('#liveChatWindow button');
         
         if (chatInput) {
             chatInput.disabled = true;
@@ -109,7 +149,6 @@ const LiveChat = {
         if (sendButton) {
             sendButton.disabled = true;
             sendButton.style.opacity = '0.3';
-            sendButton.style.cursor = 'not-allowed';
         }
 
         // Compte à rebours
@@ -117,9 +156,7 @@ const LiveChat = {
         const countdownInterval = setInterval(() => {
             countdown--;
             const countdownEl = document.getElementById('closeCountdown');
-            if (countdownEl) {
-                countdownEl.textContent = countdown;
-            }
+            if (countdownEl) countdownEl.textContent = countdown;
             
             if (countdown <= 0) {
                 clearInterval(countdownInterval);
@@ -128,107 +165,22 @@ const LiveChat = {
         }, 1000);
     },
 
-    // Fermer le chat de force et réinitialiser
+    // Fermer le chat et créer nouvelle session
     forceCloseChat() {
-        const activeSessionId = localStorage.getItem('activeChatSession');
-        
-        // Supprimer la conversation fermée du cache local
-        if (activeSessionId) {
-            const conversations = JSON.parse(localStorage.getItem('adminChatConversations')) || {};
-            if (conversations[activeSessionId]) {
-                delete conversations[activeSessionId];
-                localStorage.setItem('adminChatConversations', JSON.stringify(conversations));
-            }
-        }
-        
-        // Supprimer la session
-        localStorage.removeItem('activeChatSession');
-        
-        // Réinitialiser le flag de fermeture
+        localStorage.removeItem('chatSessionId');
+        this.sessionId = null;
+        this.messages = [];
         this.isClosing = false;
-        
-        // Fermer la fenêtre de chat
         this.closeChat();
-        
-        // Afficher une notification
-        this.showClosedNotification();
-    },
-
-    // Afficher une notification de fermeture
-    showClosedNotification() {
-        const notification = document.createElement('div');
-        notification.id = 'chatClosedNotification';
-        notification.style.cssText = `
-            position: fixed;
-            bottom: 100px;
-            right: 24px;
-            background: rgba(17, 17, 17, 0.98);
-            border: 1px solid rgba(139, 92, 246, 0.5);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-            z-index: 9997;
-            animation: slideUp 0.3s ease;
-            max-width: 320px;
-        `;
-        notification.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                <div style="font-size: 28px;">✅</div>
-                <div style="font-size: 16px; font-weight: 700; color: #fff;">
-                    Conversation terminée
-                </div>
-            </div>
-            <p style="font-size: 14px; color: #888; margin-bottom: 16px; line-height: 1.5;">
-                Merci d'avoir contacté notre support !<br>
-                Besoin d'aide ? Démarrez une nouvelle conversation.
-            </p>
-            <button onclick="document.getElementById('chatClosedNotification').remove(); LiveChat.openChat();" style="
-                width: 100%;
-                background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-                border: none;
-                color: #fff;
-                padding: 12px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.3s;
-                margin-bottom: 8px;
-            " onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 20px rgba(139, 92, 246, 0.5)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'">
-                <i class="fas fa-comments"></i> Nouvelle conversation
-            </button>
-            <button onclick="document.getElementById('chatClosedNotification').remove();" style="
-                width: 100%;
-                background: transparent;
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                color: #888;
-                padding: 10px;
-                border-radius: 8px;
-                font-size: 13px;
-                cursor: pointer;
-                transition: all 0.3s;
-            " onmouseover="this.style.borderColor='rgba(255, 255, 255, 0.3)'; this.style.color='#aaa'" onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.color='#888'">
-                Fermer
-            </button>
-        `;
-        document.body.appendChild(notification);
-
-        // Auto-supprimer après 30 secondes si pas d'action
-        setTimeout(() => {
-            const notif = document.getElementById('chatClosedNotification');
-            if (notif && notif.parentElement) {
-                notif.remove();
-            }
-        }, 30000);
+        this.getOrCreateSession();
     },
 
     // Créer le bouton de chat
     createChatButton() {
-        if (document.getElementById('liveChatButton')) return;
-
         const button = document.createElement('button');
         button.id = 'liveChatButton';
         button.innerHTML = '<i class="fas fa-comments"></i>';
+        button.onclick = () => this.toggleChat();
         button.style.cssText = `
             position: fixed;
             bottom: 24px;
@@ -237,16 +189,14 @@ const LiveChat = {
             height: 60px;
             border-radius: 50%;
             background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-            border: none;
             color: #fff;
+            border: none;
             font-size: 24px;
             cursor: pointer;
             box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
             z-index: 9999;
-            transition: all 0.3s;
-            animation: pulse 2s infinite;
+            transition: all 0.3s ease;
         `;
-        
         button.onmouseover = () => {
             button.style.transform = 'scale(1.1)';
             button.style.boxShadow = '0 6px 30px rgba(139, 92, 246, 0.6)';
@@ -255,23 +205,10 @@ const LiveChat = {
             button.style.transform = 'scale(1)';
             button.style.boxShadow = '0 4px 20px rgba(139, 92, 246, 0.4)';
         };
-        
-        button.addEventListener('click', () => this.toggleChat());
-        
         document.body.appendChild(button);
-
-        // Ajouter l'animation pulse
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes pulse {
-                0%, 100% { box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4); }
-                50% { box-shadow: 0 4px 30px rgba(139, 92, 246, 0.8), 0 0 0 10px rgba(139, 92, 246, 0.1); }
-            }
-        `;
-        document.head.appendChild(style);
     },
 
-    // Basculer le chat
+    // Basculer l'ouverture/fermeture du chat
     toggleChat() {
         if (this.isOpen) {
             this.closeChat();
@@ -283,164 +220,24 @@ const LiveChat = {
     // Ouvrir le chat
     openChat() {
         this.isOpen = true;
-        this.isClosing = false; // Réinitialiser le flag à chaque ouverture
         
-        // Vérifier si on rouvre après une fermeture
-        const existingWindow = document.getElementById('liveChatWindow');
-        if (existingWindow) {
-            // Supprimer complètement l'ancienne fenêtre
-            existingWindow.remove();
+        if (!document.getElementById('liveChatWindow')) {
+            this.createChatWindow();
         }
-
-        const chatWindow = document.createElement('div');
-        chatWindow.id = 'liveChatWindow';
-        chatWindow.style.cssText = `
-            position: fixed;
-            bottom: 100px;
-            right: 24px;
-            width: 380px;
-            height: 600px;
-            max-height: calc(100vh - 140px);
-            background: rgba(17, 17, 17, 0.98);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            z-index: 9998;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            animation: slideUp 0.3s ease;
-        `;
-
-        chatWindow.innerHTML = `
-            <!-- Header -->
-            <div style="
-                background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-                padding: 20px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                border-radius: 20px 20px 0 0;
-            ">
-                <div>
-                    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 4px; color: #fff;">
-                        💬 Support en direct
-                    </h3>
-                    <p style="font-size: 12px; color: rgba(255,255,255,0.8);">
-                        <span class="online-indicator" style="
-                            display: inline-block;
-                            width: 8px;
-                            height: 8px;
-                            border-radius: 50%;
-                            background: #10b981;
-                            margin-right: 6px;
-                            animation: blink 1.5s infinite;
-                        "></span>
-                        En ligne
-                    </p>
-                </div>
-                <button onclick="LiveChat.closeChat()" style="
-                    background: rgba(255,255,255,0.2);
-                    border: none;
-                    color: #fff;
-                    width: 32px;
-                    height: 32px;
-                    border-radius: 50%;
-                    font-size: 18px;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                ">✕</button>
-            </div>
-
-            <!-- Messages -->
-            <div id="chatMessages" style="
-                flex: 1;
-                padding: 20px;
-                overflow-y: auto;
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-            ">
-                ${this.getWelcomeMessage()}
-            </div>
-
-            <!-- Input -->
-            <div style="
-                padding: 16px;
-                border-top: 1px solid rgba(139, 92, 246, 0.2);
-                background: rgba(0, 0, 0, 0.3);
-            ">
-                <div style="display: flex; gap: 8px;">
-                    <input 
-                        type="text" 
-                        id="chatInput" 
-                        placeholder="Tapez votre message..."
-                        style="
-                            flex: 1;
-                            background: rgba(255, 255, 255, 0.05);
-                            border: 1px solid rgba(139, 92, 246, 0.3);
-                            border-radius: 12px;
-                            padding: 12px 16px;
-                            color: #fff;
-                            font-size: 14px;
-                            outline: none;
-                        "
-                        onkeypress="if(event.key === 'Enter') LiveChat.sendMessage()"
-                    >
-                    <button onclick="LiveChat.sendMessage()" style="
-                        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-                        border: none;
-                        color: #fff;
-                        width: 44px;
-                        height: 44px;
-                        border-radius: 12px;
-                        font-size: 18px;
-                        cursor: pointer;
-                        transition: all 0.3s;
-                    ">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-                <div style="
-                    margin-top: 12px;
-                    display: flex;
-                    gap: 8px;
-                    flex-wrap: wrap;
-                ">
-                    ${this.createQuickButton('Livraison')}
-                    ${this.createQuickButton('Retours')}
-                    ${this.createQuickButton('Promo')}
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(chatWindow);
-
-        // Animation
-        const animStyle = document.createElement('style');
-        animStyle.textContent = `
-            @keyframes slideUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-            @keyframes blink {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0.3; }
-            }
-        `;
-        document.head.appendChild(animStyle);
-
-        // Charger les messages précédents s'il y a une session active
-        this.loadPreviousMessages();
-
-        // Focus sur l'input
-        setTimeout(() => document.getElementById('chatInput')?.focus(), 100);
+        
+        const chatWindow = document.getElementById('liveChatWindow');
+        chatWindow.style.display = 'flex';
+        chatWindow.style.animation = 'slideUp 0.3s ease';
+        
+        const chatButton = document.getElementById('liveChatButton');
+        chatButton.style.display = 'none';
+        
+        this.loadChatHistory();
+        
+        setTimeout(() => {
+            const input = document.getElementById('chatInput');
+            if (input) input.focus();
+        }, 300);
     },
 
     // Fermer le chat
@@ -448,73 +245,122 @@ const LiveChat = {
         this.isOpen = false;
         const chatWindow = document.getElementById('liveChatWindow');
         if (chatWindow) {
-            chatWindow.style.display = 'none';
+            chatWindow.style.animation = 'slideDown 0.3s ease';
+            setTimeout(() => {
+                chatWindow.style.display = 'none';
+            }, 300);
         }
+        
+        const chatButton = document.getElementById('liveChatButton');
+        chatButton.style.display = 'flex';
     },
 
-    // Charger les messages précédents de la session active
-    loadPreviousMessages() {
-        const activeSessionId = localStorage.getItem('activeChatSession');
-        if (!activeSessionId) return;
+    // Créer la fenêtre de chat
+    createChatWindow() {
+        const chatWindow = document.createElement('div');
+        chatWindow.id = 'liveChatWindow';
+        chatWindow.style.cssText = `
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 380px;
+            max-height: 600px;
+            background: rgba(17, 17, 17, 0.98);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.8);
+            z-index: 9998;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        `;
 
-        const conversations = JSON.parse(localStorage.getItem('adminChatConversations')) || {};
-        const conversation = conversations[activeSessionId];
-        
-        // Vérifier si la conversation est clôturée ou n'existe plus
-        if (!conversation || conversation.active === false) {
-            // Session fermée, créer une nouvelle session
-            localStorage.removeItem('activeChatSession');
-            return; // Ne pas charger les anciens messages
-        }
-
-        const messagesContainer = document.getElementById('chatMessages');
-        if (!messagesContainer) return;
-
-        // Charger les messages de la conversation
-        conversation.messages.forEach(msg => {
-            const isUser = msg.sender === 'user';
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.style.cssText = `
+        chatWindow.innerHTML = `
+            <div style="
+                background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+                padding: 20px;
                 display: flex;
-                justify-content: ${isUser ? 'flex-end' : 'flex-start'};
-            `;
-
-            messageDiv.innerHTML = `
-                <div style="
-                    max-width: 75%;
-                    background: ${isUser ? 'linear-gradient(135deg, #8b5cf6, #7c3aed)' : 'rgba(255, 255, 255, 0.05)'};
-                    border: 1px solid ${isUser ? 'transparent' : 'rgba(255, 255, 255, 0.1)'};
-                    border-radius: ${isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px'};
-                    padding: 12px 16px;
-                    color: #fff;
-                    font-size: 14px;
-                    line-height: 1.5;
-                ">
-                    ${this.escapeHtml(msg.text)}
-                    <div style="
-                        font-size: 11px;
-                        color: ${isUser ? 'rgba(255,255,255,0.7)' : '#666'};
-                        margin-top: 4px;
-                        text-align: right;
-                    ">
-                        ${new Date(msg.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            ">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <i class="fas fa-headset" style="font-size: 24px; color: #fff;"></i>
+                    <div>
+                        <div style="font-size: 18px; font-weight: 700; color: #fff;">Support Zenith</div>
+                        <div style="font-size: 12px; color: rgba(255, 255, 255, 0.8);">
+                            <i class="fas fa-circle" style="font-size: 8px; color: #10b981;"></i> En ligne
+                        </div>
                     </div>
                 </div>
-            `;
+                <button onclick="LiveChat.closeChat()" style="
+                    background: rgba(255, 255, 255, 0.1);
+                    border: none;
+                    color: #fff;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    font-size: 16px;
+                    transition: all 0.2s;
+                ">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="chatMessages" style="
+                flex: 1;
+                padding: 20px;
+                overflow-y: auto;
+                max-height: 420px;
+                background: rgba(0, 0, 0, 0.3);
+            ">
+                ${this.getWelcomeMessage()}
+            </div>
+            <div style="
+                padding: 16px;
+                background: rgba(0, 0, 0, 0.2);
+                border-top: 1px solid rgba(139, 92, 246, 0.2);
+            ">
+                <div style="display: flex; gap: 8px;">
+                    <input
+                        type="text"
+                        id="chatInput"
+                        placeholder="Écrivez votre message..."
+                        style="
+                            flex: 1;
+                            padding: 12px 16px;
+                            background: rgba(255, 255, 255, 0.05);
+                            border: 1px solid rgba(139, 92, 246, 0.3);
+                            border-radius: 8px;
+                            color: #fff;
+                            font-size: 14px;
+                            outline: none;
+                        "
+                        onkeypress="if(event.key==='Enter') LiveChat.sendMessage()"
+                    />
+                    <button onclick="LiveChat.sendMessage()" style="
+                        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+                        border: none;
+                        color: #fff;
+                        width: 48px;
+                        height: 48px;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-size: 18px;
+                        transition: all 0.2s;
+                    ">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        `;
 
-            messagesContainer.appendChild(messageDiv);
-        });
-
-        // Scroller vers le bas
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        document.body.appendChild(chatWindow);
     },
 
     // Message de bienvenue
     getWelcomeMessage() {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const userName = currentUser ? currentUser.name || 'Client' : 'Client';
-        
         return `
             <div style="
                 background: rgba(139, 92, 246, 0.1);
@@ -522,197 +368,124 @@ const LiveChat = {
                 border-radius: 12px;
                 padding: 16px;
                 text-align: center;
+                margin-bottom: 16px;
             ">
-                <div style="font-size: 32px; margin-bottom: 12px;">👋</div>
-                <p style="font-size: 14px; color: #fff; margin-bottom: 8px;">
-                    Bonjour ${userName} !
+                <div style="font-size: 48px; margin-bottom: 12px;">👋</div>
+                <p style="font-size: 16px; color: #fff; margin-bottom: 8px; font-weight: 700;">
+                    Bienvenue sur le Support Zenith !
                 </p>
-                <p style="font-size: 13px; color: #888;">
-                    Comment puis-je vous aider aujourd'hui ?
+                <p style="font-size: 14px; color: #888; line-height: 1.5;">
+                    Notre équipe est là pour vous aider.<br>
+                    Posez votre question, nous répondons rapidement !
                 </p>
             </div>
         `;
-    },
-
-    // Créer un bouton rapide
-    createQuickButton(text) {
-        return `
-            <button onclick="LiveChat.sendQuickMessage('${text}')" style="
-                background: rgba(139, 92, 246, 0.1);
-                border: 1px solid rgba(139, 92, 246, 0.3);
-                color: #8b5cf6;
-                padding: 6px 12px;
-                border-radius: 8px;
-                font-size: 12px;
-                cursor: pointer;
-                transition: all 0.3s;
-            " onmouseover="this.style.background='rgba(139, 92, 246, 0.2)'" onmouseout="this.style.background='rgba(139, 92, 246, 0.1)'">
-                ${text}
-            </button>
-        `;
-    },
-
-    // Envoyer un message rapide
-    sendQuickMessage(text) {
-        const input = document.getElementById('chatInput');
-        if (input) {
-            input.value = text;
-            this.sendMessage();
-        }
     },
 
     // Envoyer un message
-    sendMessage() {
+    async sendMessage() {
         const input = document.getElementById('chatInput');
-        const message = input?.value.trim();
+        const message = input.value.trim();
         
         if (!message) return;
 
-        this.addMessage(message, 'user');
+        // Afficher le message immédiatement
+        this.displayMessage(message, false);
         input.value = '';
 
-        // Vérifier si c'est le premier message de la conversation
-        const activeSessionId = localStorage.getItem('activeChatSession');
-        const conversations = JSON.parse(localStorage.getItem('adminChatConversations')) || {};
-        const currentConv = conversations[activeSessionId];
-        
-        // Envoyer réponse auto seulement si :
-        // 1. C'est le premier message (1 seul message dans la conv)
-        // 2. L'admin n'a pas encore répondu (pas de message avec sender === 'admin')
-        const shouldAutoReply = currentConv && 
-                                currentConv.messages.length === 1 && 
-                                !currentConv.messages.some(msg => msg.sender === 'admin');
+        // Envoyer au serveur
+        try {
+            const userInfo = {
+                ip: 'client',
+                userAgent: navigator.userAgent,
+                language: navigator.language
+            };
 
-        if (shouldAutoReply) {
-            // Simuler une réponse du bot uniquement pour le premier message
-            setTimeout(() => {
-                const response = "Merci pour votre message. Un conseiller vous répondra dans quelques instants. ⏱️";
-                this.addMessage(response, 'bot');
-            }, 500);
+            const response = await fetch(`${this.API_BASE}/api/chat/send`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    sessionId: this.sessionId,
+                    message: message,
+                    userInfo: userInfo
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Récupérer la conversation complète depuis le serveur
+                const convResponse = await fetch(`${this.API_BASE}/api/chat/conversation/${this.sessionId}`);
+                const convData = await convResponse.json();
+
+                if (convData.success && convData.conversation) {
+                    this.messages = convData.conversation.messages;
+                    
+                    // Vérifier si un admin a déjà répondu
+                    const hasAdminReplied = this.messages.some(m => m.isAdmin);
+                    
+                    // Réponse auto SEULEMENT si :
+                    // 1. C'est le premier message (ou presque)
+                    // 2. Aucun admin n'a répondu
+                    if (this.messages.length <= 1 && !hasAdminReplied) {
+                        const lowerMsg = message.toLowerCase();
+                        let autoResponse = this.botResponses.default;
+                        
+                        for (const [key, value] of Object.entries(this.botResponses)) {
+                            if (key !== 'default' && lowerMsg.includes(key)) {
+                                autoResponse = value;
+                                break;
+                            }
+                        }
+
+                        // Afficher la réponse auto après un court délai
+                        setTimeout(() => {
+                            this.displayMessage(autoResponse, true);
+                        }, 1000);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Erreur envoi message:', error);
+            this.displayMessage('❌ Erreur de connexion. Veuillez réessayer.', true);
         }
     },
 
-    // Ajouter un message
-    addMessage(text, sender) {
+    // Afficher un message
+    displayMessage(text, isAdmin) {
         const messagesContainer = document.getElementById('chatMessages');
         if (!messagesContainer) return;
 
-        const isUser = sender === 'user';
-        
         const messageDiv = document.createElement('div');
         messageDiv.style.cssText = `
             display: flex;
-            justify-content: ${isUser ? 'flex-end' : 'flex-start'};
+            justify-content: ${isAdmin ? 'flex-start' : 'flex-end'};
+            margin-bottom: 12px;
             animation: fadeIn 0.3s ease;
         `;
 
-        messageDiv.innerHTML = `
-            <div style="
-                max-width: 75%;
-                background: ${isUser ? 'linear-gradient(135deg, #8b5cf6, #7c3aed)' : 'rgba(255, 255, 255, 0.05)'};
-                border: 1px solid ${isUser ? 'transparent' : 'rgba(255, 255, 255, 0.1)'};
-                border-radius: ${isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px'};
-                padding: 12px 16px;
-                color: #fff;
-                font-size: 14px;
-                line-height: 1.5;
-            ">
-                ${this.escapeHtml(text)}
-                <div style="
-                    font-size: 11px;
-                    color: ${isUser ? 'rgba(255,255,255,0.7)' : '#666'};
-                    margin-top: 4px;
-                    text-align: right;
-                ">
-                    ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                </div>
-            </div>
+        const bubble = document.createElement('div');
+        bubble.style.cssText = `
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            ${isAdmin 
+                ? 'background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.3);'
+                : 'background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: #fff;'
+            }
         `;
+        bubble.textContent = text;
 
+        messageDiv.appendChild(bubble);
         messagesContainer.appendChild(messageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-        // Sauvegarder dans l'historique du chat (pour admin)
-        this.messages.push({ text, sender, timestamp: Date.now() });
-        this.saveChatHistory();
-        
-        // Sauvegarder aussi dans les conversations admin
-        this.saveToAdminConversations({ text, sender, timestamp: Date.now() });
-    },
-    
-    // Sauvegarder dans les conversations admin
-    saveToAdminConversations(message) {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const userName = currentUser ? currentUser.name : 'Visiteur';
-        const userEmail = currentUser ? currentUser.email : 'visiteur@example.com';
-        
-        // Créer ou récupérer la conversation active
-        let conversations = JSON.parse(localStorage.getItem('adminChatConversations')) || {};
-        let activeSessionId = localStorage.getItem('activeChatSession');
-        
-        if (!activeSessionId) {
-            activeSessionId = 'session_' + Date.now();
-            localStorage.setItem('activeChatSession', activeSessionId);
-        }
-        
-        if (!conversations[activeSessionId]) {
-            conversations[activeSessionId] = {
-                id: activeSessionId,
-                clientName: userName,
-                clientEmail: userEmail,
-                messages: [],
-                unread: false,
-                active: true, // Conversation active
-                createdAt: Date.now()
-            };
-        }
-        
-        conversations[activeSessionId].messages.push(message);
-        conversations[activeSessionId].lastUpdate = Date.now();
-        
-        // Si c'est un message client, marquer comme non lu pour admin
-        if (message.sender === 'user') {
-            conversations[activeSessionId].unread = true;
-        }
-        
-        localStorage.setItem('adminChatConversations', JSON.stringify(conversations));
-    },
-
-    // Obtenir une réponse du bot
-    getBotResponse(message) {
-        const lowerMessage = message.toLowerCase();
-        
-        for (const [keyword, response] of Object.entries(this.botResponses)) {
-            if (lowerMessage.includes(keyword)) {
-                return response;
-            }
-        }
-        
-        return this.botResponses.default;
-    },
-
-    // Sauvegarder l'historique du chat
-    saveChatHistory() {
-        localStorage.setItem('chatHistory', JSON.stringify(this.messages));
-    },
-
-    // Charger l'historique du chat
-    loadChatHistory() {
-        const history = localStorage.getItem('chatHistory');
-        if (history) {
-            this.messages = JSON.parse(history);
-        }
-    },
-
-    // Échapper HTML
-    escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
     }
 };
 
-// Initialiser
+// Initialiser au chargement de la page
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => LiveChat.init());
 } else {
