@@ -84,6 +84,21 @@ async function initDB() {
             await ordersCol.insertMany(cachedOrders);
             console.log(`⬆️ MongoDB: Migration initiale de ${cachedOrders.length} commande(s) vers le cloud.`);
         }
+
+        // 🔄 NOUVEAU : Recharger automatiquement depuis MongoDB toutes les 60 secondes
+        setInterval(async () => {
+            try {
+                const freshProducts = await productsCol.find({}, { projection: { _id: 0 } }).toArray();
+                if (freshProducts.length !== cachedProducts.length) {
+                    cachedProducts = freshProducts;
+                    writeLocalJSON(PRODUCTS_FILE, cachedProducts);
+                    console.log(`🔄 [Auto-Sync] ${freshProducts.length} produit(s) rechargés depuis MongoDB.`);
+                }
+            } catch (err) {
+                console.error('⚠️ Erreur auto-sync produits:', err.message);
+            }
+        }, 60000); // Toutes les 60 secondes
+
     } catch (err) {
         console.warn('⚠️ Mode Local/Fallback actif (MongoDB indisponible ou hors-ligne):', err.message);
         isMongoConnected = false;
